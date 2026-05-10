@@ -42,6 +42,10 @@ What is genuinely new here is **the packaging**: a runnable, droppable artifact 
 baloney-detection-kit/
 ├── README.md                         You are here
 ├── ROOT_PROMPT.md                    Self-contained drop-in prompt (~1k tokens)
+├── related-work.md                   Positioning vs. system prompts, constitutional AI,
+│                                     RAG with citations, RAI evaluators, robopsychology
+├── deployment-contexts.md            Where to put the kit in a real system: personal,
+│                                     agent runtime, CI gate, layered defense, teaching
 ├── LICENSE                           MIT
 │
 ├── skill/
@@ -113,6 +117,7 @@ Open [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) 
 - It does not block "wrong" ideas. It surfaces what is already known about them.
 - It does not guarantee the user will be honest. Someone determined to stay in their bubble can lie on the checklist or attack the framework. The kit creates the opportunity for honesty, not the obligation.
 - It is not a replacement for actual research. It is the friction that makes you do the research.
+- It is not an evaluator. It changes behavior at inference; it does not score it. For detection / measurement, see the evaluator landscape in [`related-work.md`](related-work.md). For diagnosing a specific weird interaction the kit didn't catch, see [robopsychology](https://github.com/jrcruciani/robopsychology).
 
 ---
 
