@@ -114,7 +114,7 @@ Honest framing:
 **Evidence:** ⚠️ Anecdotal observation, not rigorous testing
 **Intellectual Humility:** ❌ Claiming "no one understood this" when entire fields did
 
-**Verdict:** This person has made an interesting *observation* but is in a "personal mini-cult" of their own discovery. They should:
+**Verdict:** This person has made an interesting *observation*, but the current framing risks turning a rediscovery into a private revelation. They should:
 
 1. Read Saussure and Jakobson
 2. Understand why this was discovered a century ago
@@ -144,4 +144,4 @@ The checklist catches this because Step 1 (State of the Art) immediately reveals
 - Deny the literature exists (mini-cult response)
 - Reframe as an interesting technological angle (intellectually honest)
 
-Most people in mini-cults choose option 2. The kit helps them see it.
+The playbook is meant to make option 3 easier: keep the useful observation, drop the inflated novelty claim, and re-enter the existing conversation.

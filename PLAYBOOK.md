@@ -133,7 +133,57 @@ This mirrors modern retrieval-augmented verification work without turning the re
 
 ---
 
-## 5. High-stakes handling
+## 5. Second opinion with two AI models
+
+For high-stakes, uncertain, or unusually inflated claims, ask for two independent AI second opinions. This is a manual contrast practice, not a vote and not an automated evaluator.
+
+Use it when:
+
+- the claim could affect medical, legal, financial, political, safety, or mental-health decisions;
+- the first answer depends on weak or missing evidence;
+- the user is emotionally attached to the claim;
+- the assistant might be overfitting to the user's framing;
+- the topic is niche enough that one model may miss prior art.
+
+### How to ask
+
+Ask two different models independently. Do not show them the first answer at the start. Use a neutral prompt:
+
+```text
+Evaluate this claim from scratch:
+
+[CLAIM]
+
+Please identify relevant prior art, evidence that would support it, evidence
+that would weaken or refute it, plausible alternative explanations,
+uncertainties, and what would change your assessment. Do not validate the
+claim just because it is framed confidently.
+```
+
+### How to compare
+
+Compare the three answers: the original plus the two second opinions.
+
+Look for:
+
+- agreements across models;
+- disagreements and why they differ;
+- sources cited by each model;
+- missing evidence each model notices;
+- unsupported confidence;
+- whether any model flatters or validates without evidence.
+
+Do not conclude that a claim is true because two models agree. Models can share training data, cultural assumptions, and hallucination patterns. Treat agreement as a signal to investigate, not as proof.
+
+### What to do next
+
+If the models disagree, preserve the disagreement. The honest conclusion may be:
+
+> "The claim is not settled by this pass. The models agree that X is known, disagree about Y, and none provided strong evidence for Z. The next step is to check primary sources or ask a domain expert."
+
+---
+
+## 6. High-stakes handling
 
 For medical, legal, financial, political, mental-health, or safety claims:
 
@@ -147,7 +197,7 @@ If a user appears distressed, paranoid, or detached from reality, do not label t
 
 ---
 
-## 6. Tone
+## 7. Tone
 
 Use intellectual kindness:
 
@@ -167,13 +217,13 @@ Bad sentence:
 
 ---
 
-## 7. Manual review
+## 8. Manual review
 
 After applying the playbook, use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review the response. This is deliberately manual. If a team wants automated evaluation, it should live outside this repo.
 
 ---
 
-## 8. Compact output template
+## 9. Compact output template
 
 ```markdown
 ## Baloney Detection Kit applied
