@@ -16,7 +16,7 @@ Lo que necesitamos es ingeniería del rigor por defecto. Que el sistema te oblig
 2. ¿Qué hay realmente nuevo en lo que digo?
 3. ¿Cómo se podría demostrar que estoy equivocado?
 
-He empaquetado esto como un skill abierto, _baloney-detection-kit_, que se puede meter en cualquier LLM o agente para que opere así por defecto. También sirve como checklist humana cuando uno empieza a notar el cosquilleo del descubrimiento súbito.
+He empaquetado esto como un playbook abierto, _baloney-detection-kit_, que se puede usar como instrucciones para cualquier LLM o agente para que opere así por defecto. También sirve como checklist humana cuando uno empieza a notar el cosquilleo del descubrimiento súbito.
 
 Está en GitHub, libre, MIT. Lo cuento entero en el blog: [impermanente.es](https://impermanente.es)
 

@@ -1,6 +1,6 @@
 # baloney-detection-kit
 
-> A skill (and drop-in prompt) that turns critical thinking into the default behavior of any LLM.
+> A playbook for adding epistemic friction to LLM conversations before weak claims become private revelations.
 
 ---
 
@@ -14,14 +14,15 @@ That reaction, multiplied across millions of users and amplified by recommendati
 
 This repository is an attempt to add friction back where it has been silently removed.
 
-The full reasoning is in [`essay/mini-cultos-ai.md`](essay/mini-cultos-ai.md).
-A shorter version, in Spanish, is in [`posts/blog-impermanente.md`](posts/blog-impermanente.md).
+The full reasoning is in [`essay/mini-cultos-ai.md`](essay/mini-cultos-ai.md). A shorter version, in Spanish, is in [`posts/blog-impermanente.md`](posts/blog-impermanente.md).
 
 ---
 
-## What it does
+## What this is
 
-When invoked, the kit applies a 6-step protocol to any claim or "discovery":
+This is a **playbook**: a practical protocol that humans, agents, and LLM operators can apply when a user presents a claim that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus.
+
+When invoked, the playbook applies a 6-step protocol:
 
 1. **State of the art.** What is currently known about this?
 2. **Novelty assessment.** Rediscovery, re-framing, or genuinely new?
@@ -32,7 +33,19 @@ When invoked, the kit applies a 6-step protocol to any claim or "discovery":
 
 The protocol is a synthesis of Carl Sagan's Baloney Detection Kit (1996), Andrej Karpathy's "state of the art first" methodology, Robert Jay Lifton's eight criteria of thought reform (1961), and Karl Popper's falsifiability criterion (1934).
 
-What is genuinely new here is **the packaging**: a runnable, droppable artifact that turns those existing tools into default LLM behavior, instead of an optional checklist that nobody applies in the heat of an epiphany.
+What is genuinely new here is **the packaging as a default conversation behavior**: a concise playbook that makes "check the state of the art before validating the claim" the first move, not an afterthought.
+
+---
+
+## What this is not
+
+- It is not a toolkit, SDK, package, benchmark, evaluator, CI suite, or RAG framework.
+- It does not ship a scoring engine or automated fact-checking pipeline.
+- It does not replace actual research, experts, or domain-specific review.
+- It does not censor wrong ideas. It contextualizes them.
+- It does not guarantee honesty from a user who wants validation at any cost.
+
+The playbook can coexist with evaluators, retrieval systems, and diagnostic tools, but it is deliberately not trying to become one.
 
 ---
 
@@ -41,83 +54,56 @@ What is genuinely new here is **the packaging**: a runnable, droppable artifact 
 ```
 baloney-detection-kit/
 ├── README.md                         You are here
-├── ROOT_PROMPT.md                    Self-contained drop-in prompt (~1k tokens)
-├── related-work.md                   Positioning vs. system prompts, constitutional AI,
-│                                     RAG with citations, RAI evaluators, robopsychology
-├── deployment-contexts.md            Where to put the kit in a real system: personal,
-│                                     agent runtime, CI gate, layered defense, teaching
+├── PLAYBOOK.md                       Operational playbook: triggers, modes,
+│                                     evidence practice, high-stakes handling
+├── ROOT_PROMPT.md                    Self-contained drop-in prompt
+├── related-work.md                   Positioning vs. system prompts,
+│                                     evaluators, RAG, constitutional AI
+├── deployment-contexts.md            Adoption patterns for people, agents,
+│                                     teams, high-stakes contexts, teaching
 ├── LICENSE                           MIT
 │
 ├── skill/
-│   ├── SKILL.md                      Full skill definition (with triggers,
-│   │                                 protocol, output format, tone)
+│   ├── SKILL.md                      Runtime-friendly distribution of the
+│   │                                 playbook for skill-based agents
 │   ├── prompts/
 │   │   └── critical_investigation_mode.txt
 │   ├── checklist/
-│   │   └── seven_questions.md        Human-facing self-assessment
-│   ├── examples/
-│   │   └── case_saussure.md          Worked example
-│   └── scripts/
-│       └── apply_kit.py              CLI helper to wrap a claim with the
-│                                     protocol prompt
+│   │   ├── seven_questions.md        Human-facing self-assessment
+│   │   └── review_rubric.md          Manual review rubric
+│   └── examples/
+│       ├── case_saussure.md          Worked example
+│       └── playbook_scenarios.md     Trigger, non-trigger, multi-turn,
+│                                     high-stakes and re-framing examples
 │
 ├── essay/
-│   └── mini-cultos-ai.md             Full essay (Spanish, ~20k words) that
-│                                     motivates the kit
+│   └── mini-cultos-ai.md             Full essay (Spanish)
 │
 └── posts/
-    ├── blog-impermanente.md          Blog post version (Spanish, ~1k words)
-    └── linkedin.md                   LinkedIn version (Spanish, ~300 words)
+    ├── blog-impermanente.md          Blog post version (Spanish)
+    ├── linkedin.md                   LinkedIn version (Spanish)
+    └── reddit.md                     Reddit post drafts (English)
 ```
 
 ---
 
 ## How to use it
 
-### As a drop-in prompt (5 minutes)
+### As a playbook
 
-The fastest path. Copy the block in [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt of any LLM (OpenAI, Anthropic, local). That is all.
+Start with [`PLAYBOOK.md`](PLAYBOOK.md). It explains when to activate the protocol, when to stay quiet, how to handle weak vs. high-stakes claims, how to resist multi-turn pressure, and how to review whether the response worked.
 
-```bash
-cat ROOT_PROMPT.md
-```
+### As a drop-in prompt
 
-### As a skill (Copilot CLI, Claude Code, custom agents)
+Copy the block in [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt or custom-instructions slot of an LLM client. The prompt is the portable form of the playbook.
 
-Point your skill loader at the [`skill/`](skill/) directory. The `SKILL.md` describes when to trigger the protocol (proactively, without being asked) and how to format the response.
+### As agent instructions
 
-If your assistant supports Anthropic-style or Copilot-style skills, you can drop the `skill/` directory into your skills folder directly.
-
-### As a CLI tool
-
-Use `apply_kit.py` to wrap any claim with the protocol prompt and pipe it into the LLM of your choice:
-
-```bash
-python skill/scripts/apply_kit.py "I just discovered that consciousness emerges from quantum effects in microtubules"
-# Outputs the full system + user prompt, ready to feed any LLM
-```
-
-```bash
-python skill/scripts/apply_kit.py --interactive
-```
-
-```bash
-echo "AI will achieve AGI in 5 years" | python skill/scripts/apply_kit.py --stdin --format json
-```
+If your assistant supports skills, copy the [`skill/`](skill/) directory into the relevant skills folder. `skill/SKILL.md` is not a separate product; it is the same playbook expressed in a runtime-friendly format.
 
 ### As a human checklist
 
-Open [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) and answer the seven questions honestly the next time you feel the tingle of a sudden discovery. The score tells you whether you have an insight or a mini-cult.
-
----
-
-## What it does not do
-
-- It does not censor. It contextualizes.
-- It does not block "wrong" ideas. It surfaces what is already known about them.
-- It does not guarantee the user will be honest. Someone determined to stay in their bubble can lie on the checklist or attack the framework. The kit creates the opportunity for honesty, not the obligation.
-- It is not a replacement for actual research. It is the friction that makes you do the research.
-- It is not an evaluator. It changes behavior at inference; it does not score it. For detection / measurement, see the evaluator landscape in [`related-work.md`](related-work.md). For diagnosing a specific weird interaction the kit didn't catch, see [robopsychology](https://github.com/jrcruciani/robopsychology).
+Open [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) and answer the questions honestly the next time you feel the tingle of a sudden discovery. Use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review whether an assistant applied the playbook well.
 
 ---
 
@@ -127,15 +113,15 @@ The most important test of any framework like this is whether it survives being 
 
 **State of the art.** Critical thinking tools have been around for at least 90 years (Popper 1934, Sagan 1996). Research on echo chambers, filter bubbles, and algorithmic radicalization is abundant (Pariser, Tufekci, Zuboff, Donovan). LLM-induced misinformation is documented by OpenAI, Anthropic, and academic researchers. AI sycophancy as a design problem is openly discussed.
 
-**Novelty.** This kit is **re-framing**, not invention. The synthesis maps Sagan and Karpathy onto LLM design as a default behavior. The packaging as a runnable skill is the practical contribution.
+**Novelty.** This kit is **re-framing**, not invention. The synthesis maps Sagan and Karpathy onto LLM design as a default behavior. The practical contribution is the playbook packaging: short enough to use, explicit enough to resist flattery, and portable across humans and agents.
 
-**Falsifiability.** The hypothesis "this kit reduces mini-cult thinking when integrated by default" is testable. A/B test users with and without the protocol; measure how often they later refine, retract, or contextualize their initial claims. I have not run that test. Anyone can.
+**Falsifiability.** The hypothesis "this playbook reduces sycophantic validation of weak novel claims" is testable. A team can compare conversations with and without the playbook, then manually review whether users refine, retract, or contextualize their initial claims. This repo does not include an automated evaluator.
 
-**Alternatives.** Education alone (teach humans to be critical). Regulation (governments mandate AI disclaimers). External fact-checking layers. Search-grounded LLMs that always cite. Each has merits. This kit is one option among several, with one specific bet: that changing LLM defaults is higher leverage than changing user behavior.
+**Alternatives.** Education alone. Regulation. External fact-checking layers. Search-grounded LLMs that always cite. Model training against sycophancy. Each has merits. This playbook is one option among several, with one specific bet: changing the conversational default is high-leverage.
 
-**What I do not know.** Whether the protocol scales without becoming annoying. Whether users will actually adopt the "rigorous mode" or always switch to "conversational mode". Whether the protocol introduces its own biases. Whether it works equally well across languages and cultures.
+**What I do not know.** Whether the protocol scales without becoming annoying. Whether users will keep it on when it challenges them. Whether the protocol introduces its own biases. Whether it works equally well across languages and cultures.
 
-**Next step.** Use it. Break it. Tell me where it fails. Submit issues and pull requests.
+**Next step.** Use it as a playbook. Break it. Tell me where the guidance fails. Submit issues and pull requests that improve the protocol, examples, or review rubric.
 
 ---
 
@@ -163,12 +149,15 @@ Use it, fork it, embed it, improve it.
 
 Issues and pull requests welcome. Especially:
 
-- New worked examples in `skill/examples/` (real cases of false discoveries and how the kit handles them).
-- Translations of the prompt and checklist to other languages.
-- Adapters for specific frameworks (LangChain, LlamaIndex, Anthropic SDK, etc.).
-- Integration reports: did this change anything for your users?
+- Better playbook examples in `skill/examples/`.
+- Translations of the prompt, playbook, and checklist.
+- Reports from real use: when did the playbook fire too often, too rarely, or with the wrong tone?
+- Improvements to the manual review rubric.
+
+Please do not add package scaffolding, dependencies, CI harnesses, benchmark runners, SDK adapters, or framework integrations here. Those can live in separate repos if needed; this repo should stay a playbook.
 
 ---
 
 **Author:** J.R. Cruciani · Madrid · 2026
+
 **Related writing:** [impermanente.es](https://impermanente.es)

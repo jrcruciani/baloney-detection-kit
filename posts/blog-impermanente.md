@@ -1,7 +1,7 @@
 ---
 title: "El mini-culto de uno"
 date: 2026-04-21
-tags: [ai, epistemología, herramientas]
+tags: [ai, epistemología, playbooks]
 ---
 
 # El mini-culto de uno
@@ -22,7 +22,7 @@ La pregunta operativa es: ¿cómo se baja eso a la práctica cuando tu fuente de
 
 Esto cambia la conversación de "el LLM como cómplice de mi descubrimiento" a "el LLM como editor que me obliga a contextualizar antes de seguir". No es censura, es ingeniería del rigor. Funciona si quien usa el modelo quiere de verdad saber, y filtra a quien solo quiere validación. Lo cual ya es bastante.
 
-Llevo unas semanas dándole vueltas a esto y al final acabé empaquetándolo como un skill, _baloney-detection-kit_, que cualquiera puede meterle a su agente o a su LLM para que opere así por defecto. Está en GitHub, abierto, con una checklist también para uso humano cuando uno empieza a notar el cosquilleo del descubrimiento súbito. La parte irónica, y honesta, es que mientras lo escribía tuve que aplicarme el filtro a mí mismo: nada de lo que hay en ese kit es nuevo. Sagan, Karpathy, Lifton, Tufekci, Zuboff, todo está dicho. Lo único nuevo, si acaso, es la combinación específica y el haber bajado el rigor a una pieza concreta y reutilizable. No es un descubrimiento, es un montaje. Decirlo así, sin inflarlo, es la primera prueba de que el kit funciona.
+Llevo unas semanas dándole vueltas a esto y al final acabé empaquetándolo como un playbook, _baloney-detection-kit_, que cualquiera puede usar como instrucciones para su agente o su LLM para que opere así por defecto. Está en GitHub, abierto, con una checklist también para uso humano cuando uno empieza a notar el cosquilleo del descubrimiento súbito. La parte irónica, y honesta, es que mientras lo escribía tuve que aplicarme el filtro a mí mismo: nada de lo que hay en ese kit es nuevo. Sagan, Karpathy, Lifton, Tufekci, Zuboff, todo está dicho. Lo único nuevo, si acaso, es la combinación específica y el haber bajado el rigor a una pieza concreta y reutilizable. No es un descubrimiento, es un montaje. Decirlo así, sin inflarlo, es la primera prueba de que el kit funciona.
 
 El reflejo de universalizar lo propio del que hablaba el otro día sigue ahí, intacto. Pero hay un reflejo aún más viejo, peor, que es el de creer que algo es nuevo solo porque a mí se me acaba de ocurrir. Si la era anterior era la del molde único de SAP, esta corre el riesgo de ser la del molde único de uno. Mil moldes únicos de uno. Mil cultos de un solo miembro convencidos de haber visto la luz, hablando con un modelo que aplaude desde la primera fila.
 
@@ -30,4 +30,4 @@ La pregunta no es si las herramientas son buenas. Lo son. La pregunta es si vamo
 
 ---
 
-_El skill `baloney-detection-kit` está disponible en [github.com/Jrcruciani/baloney-detection-kit](https://github.com/Jrcruciani/baloney-detection-kit). Se puede integrar como system prompt en cualquier LLM o usar como checklist humana antes de publicar una idea que crees nueva._
+_El playbook `baloney-detection-kit` está disponible en [github.com/Jrcruciani/baloney-detection-kit](https://github.com/Jrcruciani/baloney-detection-kit). Se puede usar como system prompt en cualquier LLM, como instrucciones para agentes o como checklist humana antes de publicar una idea que crees nueva._

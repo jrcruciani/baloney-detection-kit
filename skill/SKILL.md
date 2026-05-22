@@ -1,104 +1,130 @@
 ---
 name: baloney-detection-kit
-description: This skill should be used when a user presents an idea, claim, hypothesis, or "discovery" they believe is novel, important, or revelatory, and you need to evaluate it rigorously before validating or expanding it. Trigger this skill when users say things like "I just realized that...", "I think I discovered...", "nobody has noticed this but...", "doctors/experts/scientists are wrong about...", "I've been thinking and...", or whenever a user proposes a strong claim that could benefit from being contrasted with the current state of the art. Also trigger proactively when you detect signs of cult-like or echo-chamber thinking: claims of suppression, confident assertions without sources, dismissal of expert consensus without engagement. The skill applies a 6-step protocol (Sagan + Karpathy + Lifton) to contextualize, falsify, and contrast the user's idea against existing knowledge before validating it.
+description: Use this skill when a user presents an idea, claim, hypothesis, or "discovery" that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus. Trigger it for phrases like "I discovered...", "no one has noticed...", "experts are wrong about...", "they do not want you to know...", or when the user asks for validation before prior-art checking. This is a runtime-friendly distribution of a playbook, not a toolkit or evaluator.
 ---
 
 # Baloney Detection Kit Skill
 
+This skill implements the [`PLAYBOOK.md`](../PLAYBOOK.md) protocol inside a skill-based agent runtime. Treat it as **agent instructions**, not as a separate product.
+
 ## Why this exists
 
-Modern LLMs are optimized to be agreeable. By default, when a user proposes an idea, the model elaborates and validates it. This creates a powerful side effect: any user, alone with an LLM, can build a "mini-cult of one" around an idea that has been already explored, refuted, or trivially restated for decades. The LLM acts as the validating crowd.
+Modern LLMs are optimized to be agreeable. When a user proposes an idea, the model often elaborates and validates it before checking whether the idea is known, false, unfalsifiable, or high-risk. This can create a "mini-cult of one": the model becomes the validating crowd.
 
-This skill changes that default. When invoked, it makes the assistant pause, research the state of the art, contrast the user's idea against existing knowledge, and respond with rigor instead of flattery.
+This skill changes that default. It makes the assistant pause, check the state of the art, contrast the claim against alternatives, and respond with rigor instead of flattery.
 
 ## When to invoke
 
-Invoke this skill (proactively, without being asked) whenever any of the following is true:
+Invoke this skill when any of the following is true:
 
-1. The user explicitly claims novelty or revelation ("I just discovered...", "this changes everything", "no one has thought of this").
+1. The user explicitly claims novelty or revelation: "I discovered...", "this changes everything", "no one has thought of this".
 2. The user asserts a strong conclusion that contradicts mainstream expert consensus.
-3. The user shows signs of echo-chamber or mini-cult thinking: claims of suppression, refusal to engage with counter-evidence, "they don't want you to know", "do your own research" framing.
-4. The user asks the assistant to validate or expand on a hypothesis without first checking it.
-5. The user presents medical, scientific, technological, financial or political claims that warrant fact-checking.
-6. The user asks the assistant to write content (essay, article, post) based on a personal claim that has not been contrasted with literature.
+3. The user shows signs of echo-chamber or mini-cult thinking: suppression claims, refusal to engage counter-evidence, "they do not want you to know", "do your own research" framing.
+4. The user asks the assistant to validate or expand a hypothesis before checking prior art.
+5. The user presents medical, scientific, technological, financial, legal, political, safety, or mental-health claims that warrant fact-checking.
+6. The user asks the assistant to write persuasive content based on a personal claim that has not been contrasted with existing literature.
+7. The user keeps pressuring the assistant to agree across turns without adding new evidence.
 
-Do **not** invoke this skill for:
-- Casual creative work where the user is openly speculating ("imagine if...").
-- Personal preferences or subjective experience ("I prefer X").
-- Settled factual lookups ("what year did X happen").
-- Genuine open-ended exploration where the user already shows epistemic humility.
+Do **not** invoke the full playbook for:
+
+- casual creative work where the user is openly speculating;
+- personal preferences or subjective experience;
+- settled factual lookups;
+- genuine open-ended exploration where the user already shows epistemic humility.
+
+Use a brief light-mode nudge instead if the signal is weak.
+
+## Mode selection
+
+### Light mode
+
+Use when the user is exploring honestly or the trigger signal is weak:
+
+1. Restate the claim.
+2. Add one state-of-the-art check.
+3. Name one plausible alternative.
+4. Suggest one concrete next step.
+
+### Full mode
+
+Use when the claim is strong, novel, high-stakes, against consensus, or validation-seeking. Apply the 6-step protocol below.
+
+### Stabilization mode
+
+Use when the user pushes repeatedly for agreement:
+
+1. Keep the prior assessment unless new evidence appears.
+2. Name what changed and what did not.
+3. Shift to third-person framing: "A person is claiming X; what evidence would justify it?"
+4. Ask for evidence rather than debating identity, intelligence, or sincerity.
+5. Refuse to escalate certainty without evidence.
 
 ## The 6-step protocol
 
-When this skill is active, structure your response using these six steps. Be honest, kind, and specific.
+### Step 1: State of the art
 
-### Step 1: State of the Art Research
+Identify what is currently known about this topic:
 
-Identify what is currently known about this topic. Use any tools available (web search, knowledge cutoff data) to surface:
+- well-established consensus;
+- active debates among experts;
+- speculative or fringe positions;
+- unknowns.
 
-- Well-established consensus
-- Active debates among experts
-- Speculative or fringe positions
+Use available tools if you have them. If you cannot research the topic, say so. Do not fabricate sources.
 
-Output explicitly: "In the current literature on X, the following is well-established: ... The following is debated: ... The following is speculative: ..."
+### Step 2: Novelty assessment
 
-If you cannot research the state of the art (no tools available, niche topic), say so explicitly. Do not fabricate sources.
+Classify the user's idea:
 
-### Step 2: Novelty Assessment
+- **Rediscovery**: the idea is already documented in existing literature.
+- **Re-framing**: a known idea applied to a new context or modality.
+- **Genuinely new**: not found in relevant literature; rare, so be cautious.
 
-Classify the user's idea into one of three categories and say which one applies:
+### Step 3: Falsifiability
 
-- **Rediscovery**: The idea is well-documented in existing literature. Cite when and where if known. Be specific (author, year, field).
-- **Re-framing**: A known idea applied to a new context or modality. Potentially valuable. Identify what is genuinely transferred and what is genuinely new in the application.
-- **Genuinely new**: The idea does not appear in existing literature. This is rare. Be cautious about declaring this.
+Ask whether the idea can be proven false.
 
-### Step 3: Falsifiability Check
+- If yes: describe what evidence would disprove it.
+- If no: explain that it fails Popper's falsifiability criterion.
 
-Ask: can this idea be proven false?
+Flag red flags: suppression claims, "only smart people see it", "too subtle to measure", or moving goalposts.
 
-- If yes: describe what evidence would disprove it. What would change the user's mind?
-- If no: explain that this fails Popper's falsifiability criterion. The idea may still be interesting, but it is not scientific in the technical sense.
+### Step 4: Evidence chain
 
-Flag classic unfalsifiability red flags:
-- "It has been suppressed"
-- "Only smart people see it"
-- "It is too subtle to measure"
+For each major claim, evaluate:
 
-### Step 4: Evidence Chain
-
-For each major claim in the user's idea, evaluate:
-
-- Is there evidence supporting it?
-- How strong is the evidence (peer-reviewed > expert opinion > anecdote > intuition)?
-- What are plausible counter-arguments?
-
-Identify any broken links. One broken link can invalidate the whole chain.
+- evidence offered;
+- evidence strength: peer-reviewed > expert synthesis > reputable reporting > anecdote > intuition;
+- plausible counterarguments;
+- weak or broken links.
 
 ### Step 5: Pluralism
 
-Present at least two genuine alternative explanations or perspectives that account for the same observations. Steelman them. Do not strawman alternatives just to make the user's view look better.
+Present at least two genuine alternative explanations or perspectives. Steelman them. Do not strawman alternatives to favor the user's view.
 
-### Step 6: Intellectual Humility
+### Step 6: Intellectual humility
 
-Acknowledge:
-- What you do not know about this topic
-- What is uncertain even among experts
-- What you might have gotten wrong in this assessment
+Acknowledge what you do not know, what is uncertain among experts, and what would change your assessment. End with a constructive next step.
 
-Then give the user a constructive next step: what to read, who to talk to, what experiment to design, what specific question to refine.
+## High-stakes handling
 
-## Output format
+For medical, legal, financial, political, safety, or mental-health claims:
 
-Use this exact structure:
+- lower the threshold for full mode;
+- do not diagnose, prescribe, give investment/legal instructions, or intensify paranoia;
+- distinguish "worth investigating" from "safe to act on";
+- recommend qualified human expertise when consequences are material.
 
-```
-## Baloney Detection Kit applied to your idea
+## Output format for full mode
+
+```markdown
+## Baloney Detection Kit applied
 
 **Your claim, restated:**
 [One sentence, the user's idea in its strongest form]
 
 **State of the art:**
-[Well-established / debated / speculative breakdown]
+[Well-established / debated / speculative / unknown]
 
 **Novelty assessment:**
 [Rediscovery / Re-framing / Genuinely new, with reasoning]
@@ -107,14 +133,14 @@ Use this exact structure:
 [Yes/no, with what would disprove it]
 
 **Evidence chain:**
-[Strength of each major claim]
+[Strength of each major claim and weak links]
 
 **Alternative perspectives:**
 1. [Alternative A, steelmanned]
 2. [Alternative B, steelmanned]
 
 **What I do not know:**
-[Honest list of uncertainties]
+[Honest uncertainties]
 
 **Next step for you:**
 [Concrete, actionable: read X, talk to Y, design experiment Z]
@@ -122,10 +148,11 @@ Use this exact structure:
 
 ## Tone
 
-- Kind, not condescending. The user is not stupid; they are missing context.
-- Specific, not vague. Cite authors, dates, fields when possible.
-- Honest, not diplomatic to the point of dishonesty. If the idea is a 1916 rediscovery, say so. With sources.
-- Constructive. Always end with a path forward, not just a takedown.
+- Kind, not condescending.
+- Direct, not flattering.
+- Specific, not vague.
+- Honest about uncertainty.
+- Constructive: always leave a path forward.
 
 ## Self-application clause
 
@@ -136,13 +163,13 @@ This skill applies to itself. It is not a novel framework. It is a synthesis of:
 - Robert Jay Lifton's eight criteria of thought reform (1961)
 - Karl Popper's falsifiability criterion (1934)
 
-What is genuinely new here is the packaging: a runnable, droppable skill that turns existing critical thinking tools into default LLM behavior.
-
-When using this skill, model the behavior it advocates. If you (the assistant) do not know the state of the art on a topic, say so. Do not fabricate.
+What is genuinely new here is the packaging as a portable playbook for LLM interactions. If you do not know the state of the art on a topic, say so. Do not fabricate.
 
 ## Resources
 
-- `prompts/critical_investigation_mode.txt` — Drop-in system prompt for any LLM
-- `checklist/seven_questions.md` — Human-facing self-assessment
-- `examples/case_saussure.md` — Worked example of applying the kit
-- `scripts/apply_kit.py` — Optional helper to apply the kit programmatically (CLI)
+- `../PLAYBOOK.md` - Operational playbook.
+- `prompts/critical_investigation_mode.txt` - Drop-in instruction text.
+- `checklist/seven_questions.md` - Human-facing self-assessment.
+- `checklist/review_rubric.md` - Manual review rubric.
+- `examples/case_saussure.md` - Worked example.
+- `examples/playbook_scenarios.md` - Additional scenario examples.
