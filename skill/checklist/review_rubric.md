@@ -134,6 +134,8 @@ Comparison quality:
 Remaining uncertainty:
 ```
 
+For operational guidance on running the contrast (do not paste the conversation, pick reviewers from different training lineages, courier ≠ third reviewer, severity-tagged findings, asymmetric failure handling), see [`../../second-opinion-operational.md`](../../second-opinion-operational.md).
+
 ---
 
 ## 9. Tone and usefulness
