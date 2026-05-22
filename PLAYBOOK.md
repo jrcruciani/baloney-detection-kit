@@ -175,6 +175,8 @@ Look for:
 
 Do not conclude that a claim is true because two models agree. Models can share training data, cultural assumptions, and hallucination patterns. Treat agreement as a signal to investigate, not as proof.
 
+For operational notes on running this practice in an agent runtime (object summarization, reviewer-family diversity, courier vs. third-reviewer separation, severity tagging, asymmetric failure handling), see [`second-opinion-operational.md`](second-opinion-operational.md).
+
 ### What to do next
 
 If the models disagree, preserve the disagreement. The honest conclusion may be:
