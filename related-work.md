@@ -69,7 +69,16 @@ RAG and evidence-backed fact-checking systems ground answers in external sources
 - **Difference:** RAG changes the evidence substrate; the playbook changes the conversational behavior.
 - **Compose:** a system can use RAG while following the playbook, but this repo does not implement RAG.
 
-### 4. Sycophancy evaluation and mitigation
+### 4. Agentic Plan -> Execute -> Verify orchestration
+
+[AgenticAI.PlanExecuteValidate](https://github.com/RobertEichenseer/AgenticAI.PlanExecuteValidate) demonstrates a Plan -> Execute -> Verify architecture where a planner creates a structured plan, an executor runs steps across functions, agents, and MCP tools, and a verifier reviews the result through an activity artifact.
+
+- **Similarity:** BDK also benefits from explicit planning, execution, and verification: decide whether the playbook should fire, run epistemic checks, then review the answer before delivery.
+- **Difference:** AgenticAI.PlanExecuteValidate is an orchestration sample; BDK is the behavioral policy that can run inside such an orchestrator.
+- **Compose:** a downstream runtime can map BDK triggers to the planner, BDK protocol steps to the executor, and the manual review rubric to the verifier. See [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md).
+- **Boundary:** this repo should not absorb the orchestrator. Framework bindings, MCP wiring, activity schemas, and automated gates belong in the downstream system.
+
+### 5. Sycophancy evaluation and mitigation
 
 Research on sycophancy shows that models often conform to user beliefs, sometimes under multi-turn pressure. Evaluation suites and mitigation methods can measure or reduce that tendency.
 
@@ -113,11 +122,12 @@ social alignment and epistemic integrity.
 | Class | Question it answers | Examples |
 |-------|---------------------|----------|
 | **Behavioral playbook** | How should the assistant respond before it validates a weak claim? | baloney-detection-kit |
+| **Agentic orchestration pattern** | How should a runtime plan, execute, and verify a multi-step answer across tools, agents, and MCP? | AgenticAI.PlanExecuteValidate, project-specific orchestrators |
 | **Retrieval / fact-checking pipeline** | What evidence supports or refutes this claim? | FEVER-style and AVeriTeC-style systems, RAG with citation enforcement |
 | **Automated evaluator** | How often does a model fail across many cases? | Azure AI Foundry RAI evaluators, OpenAI evals, Promptfoo, DeepEval, Ragas, Giskard, Inspect AI |
 | **Diagnostic toolkit** | Why did this specific interaction go wrong? | robopsychology, manual incident review |
 
-A serious deployment may use one tool from each row. This repo only owns the first row.
+A serious deployment may use one tool from each row. This repo only owns the first row; BDK can inform the orchestration row without becoming it.
 
 ---
 
@@ -174,6 +184,8 @@ A serious deployment may use one tool from each row. This repo only owns the fir
 ---
 
 ## Positioning summary
+
+Agentic Plan -> Execute -> Verify orchestration sits above several rows in this table: it can call BDK as behavioral policy, RAG as evidence substrate, and evaluators or robopsychology as review instruments. The comparison below keeps BDK scoped to its own layer.
 
 | Dimension | baloney-detection-kit | System prompts | Constitutional AI | RAG with citations | RAI evaluators | robopsychology |
 |-----------|----------------------|----------------|-------------------|--------------------|----------------|----------------|

@@ -38,6 +38,7 @@ How:
 1. Put [`skill/`](skill/) where your runtime expects skills, or adapt `skill/SKILL.md` into your instruction layer.
 2. Keep the trigger list conservative.
 3. Treat the skill as a distribution format for the playbook, not as a separate tool.
+4. If your runtime already has planner, executor, verifier, tools, agents, MCP, or audit artifacts, use [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md) as the downstream integration pattern.
 
 What you get:
 
@@ -146,6 +147,7 @@ Patterns can stack. A team can use the prompt personally, the skill in an agent,
 - **Manual review** -> [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md).
 - **Worked examples** -> [`skill/examples/`](skill/examples/).
 - **Comparison with adjacent approaches** -> [`related-work.md`](related-work.md).
+- **Plan -> Execute -> Verify integration** -> [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md).
 
 ---
 

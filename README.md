@@ -53,7 +53,7 @@ What is genuinely new here is **the packaging as a default conversation behavior
 - It does not censor wrong ideas. It contextualizes them.
 - It does not guarantee honesty from a user who wants validation at any cost.
 
-The playbook can coexist with evaluators, retrieval systems, and diagnostic tools, but it is deliberately not trying to become one.
+The playbook can coexist with evaluators, retrieval systems, Plan -> Execute -> Verify orchestrators, and diagnostic tools, but it is deliberately not trying to become one.
 
 ---
 
@@ -69,6 +69,8 @@ baloney-detection-kit/
 │                                     evaluators, RAG, constitutional AI
 ├── deployment-contexts.md            Adoption patterns for people, agents,
 │                                     teams, high-stakes contexts, teaching
+├── agentic-plan-execute-verify.md    Guide for downstream Plan -> Execute ->
+│                                     Verify orchestration
 ├── validation/
 │   └── closed-loop/                  Reproducible BDK -> robopsychology
 │                                     measurement protocol
@@ -112,6 +114,10 @@ Copy the block in [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt or c
 
 If your assistant supports skills, copy the [`skill/`](skill/) directory into the relevant skills folder. `skill/SKILL.md` is not a separate product; it is the same playbook expressed in a runtime-friendly format.
 
+### As Plan -> Execute -> Verify orchestration
+
+If you already operate an agentic runtime with planner, executor, verifier, tools, agents, MCP, or audit artifacts, use [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md) to map the playbook onto that architecture. The orchestration belongs downstream; this repo stays a playbook.
+
 ### As a human checklist
 
 Open [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) and answer the questions honestly the next time you feel the tingle of a sudden discovery. Use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review whether an assistant applied the playbook well.
@@ -151,6 +157,7 @@ BDK is a prompt-side intervention. [`robopsychology`](https://github.com/jrcruci
 - Shoshana Zuboff, _The Age of Surveillance Capitalism_ (2019). Algorithmic shaping of belief.
 - Zeynep Tufekci, "YouTube, the Great Radicalizer" (NYT, 2018).
 - The Verge, "NFT, Metaverse, AI Weirdos" (2025). The article that triggered this project.
+- Robert Eichenseer, [`AgenticAI.PlanExecuteValidate`](https://github.com/RobertEichenseer/AgenticAI.PlanExecuteValidate). A Plan -> Execute -> Verify reference pattern for orchestrating planners, executors, verifiers, agents, tools, and MCP.
 
 ---
 
@@ -171,7 +178,7 @@ Issues and pull requests welcome. Especially:
 - Reports from real use: when did the playbook fire too often, too rarely, or with the wrong tone?
 - Improvements to the manual review rubric.
 
-Please do not add package scaffolding, dependencies, CI harnesses, benchmark runners, SDK adapters, or framework integrations here. Those can live in separate repos if needed; this repo should stay a playbook.
+Please do not add package scaffolding, dependencies, CI harnesses, benchmark runners, SDK adapters, or framework integrations here. Documentation-only integration patterns are welcome when they keep code downstream; adapters can live in separate repos if needed. This repo should stay a playbook.
 
 ---
 
