@@ -79,6 +79,35 @@ Research on sycophancy shows that models often conform to user beliefs, sometime
 
 ---
 
+## Research vocabulary mapping
+
+BDK keeps its Sagan/Karpathy/Lifton/Popper voice, but the current research
+literature names the same failure cluster more precisely. The mapping is:
+
+| BDK language | Research vocabulary | Verified anchors |
+|--------------|---------------------|------------------|
+| Over-agreement, capitulation, flattering validation | **Social sycophancy**: excessive preservation of the user's desired self-image, even when correction is warranted | Cheng et al., "ELEPHANT: Measuring and understanding social sycophancy in LLMs", OpenReview forum `igbRHKEiAs` |
+| Losing the thread under pressure; letting the user's framing displace the epistemic task | **Boundary failure between social alignment and epistemic integrity** | Li et al., "When Helpfulness Becomes Sycophancy...", arXiv:2605.05403, DOI `10.48550/arXiv.2605.05403` |
+| Reversing stance across a conversation after repeated pressure | **Multi-turn sycophantic conformity**, including turn-of-flip and number-of-flips measures | Hong et al., "Measuring Sycophancy of Language Models in Multi-turn Dialogues", Findings EMNLP 2025, Anthology ID `2025.findings-emnlp.121`, DOI `10.18653/v1/2025.findings-emnlp.121` |
+| Second opinion, state-of-the-art-first checks, epistemic friction | Helpfulness-honesty mitigation: preserve usefulness without letting social accommodation replace independent judgment | The mitigation framing is shared across the sources above; BDK implements it as a prompt-side practice, not a benchmark |
+
+This matters because "sycophancy" is not just agreeing with a false factual
+statement. The failure BDK targets is broader: a model detects a user's belief,
+preference, self-image, or desire for validation, then shifts toward that cue in
+a way that weakens correction, prior-art checking, or independent judgment.
+
+### Matched-pair stance with robopsychology
+
+BDK and [robopsychology](https://github.com/jrcruciani/robopsychology) are a
+matched pair. **BDK is the prompt-side intervention**: it adds epistemic friction
+before a model validates a weak or inflated claim. **Robopsychology is the
+measurement-side instrument**: it diagnoses whether the resulting transcript
+shows sycophancy, framing sensitivity, presentation shifts, or coherence
+failures. Together they target social sycophancy as a boundary failure between
+social alignment and epistemic integrity.
+
+---
+
 ## Adjacent evaluation and diagnostic tools
 
 | Class | Question it answers | Examples |
@@ -99,7 +128,9 @@ A serious deployment may use one tool from each row. This repo only owns the fir
 - **Sharma, M. et al. (2023). "Towards Understanding Sycophancy in Language Models."** Systematic study of sycophancy in RLHF-trained models.
 - **Perez, E. et al. (2022). "Discovering Language Model Behaviors with Model-Written Evaluations."** Uses models to generate evaluation datasets, including for sycophancy.
 - **Goldberg, J. et al. (2025). "SycEval: Evaluating LLM Sycophancy."** Evaluates sycophantic behavior across domains and distinguishes progressive from regressive sycophancy.
-- **Hong, J. et al. (2025). "Measuring Sycophancy of Language Models in Multi-turn Dialogues."** Introduces multi-turn measures such as turn of flip and number of flips; motivates stabilization mode.
+- **Cheng, M. et al. (2025). "ELEPHANT: Measuring and understanding social sycophancy in LLMs."** OpenReview forum `igbRHKEiAs`. Introduces social sycophancy as excessive preservation of the user's face and reports prompting and steering mitigations. Venue status is not asserted here beyond the verified OpenReview record.
+- **Hong, J. et al. (2025). "Measuring Sycophancy of Language Models in Multi-turn Dialogues."** Findings EMNLP 2025, Anthology ID `2025.findings-emnlp.121`, DOI `10.18653/v1/2025.findings-emnlp.121`. Introduces multi-turn measures such as turn of flip and number of flips; motivates stabilization mode.
+- **Li, J. et al. (2026). "When Helpfulness Becomes Sycophancy: Sycophancy is a Boundary Failure Between Social Alignment and Epistemic Integrity in Large Language Models."** arXiv:2605.05403, DOI `10.48550/arXiv.2605.05403`. Names the exact boundary failure BDK is designed to counter.
 
 ### On hallucination, grounding, and uncertainty
 

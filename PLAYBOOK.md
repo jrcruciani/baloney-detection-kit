@@ -2,6 +2,8 @@
 
 This playbook is a conversational protocol for adding epistemic friction before an LLM validates a weak, inflated, or high-stakes claim. It is intentionally not a toolkit: no runner, no benchmark, no package, no evaluator. The output is better judgment in the moment.
 
+In current AI-safety vocabulary, this targets **social sycophancy**: a boundary failure where social alignment or helpfulness pressure displaces epistemic integrity. See [`related-work.md`](related-work.md) for the mapping.
+
 ---
 
 ## 1. Trigger conditions

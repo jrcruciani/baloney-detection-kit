@@ -69,6 +69,9 @@ baloney-detection-kit/
 │                                     evaluators, RAG, constitutional AI
 ├── deployment-contexts.md            Adoption patterns for people, agents,
 │                                     teams, high-stakes contexts, teaching
+├── validation/
+│   └── closed-loop/                  Reproducible BDK -> robopsychology
+│                                     measurement protocol
 ├── LICENSE                           MIT
 │
 ├── skill/
@@ -130,6 +133,12 @@ The most important test of any framework like this is whether it survives being 
 **What I do not know.** Whether the protocol scales without becoming annoying. Whether users will keep it on when it challenges them. Whether the protocol introduces its own biases. Whether it works equally well across languages and cultures.
 
 **Next step.** Use it as a playbook. Break it. Tell me where the guidance fails. Submit issues and pull requests that improve the protocol, examples, or review rubric.
+
+---
+
+## Measurement loop
+
+BDK is a prompt-side intervention. [`robopsychology`](https://github.com/jrcruciani/robopsychology) is the sibling measurement-side instrument for diagnosing sycophancy, framing sensitivity, presentation shifts, and coherence failures. The closed-loop protocol in [`validation/closed-loop/`](validation/closed-loop/) tests whether installing `ROOT_PROMPT.md` measurably reduces sycophantic validation on the same probe.
 
 ---
 
