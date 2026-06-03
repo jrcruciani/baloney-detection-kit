@@ -148,6 +148,40 @@ BDK is a prompt-side intervention. [`robopsychology`](https://github.com/jrcruci
 
 ---
 
+## Where this fits: the agent-governance ecosystem
+
+BDK is the cheapest, most portable layer in a larger agent-reliability picture. If you
+build or operate LLM agents, it composes with three other reference projects — one of
+mine and two official Microsoft open-source releases (both MIT) — each owning a
+different job. They overlap a little around *inspecting behavior*, but their primary
+functions are complementary, not duplicated.
+
+| Project | Layer | Job | When |
+|---------|-------|-----|------|
+| **baloney-detection-kit** (this repo) | Conversational | **Prevent** weak/novel claims from being validated — epistemic friction before the model agrees | Design, runtime (as a prompt) |
+| **[robopsychology](https://github.com/jrcruciani/robopsychology)** (mine) | Conversational / behavioral | **Diagnose** *why* a specific output went wrong — model vs. runtime vs. conversation | Pre-deploy eval, observability, post-incident |
+| **[ASSERT](https://github.com/responsibleai/ASSERT)** (Microsoft) | Evaluation | **Evaluate** behavior against written specs — natural-language requirements become reproducible, trace-aware test suites | Pre-deploy eval, regression testing |
+| **[Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** (Microsoft) | Infrastructure | **Govern** agent *actions* at runtime — policy enforcement, agent identity, sandboxing, audit | Deployment, runtime |
+
+A simple way to read it: **BDK and robopsychology work at the conversational/behavioral
+layer** (shape how the agent reasons, then explain how it behaved), while **ASSERT and
+AGT work around the model** (evaluate behavior reproducibly, and govern actions
+deterministically in production).
+
+### Where BDK plugs in
+
+BDK is a behavioral *policy* expressed as text, so it can ride inside the other tools
+without becoming them. These are conceptual composition patterns, not adapters shipped
+in this repo:
+
+- **With robopsychology** — BDK is the prevention; robopsychology is the measurement. The shared closed-loop protocol above tests whether BDK actually reduces sycophantic validation.
+- **With the [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** — drop `ROOT_PROMPT.md` into the system prompt of an AGT-governed agent to get **defense in depth**: BDK adds conversational, human-visible epistemic friction (advisory — a prompt can be ignored or eroded), while AGT adds runtime, sub-second *enforcement* of what actions are allowed (the agent simply cannot execute a denied action). The two operate at different layers and do not replace each other — prompts shape reasoning, enforcement governs actions.
+- **With [ASSERT](https://github.com/responsibleai/ASSERT)** — BDK is itself a behavioral requirement ("when a user makes a novel/high-stakes claim, the agent must run the 6-step protocol before validating it"). That requirement can be written as an ASSERT spec, so ASSERT generates and scores test cases checking whether the agent applies epistemic friction under the trigger conditions. ASSERT can test the *observable* behavior; it cannot guarantee internal cognition, and its LLM-judge scores keep a human in the loop.
+
+For the full positioning, see [`related-work.md`](related-work.md); for adoption patterns including the enterprise agent stack, see [`deployment-contexts.md`](deployment-contexts.md).
+
+---
+
 ## Inspiration
 
 - Carl Sagan, _The Demon-Haunted World_ (1996). The original Baloney Detection Kit.

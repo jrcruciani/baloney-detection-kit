@@ -126,6 +126,30 @@ Watch out for:
 
 ---
 
+## Pattern 6 - Enterprise agent stack
+
+**You ship autonomous agents to production** and already use (or plan to use) Microsoft's open-source agent tooling — [ASSERT](https://github.com/responsibleai/ASSERT) for evaluation and the [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit) for runtime governance. BDK is the cheapest layer to add, and it slots in without conflicting with either. These are conceptual composition patterns, not integrations shipped here.
+
+How:
+
+1. **Design** — capture "apply epistemic friction before validating novel/high-stakes claims" as a behavioral requirement. Keep BDK's [`ROOT_PROMPT.md`](ROOT_PROMPT.md) as the portable form of that requirement.
+2. **Embed** — put `ROOT_PROMPT.md` (or [`skill/`](skill/)) inside the system prompt of the agents you govern with AGT. BDK becomes the conversational layer; AGT remains the enforcement layer underneath it.
+3. **Specify and test** — express the 6-step protocol as an ASSERT spec so ASSERT generates and scores test cases that check whether the agent runs the protocol when trigger conditions fire. Re-run it as a regression gate.
+4. **Diagnose** — when an evaluation case or a production incident shows the agent still validated a weak claim, hand the transcript to [robopsychology](https://github.com/jrcruciani/robopsychology) to diagnose whether the cause was the model, the runtime, or the conversation.
+
+What you get:
+
+- A defense-in-depth posture: conversational friction (BDK, advisory) under runtime enforcement (AGT, hard), with reproducible evaluation (ASSERT) and per-case diagnosis (robopsychology) around it.
+- A clear division of labor: BDK prevents, ASSERT measures, AGT governs, robopsychology explains.
+
+Watch out for:
+
+- **A prompt is advisory.** BDK shapes reasoning; it cannot block an action. That is why AGT must still govern the actions BDK only talks the model out of — do not treat BDK as enforcement.
+- **ASSERT tests observable behavior**, not internal cognition, and its LLM-judge scores are not deterministic. Keep human review in the loop.
+- **Do not absorb the stack into this repo.** BDK stays a playbook; the spec config, governance policies, and orchestration live in the downstream system.
+
+---
+
 ## Decision summary
 
 | If your situation is... | Use pattern |
@@ -135,6 +159,7 @@ Watch out for:
 | Team wants lightweight review | 3 - Team review ritual |
 | High-stakes domain | 4 - High-stakes use |
 | Teaching, research, writing | 5 - Teaching and writing |
+| Production agents with ASSERT / Agent Governance Toolkit | 6 - Enterprise agent stack |
 
 Patterns can stack. A team can use the prompt personally, the skill in an agent, the review ritual in retrospectives, and the high-stakes guidance in regulated workflows. None of that requires turning this repo into a toolkit.
 

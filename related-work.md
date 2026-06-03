@@ -124,10 +124,28 @@ social alignment and epistemic integrity.
 | **Behavioral playbook** | How should the assistant respond before it validates a weak claim? | baloney-detection-kit |
 | **Agentic orchestration pattern** | How should a runtime plan, execute, and verify a multi-step answer across tools, agents, and MCP? | AgenticAI.PlanExecuteValidate, project-specific orchestrators |
 | **Retrieval / fact-checking pipeline** | What evidence supports or refutes this claim? | FEVER-style and AVeriTeC-style systems, RAG with citation enforcement |
+| **Spec-driven evaluator** | Does the agent satisfy behaviors written in a natural-language spec? | [ASSERT](https://github.com/responsibleai/ASSERT) |
 | **Automated evaluator** | How often does a model fail across many cases? | Azure AI Foundry RAI evaluators, OpenAI evals, Promptfoo, DeepEval, Ragas, Giskard, Inspect AI |
+| **Runtime action governance** | Is this agent action allowed, who did it, and can we prove it? | [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit) |
 | **Diagnostic toolkit** | Why did this specific interaction go wrong? | robopsychology, manual incident review |
 
 A serious deployment may use one tool from each row. This repo only owns the first row; BDK can inform the orchestration row without becoming it.
+
+---
+
+## Microsoft agent-governance tools (2026)
+
+In 2026 Microsoft released two open-source (MIT) projects that sit next to BDK in the agent lifecycle. BDK does not compete with either — it is a conversational prevention layer, while these operate at the evaluation and infrastructure layers — but they are the tools a team is most likely to already run, so it is worth being explicit about the boundaries and the composition patterns. The patterns below are *conceptual workflows*, not integrations shipped in this repo.
+
+- **[ASSERT](https://github.com/responsibleai/ASSERT)** — *Adaptive Spec-driven Scoring for Evaluation and Regression Testing.* Turns natural-language behavioral specs into executable, trace-aware evaluations (systematize the spec → derive behavior taxonomy → generate single/multi-turn test cases → run against the target → LLM-judge scoring with rationale and policy citation). Local-first, framework-agnostic (100+ endpoints via LiteLLM, agent traces via OpenInference/OpenTelemetry).
+
+  *Relationship to BDK*: there is real surface overlap — both care about whether an agent applies appropriate epistemic behavior. But BDK **prevents** the failure at inference time inside the conversation, while ASSERT **measures** (synthetically, pre-deployment) whether the behavior occurred, with regression tracking. *Composition*: BDK's 6-step protocol is itself a behavioral requirement, so it can be expressed as an ASSERT spec; ASSERT then generates test cases that check whether the agent runs the protocol when trigger conditions fire. ASSERT validates observable behavior, not internal cognition, and its judge scores are not deterministic — a human stays in the loop.
+
+- **[Agent Governance Toolkit (AGT)](https://github.com/microsoft/agent-governance-toolkit)** — runtime policy enforcement, agent identity, sandboxing, and SRE for autonomous agents (Public Preview, MIT). When integrated into the agent's execution path, it intercepts governed actions (tool calls, queries, delegations) and allows or denies them against a policy before execution, with an audit record per decision; documented scope includes the OWASP Agentic Top 10 risk categories and common agent frameworks.
+
+  *Relationship to BDK*: complementary, almost orthogonal. AGT governs **actions** deterministically; it does not provide BDK's epistemic-reasoning protocol or shape how the agent talks. BDK governs **conversational reasoning** advisorily; it cannot block an action. *Composition*: put BDK in the system prompt of an AGT-governed agent for **defense in depth** — conversational friction (visible, advisory) layered under runtime enforcement (opaque to the agent, hard). The key honesty here: a prompt is advisory and can be ignored, which is exactly why AGT must still govern the actions BDK only talks the model out of.
+
+These two cover what BDK deliberately does not — reproducible measurement at scale, and runtime enforcement. BDK stays the cheap, portable, readable first layer that can live *inside* agents those tools evaluate and govern.
 
 ---
 
@@ -187,16 +205,16 @@ A serious deployment may use one tool from each row. This repo only owns the fir
 
 Agentic Plan -> Execute -> Verify orchestration sits above several rows in this table: it can call BDK as behavioral policy, RAG as evidence substrate, and evaluators or robopsychology as review instruments. The comparison below keeps BDK scoped to its own layer.
 
-| Dimension | baloney-detection-kit | System prompts | Constitutional AI | RAG with citations | RAI evaluators | robopsychology |
-|-----------|----------------------|----------------|-------------------|--------------------|----------------|----------------|
-| **Stage** | Inference-time | Inference-time | Training + inference | Inference-time | Post-hoc / batch | Post-hoc / per-case |
-| **Goal** | Prevent sycophantic validation | General behavior shaping | Encode principles | Ground claims in evidence | Measure failure rates | Diagnose specific failures |
-| **Requires** | Text instructions | Prompt access | Training pipeline | Retrieval/source layer | Test set + scoring infra | Reproducible interaction |
-| **Output** | Better response pattern | Modified model response | Modified model behavior | Evidence-backed response | Aggregate scores | Qualitative diagnosis |
-| **Strength** | Portable, readable, no dependencies | Simple | More robust | Verifiable grounding | Quantifiable | Deep per-case analysis |
-| **Weakness** | Manual, fragile | Same | Expensive | Needs corpus/tools | Too late for prevention | Manual and slow |
+| Dimension | baloney-detection-kit | System prompts | Constitutional AI | RAG with citations | RAI evaluators | ASSERT | Agent Governance Toolkit | robopsychology |
+|-----------|----------------------|----------------|-------------------|--------------------|----------------|--------|--------------------------|----------------|
+| **Stage** | Inference-time | Inference-time | Training + inference | Inference-time | Post-hoc / batch | Pre-deploy / regression | Runtime | Post-hoc / per-case |
+| **Goal** | Prevent sycophantic validation | General behavior shaping | Encode principles | Ground claims in evidence | Measure failure rates | Score behavior vs. a spec | Govern/audit agent actions | Diagnose specific failures |
+| **Requires** | Text instructions | Prompt access | Training pipeline | Retrieval/source layer | Test set + scoring infra | A written behavioral spec | Integration in the action path | Reproducible interaction |
+| **Output** | Better response pattern | Modified model response | Modified model behavior | Evidence-backed response | Aggregate scores | Test suite + cited verdicts | Allow/deny + audit trail | Qualitative diagnosis |
+| **Strength** | Portable, readable, no dependencies | Simple | More robust | Verifiable grounding | Quantifiable | Spec-driven coverage, regression-aware | Deterministic enforcement | Deep per-case analysis |
+| **Weakness** | Manual, fragile | Same | Expensive | Needs corpus/tools | Too late for prevention | LLM-judge, needs a good spec | No epistemic reasoning; needs integration | Manual and slow |
 
-The playbook is meant to be the cheapest, most portable first layer: a better default before heavier tools are justified.
+The playbook is meant to be the cheapest, most portable first layer: a better default before heavier tools are justified. ASSERT and the Agent Governance Toolkit are two of those heavier tools — BDK can be specified and tested by the former and embedded inside agents governed by the latter.
 
 ---
 
