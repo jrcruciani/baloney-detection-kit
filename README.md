@@ -12,6 +12,12 @@
 
 ---
 
+## TL;DR
+
+Use this repo when a user presents a claim that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus. The core habit is simple: pause, check the state of the art, ask what would disprove the claim, contrast it with alternatives, and respond with curiosity rather than flattery.
+
+Use light mode for casual exploration; use the full protocol for novelty claims, consensus-breaking claims, or high-stakes topics. This repo is a playbook, not a toolkit, evaluator, or automated fact-checker.
+
 ## Why this exists
 
 Modern LLMs are optimized to be agreeable. By default, when you propose an idea, the model elaborates and validates it. This creates a quiet but powerful side effect: any user, alone with an LLM, can build a "mini-cult of one" around an idea that has been already explored, refuted, or trivially restated for decades. The model plays the role of the validating crowd.

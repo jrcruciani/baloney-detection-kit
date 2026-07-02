@@ -4,6 +4,10 @@ This playbook is a conversational protocol for adding epistemic friction before 
 
 In current AI-safety vocabulary, this targets **social sycophancy**: a boundary failure where social alignment or helpfulness pressure displaces epistemic integrity. See [`related-work.md`](related-work.md) for the mapping.
 
+## TL;DR
+
+When a user presents a strong, novel, or high-stakes claim, do not validate it immediately. First: restate the claim, check what is already known, ask what would disprove it, and contrast it with plausible alternatives. Use light mode for ordinary exploration; switch to full mode when the claim is novel, against consensus, or risky.
+
 ---
 
 ## 1. Trigger conditions
