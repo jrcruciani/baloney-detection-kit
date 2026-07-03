@@ -13,8 +13,9 @@ The README covers *what* the playbook is. [`PLAYBOOK.md`](PLAYBOOK.md) covers *h
 How:
 
 1. Paste [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt, custom-instructions, or personality slot of your LLM client.
-2. Keep [`PLAYBOOK.md`](PLAYBOOK.md) nearby for the human-readable protocol.
-3. Use [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) when you feel you may have discovered something important.
+2. If the instruction slot is short, use [`prompts/prompt-compact.md`](prompts/prompt-compact.md) instead.
+3. Keep [`PLAYBOOK.md`](PLAYBOOK.md) nearby for the human-readable protocol.
+4. Use [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) when you feel you may have discovered something important.
 
 What you get:
 
@@ -35,7 +36,7 @@ Watch out for:
 
 How:
 
-1. Put [`skill/`](skill/) where your runtime expects skills, or adapt `skill/SKILL.md` into your instruction layer.
+1. Put [`skill/`](skill/) where your runtime expects skills, or adapt `skill/SKILL.md` or [`prompts/prompt-agent.md`](prompts/prompt-agent.md) into your instruction layer.
 2. Keep the trigger list conservative.
 3. Treat the skill as a distribution format for the playbook, not as a separate tool.
 4. If your runtime already has planner, executor, verifier, tools, agents, MCP, or audit artifacts, use [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md) as the downstream integration pattern.
@@ -64,6 +65,7 @@ How:
 3. Have a human reviewer use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md).
 4. Discuss misses: false positives, false negatives, bad tone, bad evidence, or failure under pressure.
 5. Update instructions or examples, not code.
+6. Pin the prompt version or repository commit if the review is part of a reproducible process.
 
 What you get:
 

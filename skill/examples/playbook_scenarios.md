@@ -2,6 +2,8 @@
 
 These are short scenario sketches, not automated tests. Use them to calibrate when the playbook should fire, when it should stay light, and how it should behave under pressure.
 
+For full dialogue examples, see [`complete_conversations.md`](complete_conversations.md).
+
 ---
 
 ## 1. Clear trigger: novelty claim

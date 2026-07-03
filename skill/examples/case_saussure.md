@@ -141,7 +141,7 @@ Honest framing:
 
 The checklist catches this because Step 1 (State of the Art) immediately reveals that this is well-trodden ground. The person then has a choice:
 - Accept the rediscovery and learn the field
-- Deny the literature exists (mini-cult response)
+- Deny the literature exists and protect the claim from evidence
 - Reframe as an interesting technological angle (intellectually honest)
 
 The playbook is meant to make option 3 easier: keep the useful observation, drop the inflated novelty claim, and re-enter the existing conversation.

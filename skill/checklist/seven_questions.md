@@ -1,171 +1,180 @@
 # The Baloney Detection Checklist
 
-When you think you've discovered something important, work through this checklist **honestly**.
+When you think you may have discovered something important, use this checklist
+to slow down before asking an LLM, a friend, or an audience to validate it.
+
+This is a calibration tool. It is not a diagnosis of you or your idea.
 
 ---
 
-## Your Idea in One Sentence
+## Your idea in one sentence
 
-(Write it clearly. If you can't, it's probably not clear enough.)
+Write the claim clearly enough that someone else could disagree with it.
 
----
-
-## The 7-Question Test
-
-### 1. **State of the Art Research** ⭐ (CRITICAL)
-- [ ] Have I searched for this idea in Wikipedia, academic databases, or reputable sources?
-- [ ] Do I know who are the leading experts on this topic?
-- [ ] Have I read at least 2-3 sources written by recognized experts?
-
-**If you answered NO to any:** STOP. Your discovery is premature. Do this first before proceeding.
+```text
+My claim:
+The strongest evidence I currently have:
+What I want to do with it:
+```
 
 ---
 
-### 2. **Novelty Honesty** (Be Ruthless)
-- [ ] Is my idea actually new, or have I rediscovered something known?
-- [ ] If it's been discovered before, when? (Write the date/year)
-- [ ] What is genuinely new about *my* version, if anything?
+## The 7-question calibration
 
-**Scoring:**
-- Rediscovery (known for 10+ years): 0 points
-- Re-framing (known idea applied to new context): 1-2 points
-- Genuinely new (not in literature): 3 points
+### 1. State-of-the-art research
 
----
+- [ ] Have I searched reputable sources, academic databases, expert summaries, or canonical references?
+- [ ] Do I know which field or expert community already studies this?
+- [ ] Have I read at least 2-3 sources that would exist even if my idea were wrong?
 
-### 3. **Falsifiability Test** (Popper's Standard)
-- [ ] Can my idea be proven wrong?
-- [ ] What evidence would disprove it?
-- [ ] If I can't answer this, my idea is unfalsifiable (and therefore not scientific)
-
-**Red Flags:**
-- "It's been suppressed" (conspiracy thinking)
-- "No one has done the research yet" (maybe for good reason)
-- "It's too subtle to measure" (then how do you know it's true?)
-
-**Scoring:**
-- Clearly falsifiable: 3 points
-- Somewhat testable but vague: 1 point
-- Unfalsifiable: 0 points
+If any answer is no, treat the discovery as premature. Do the search before
+expanding the theory.
 
 ---
 
-### 4. **Evidence Chain Test** (Sagan's Standard)
-- [ ] For each major claim, do I have evidence?
-- [ ] How strong is that evidence? (Primary source? Peer-reviewed? My intuition?)
+### 2. Novelty honesty
+
+- [ ] Is this actually new, or have I rediscovered something known?
+- [ ] If it is known, when and where was it documented?
+- [ ] What, if anything, is genuinely new about my version, context, evidence, or application?
+
+Calibration:
+
+| Result | Meaning |
+|--------|---------|
+| Rediscovery | The core idea already exists. The useful move is to learn the field. |
+| Re-framing | The core idea exists, but your context or application may be useful. |
+| Genuinely new | Rare. Requires serious prior-art checking and expert review. |
+
+---
+
+### 3. Falsifiability
+
+- [ ] Can my claim be proven wrong?
+- [ ] What evidence would make me update or abandon it?
+- [ ] Have I stated the claim narrowly enough that someone else could test it?
+
+Watch for claims that cannot lose:
+
+- "It has been suppressed."
+- "Only unusually smart people can see it."
+- "It is too subtle to measure."
+- "Every counterexample is actually proof."
+
+---
+
+### 4. Evidence chain
+
+- [ ] What are the major links in my argument?
+- [ ] What evidence supports each link?
 - [ ] If one link breaks, does the whole argument collapse?
 
-**Evidence Strength Scale:**
-- Peer-reviewed research: 3 points per link
-- Expert opinion (with credentials): 2 points per link
-- Anecdote or personal experience: 1 point per link
-- "It feels right" or "I just know": 0 points
+Evidence strength, from stronger to weaker:
 
-**Total your evidence score and divide by number of major claims:**
-- Average 3.0+: Strong foundation
-- Average 2.0-2.9: Reasonable but needs work
-- Average 1.0-1.9: Mostly anecdotal; weak
-- Below 1.0: Not backed by evidence
+1. Peer-reviewed research or primary data.
+2. Expert synthesis or recognized institutional guidance.
+3. Reputable reporting or well-documented cases.
+4. Anecdote or personal experience.
+5. Intuition, vibe, or "it feels obvious."
+
+The weakest link deserves the most attention.
 
 ---
 
-### 5. **Alternative Explanations** (Occam's Razor)
-- [ ] Can I articulate 2-3 alternative explanations for the same evidence?
-- [ ] Have I honestly tried to disprove my own idea?
-- [ ] Am I emotionally attached to being right?
+### 5. Alternative explanations
 
-**Scoring:**
-- Considered multiple alternatives, eliminated them fairly: 3 points
-- Considered 1-2 alternatives: 1 point
-- Can't think of any alternatives: 0 points
+- [ ] Can I articulate at least two alternatives that would explain the same observation?
+- [ ] Have I steelmanned those alternatives rather than making them easy to defeat?
+- [ ] Am I more attached to being original than to understanding what is true?
 
----
-
-### 6. **Specificity & Quantification** (Sagan's Standard)
-- [ ] Can I measure or quantify my claim?
-- [ ] Am I being vague ("generally," "mostly," "some") or specific ("67%," "in 3 of 5 cases")?
-- [ ] Can someone else test my claim independently?
-
-**Scoring:**
-- Quantified and replicable: 3 points
-- Specific but not quantified: 1 point
-- Vague or hand-wavy: 0 points
+If you cannot name a serious alternative, you probably have not investigated the
+claim enough yet.
 
 ---
 
-### 7. **Intellectual Humility** (The Meta-Test)
-- [ ] Am I claiming certainty where there is none?
-- [ ] Do I acknowledge what I *don't* know?
-- [ ] Am I open to being wrong? (Really?)
-- [ ] If someone presented contrary evidence, would I actually consider it?
+### 6. Specificity and replication
 
-**Red Flags:**
-- "Everyone else is wrong and I'm right"
-- "Experts are suppressing this"
-- "The mainstream is too closed-minded to see it"
-- "Only smart people understand this" (intelligence gatekeeping)
+- [ ] Can I make the claim more specific?
+- [ ] Can I measure, count, compare, or operationalize it?
+- [ ] Could someone else test it without needing to share my intuition?
 
-**Scoring:**
-- Honest about limits and open to correction: 3 points
-- Mostly confident but willing to listen: 1 point
-- "I know I'm right": 0 points
+Better claims usually move from:
 
----
+```text
+This changes everything.
+```
 
-## Scoring Your Results
+to:
 
-**Add up all your points from questions 2-7:**
-
-### 18-21 Points
-✅ **You have a solid insight.** It's well-grounded, falsifiable, and you're honest about its limits. Ready to share with experts in the field.
-
-### 14-17 Points
-⚠️ **You have something interesting, but do more work.** More research, find primary sources, identify specific falsifiable predictions.
-
-### 10-13 Points
-🟡 **Warning signs.** You might be in a mini-cult. Step back. Seek expertise from outside your immediate circle. Spend time with people who disagree with you.
-
-### Below 10 Points
-🛑 **You're likely in a personal cult.** Your idea is:
-- Mostly anecdotal
-- Unfalsifiable  
-- Not grounded in current research
-- Defensive against criticism
-
-**What to do:** Find an expert in the field (university professor, published researcher) and pitch your idea to them. If they dismiss it immediately, that's data. If they say "actually, we've looked at this," that's important information. If they say "that's interesting, here's what the current research shows," you've now learned.
+```text
+In this specific context, I expect X to happen more often than Y. Here is what
+would count as a failure of that expectation.
+```
 
 ---
 
-## Meta-Question: Is This Checklist Itself Valid?
+### 7. Intellectual humility
 
-Yes, we applied it to itself:
+- [ ] Am I claiming certainty where I only have a lead?
+- [ ] Have I named what I do not know?
+- [ ] Would I actually update if a competent critic showed strong counter-evidence?
+- [ ] Have I asked someone or something that is not optimized to flatter me?
 
-- **State of the Art:** Sagan's Baloney Detection Kit (1996), Karpathy's methodology papers, research on misinformation.
-- **Novelty:** Re-framing of existing tools applied to LLMs specifically. Not original, but targeted.
-- **Falsifiability:** Can be tested—do people who use this checklist have fewer false "discoveries"?
-- **Evidence:** Grounded in published research and documented cult dynamics.
-- **Honesty:** This is a tool, not a guarantee. People can misuse it or lie to themselves anyway.
+Watch for defensive patterns:
+
+- "Everyone else is wrong."
+- "Experts are only protecting their status."
+- "The mainstream is too closed-minded to see it."
+- "People who disagree just do not understand."
+
+These patterns do not prove the idea is false, but they do mean you need outside
+calibration before escalating confidence.
+
+---
+
+## Calibration bands
+
+Use these bands qualitatively. Do not turn them into a fake precision score.
+
+| Band | What it means | Next step |
+|------|---------------|-----------|
+| **Well grounded** | You have prior-art awareness, falsifiability, evidence, alternatives, and uncertainty. | Share a narrow version with knowledgeable critics. |
+| **Interesting but underdeveloped** | There may be something useful, but the evidence or framing is not ready. | Read more, narrow the claim, and define what would disprove it. |
+| **High risk of auto-validation** | The idea depends heavily on intuition, novelty, vague evidence, or dismissal of alternatives. | Pause expansion. Seek expert context or an adversarial review. |
+| **Not ready to claim** | The claim is not grounded, not falsifiable, or is mainly protected by certainty. | Reframe it as a question, not a discovery. Start with state-of-the-art research. |
+
+---
+
+## What to do after the checklist
+
+1. Rewrite the claim in its narrowest defensible form.
+2. Identify the strongest prior art against it.
+3. Ask a neutral reviewer or model to evaluate the claim from scratch.
+4. Preserve the useful observation even if the novelty claim fails.
+
+---
+
+## Meta-question: is this checklist itself valid?
+
+The checklist applies to itself:
+
+- **State of the art:** It borrows from Sagan, Popper, critical thinking,
+  cognitive-bias work, and research on LLM sycophancy.
+- **Novelty:** It is a re-framing for LLM conversations, not an invention.
+- **Falsifiability:** It can be tested by comparing conversations with and
+  without the checklist.
+- **Evidence:** It is grounded in prior traditions, but its effectiveness still
+  depends on context and user willingness.
+- **Humility:** It can over-trigger, sound patronizing, or miss subtle
+  validation-seeking.
 
 Use it as a starting point, not gospel.
 
 ---
 
-## How to Use This
-
-1. **For yourself:** Answer all questions before claiming you've discovered something
-2. **For others:** Use it to evaluate ideas presented to you
-3. **For groups:** Make it part of how your organization evaluates new ideas
-4. **For LLM developers:** Use the structure as a basis for system prompts
-
----
-
 ## Resources
 
-- **Sagan, C.** *The Demon-Haunted World* — The original framework
-- **Kahneman, D.** *Thinking, Fast and Slow* — Cognitive biases
-- **Feynman, R.** "Cargo Cult Science" — On false scientific thinking
-- **Russell, B.** "Let the Data Speak" — On intellectual humility
-
----
-
-**Questions? Improvements? Submit an issue or PR.**
+- **Carl Sagan**, *The Demon-Haunted World* - the original Baloney Detection Kit.
+- **Karl Popper**, *The Logic of Scientific Discovery* - falsifiability.
+- **Daniel Kahneman**, *Thinking, Fast and Slow* - cognitive biases.
+- **Richard Feynman**, "Cargo Cult Science" - false scientific thinking.

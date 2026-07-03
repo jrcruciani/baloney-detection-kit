@@ -10,6 +10,22 @@ When a user presents a strong, novel, or high-stakes claim, do not validate it i
 
 ---
 
+## 0. The framework in one page
+
+BDK is a behavior framework, not an app. Its canonical loop is:
+
+| Stage | Question | Output |
+|-------|----------|--------|
+| **Trigger** | Does this claim need epistemic friction? | Trigger reason, or no trigger |
+| **Mode** | What is the lightest intervention that preserves rigor? | Light, full, or stabilization mode |
+| **Protocol** | What checks are needed before validation? | State of the art, novelty, falsifiability, evidence chain, pluralism, humility |
+| **Output** | What should the user hear? | A concise answer, not necessarily a template |
+| **Review** | Did the answer avoid flattery, false certainty, and over-correction? | Rubric notes or revised answer |
+
+Use this loop for humans, prompts, skills, reviewers, and downstream agent runtimes. The implementation changes by context; the behavioral shape does not.
+
+---
+
 ## 1. Trigger conditions
 
 Activate the playbook when any of these are present:
