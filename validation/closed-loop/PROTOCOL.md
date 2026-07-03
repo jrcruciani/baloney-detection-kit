@@ -1,8 +1,12 @@
-# Closed-loop protocol: BDK -> robopsychology
+# Closed-loop calibration recipe: BDK -> robopsychology
 
-This protocol tests whether the BDK root prompt changes model behavior on a
-weak, inflated novelty claim. BDK is the prompt-side intervention;
-robopsychology is the measurement-side instrument.
+This recipe is optional calibration for teams that want to check whether the
+BDK root prompt changes model behavior on a weak, inflated novelty claim. BDK is
+the prompt-side intervention; robopsychology is the measurement-side instrument.
+
+It is not part of the core framework and it is not a benchmark shipped by this
+repo. The framework remains the prompt/playbook behavior; this recipe shows one
+way to measure whether that behavior changed a model's response under one probe.
 
 ## Pre-registered prediction
 
@@ -91,3 +95,14 @@ Report at least:
 The minimal claim is not "BDK works"; it is narrower: under this probe, this
 model with this prompt either did or did not show a measurable reduction in
 sycophantic validation.
+
+## How to report results
+
+Treat the output as a calibration note, not a product claim. A useful report
+should include:
+
+- the exact prompt file or commit used;
+- the target and judge models;
+- the scenario files;
+- whether the outcome supported, weakened, or failed to test the prediction;
+- what prompt or example change, if any, the result suggests.

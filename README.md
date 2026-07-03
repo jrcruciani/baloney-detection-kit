@@ -18,6 +18,16 @@ Use this repo when a user presents a claim that sounds novel, revelatory, suppre
 
 Use light mode for casual exploration; use the full protocol for novelty claims, consensus-breaking claims, or high-stakes topics. This repo is a playbook, not a toolkit, evaluator, or automated fact-checker.
 
+This repository distributes five things:
+
+| Artifact | Use it when you need |
+|----------|----------------------|
+| **Framework** | A repeatable mental model: Trigger -> Mode -> Protocol -> Output -> Review |
+| **Drop-in prompts** | Copy-paste instructions for personal LLMs, agents, reviewers, or second opinions |
+| **Agent skill** | Runtime-friendly instructions for skill-based agents |
+| **Human checklist** | A self-assessment before turning a weak idea into a private revelation |
+| **Calibration recipes** | Manual and optional measurement patterns for checking whether the behavior helped |
+
 ## Why this exists
 
 Modern LLMs are optimized to be agreeable. By default, when you propose an idea, the model elaborates and validates it. This creates a quiet but powerful side effect: any user, alone with an LLM, can build a "mini-cult of one" around an idea that has been already explored, refuted, or trivially restated for decades. The model plays the role of the validating crowd.
@@ -35,6 +45,14 @@ The full reasoning is in [`essay/mini-cultos-ai.md`](essay/mini-cultos-ai.md). A
 ## What this is
 
 This is a **playbook**: a practical protocol that humans, agents, and LLM operators can apply when a user presents a claim that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus.
+
+The framework has one canonical shape:
+
+1. **Trigger.** Decide whether the claim deserves epistemic friction.
+2. **Mode.** Choose light, full, or stabilization mode.
+3. **Protocol.** Run the relevant state-of-the-art, novelty, falsifiability, evidence, pluralism, and humility checks.
+4. **Output.** Answer in the lightest structure that preserves rigor.
+5. **Review.** Use the rubric or examples to catch over-validation, over-triggering, bad tone, and fabricated certainty.
 
 When invoked, the playbook applies a 6-step protocol:
 
@@ -71,6 +89,16 @@ baloney-detection-kit/
 ├── PLAYBOOK.md                       Operational playbook: triggers, modes,
 │                                     evidence practice, high-stakes handling
 ├── ROOT_PROMPT.md                    Self-contained drop-in prompt
+├── VERSIONING.md                     Behavioral versioning for prompts and
+│                                     framework changes
+├── prompts/                          Copy-paste prompt distribution
+│   ├── README.md                     Prompt matrix and selection guide
+│   ├── prompt-compact.md             Short custom-instructions version
+│   ├── prompt-full.md                Full system-prompt version
+│   ├── prompt-high-stakes.md         Extra caution for material risk domains
+│   ├── prompt-agent.md               Tool/agent runtime version
+│   ├── prompt-reviewer.md            Review an existing answer
+│   └── prompt-second-opinion.md      Independent model contrast prompt
 ├── related-work.md                   Positioning vs. system prompts,
 │                                     evaluators, RAG, constitutional AI
 ├── deployment-contexts.md            Adoption patterns for people, agents,
@@ -79,7 +107,7 @@ baloney-detection-kit/
 │                                     Verify orchestration
 ├── validation/
 │   └── closed-loop/                  Reproducible BDK -> robopsychology
-│                                     measurement protocol
+│                                     calibration recipe
 ├── LICENSE                           MIT
 │
 ├── skill/
@@ -92,6 +120,7 @@ baloney-detection-kit/
 │   │   └── review_rubric.md          Manual review rubric
 │   └── examples/
 │       ├── case_saussure.md          Worked example
+│       ├── complete_conversations.md Complete conversation examples
 │       └── playbook_scenarios.md     Trigger, non-trigger, multi-turn,
 │                                     high-stakes and re-framing examples
 │
@@ -108,11 +137,26 @@ baloney-detection-kit/
 
 ## How to use it
 
-### As a playbook
+### As a framework
 
 Start with [`PLAYBOOK.md`](PLAYBOOK.md). It explains when to activate the protocol, when to stay quiet, how to handle weak vs. high-stakes claims, how to resist multi-turn pressure, and how to review whether the response worked.
 
-### As a drop-in prompt
+The shortest version is: **Trigger -> Mode -> Protocol -> Output -> Review**. If a proposed change does not fit that shape, it probably belongs downstream rather than in this repo.
+
+### As a prompt distribution
+
+Use [`prompts/README.md`](prompts/README.md) to choose the right copy-paste prompt:
+
+- compact custom instructions;
+- full system prompt;
+- high-stakes prompt;
+- agent runtime prompt;
+- reviewer prompt;
+- second-opinion prompt.
+
+`ROOT_PROMPT.md` remains the canonical self-contained full prompt for users who want one file.
+
+### As a drop-in root prompt
 
 Copy the block in [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt or custom-instructions slot of an LLM client. The prompt is the portable form of the playbook.
 
@@ -127,6 +171,10 @@ If you already operate an agentic runtime with planner, executor, verifier, tool
 ### As a human checklist
 
 Open [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) and answer the questions honestly the next time you feel the tingle of a sudden discovery. Use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review whether an assistant applied the playbook well.
+
+### As a versioned behavior
+
+If you embed the prompt in a product, classroom, or team workflow, pin the behavior you used. [`VERSIONING.md`](VERSIONING.md) explains what counts as a behavior change, a wording change, or a breaking change.
 
 ---
 
@@ -148,9 +196,11 @@ The most important test of any framework like this is whether it survives being 
 
 ---
 
-## Measurement loop
+## Calibration loop
 
-BDK is a prompt-side intervention. [`robopsychology`](https://github.com/jrcruciani/robopsychology) is the sibling measurement-side instrument for diagnosing sycophancy, framing sensitivity, presentation shifts, and coherence failures. The closed-loop protocol in [`validation/closed-loop/`](validation/closed-loop/) tests whether installing `ROOT_PROMPT.md` measurably reduces sycophantic validation on the same probe.
+BDK is a prompt-side intervention. [`robopsychology`](https://github.com/jrcruciani/robopsychology) is the sibling measurement-side instrument for diagnosing sycophancy, framing sensitivity, presentation shifts, and coherence failures. The closed-loop recipe in [`validation/closed-loop/`](validation/closed-loop/) is optional calibration: it tests whether installing `ROOT_PROMPT.md` measurably reduces sycophantic validation on one probe.
+
+The minimal claim is not "BDK works." It is narrower: under a specific probe, model, and prompt version, the treatment either did or did not reduce sycophantic validation.
 
 ---
 
@@ -180,7 +230,7 @@ BDK is a behavioral *policy* expressed as text, so it can ride inside the other 
 without becoming them. These are conceptual composition patterns, not adapters shipped
 in this repo:
 
-- **With robopsychology** — BDK is the prevention; robopsychology is the measurement. The shared closed-loop protocol above tests whether BDK actually reduces sycophantic validation.
+- **With robopsychology** — BDK is the prevention; robopsychology is the measurement. The shared closed-loop recipe above tests whether BDK actually reduces sycophantic validation under one probe.
 - **With the [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** — drop `ROOT_PROMPT.md` into the system prompt of an AGT-governed agent to get **defense in depth**: BDK adds conversational, human-visible epistemic friction (advisory — a prompt can be ignored or eroded), while AGT adds runtime, sub-second *enforcement* of what actions are allowed (the agent simply cannot execute a denied action). The two operate at different layers and do not replace each other — prompts shape reasoning, enforcement governs actions.
 - **With [ASSERT](https://github.com/responsibleai/ASSERT)** — BDK is itself a behavioral requirement ("when a user makes a novel/high-stakes claim, the agent must run the 6-step protocol before validating it"). That requirement can be written as an ASSERT spec, so ASSERT generates and scores test cases checking whether the agent applies epistemic friction under the trigger conditions. ASSERT can test the *observable* behavior; it cannot guarantee internal cognition, and its LLM-judge scores keep a human in the loop.
 
@@ -217,6 +267,7 @@ Issues and pull requests welcome. Especially:
 - Translations of the prompt, playbook, and checklist.
 - Reports from real use: when did the playbook fire too often, too rarely, or with the wrong tone?
 - Improvements to the manual review rubric.
+- Prompt variants that preserve the same framework while fitting a real runtime.
 
 Please do not add package scaffolding, dependencies, CI harnesses, benchmark runners, SDK adapters, or framework integrations here. Documentation-only integration patterns are welcome when they keep code downstream; adapters can live in separate repos if needed. This repo should stay a playbook.
 

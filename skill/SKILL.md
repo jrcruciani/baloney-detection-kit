@@ -172,4 +172,5 @@ What is genuinely new here is the packaging as a portable playbook for LLM inter
 - `checklist/seven_questions.md` - Human-facing self-assessment.
 - `checklist/review_rubric.md` - Manual review rubric.
 - `examples/case_saussure.md` - Worked example.
+- `examples/complete_conversations.md` - Complete conversation examples.
 - `examples/playbook_scenarios.md` - Additional scenario examples.

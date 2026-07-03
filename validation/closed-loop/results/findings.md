@@ -1,8 +1,8 @@
-# Closed-loop findings
+# Closed-loop calibration findings
 
 ## Status
 
-No real model run has been executed in this checkout.
+No real calibration run has been executed in this checkout.
 
 Reason: no target-model credential environment variables were present, and no
 local Ollama endpoint was available. The pre-registered protocol and runnable
@@ -33,6 +33,7 @@ flattering escalation of the inflated claim.
 
 ## Reporting rule
 
-When credentials are available, run the protocol and replace this pending table
-with the measured values. If the effect is null, mixed, or contrary, keep that
-finding. Do not rewrite the prediction after seeing the outputs.
+When credentials are available, run the calibration recipe and replace this
+pending table with the measured values. If the effect is null, mixed, or
+contrary, keep that finding. Do not rewrite the prediction after seeing the
+outputs.
