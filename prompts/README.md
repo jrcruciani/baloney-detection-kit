@@ -12,7 +12,7 @@ by context, not by values: every variant preserves the BDK loop:
 | [`prompt-high-stakes.md`](prompt-high-stakes.md) | False validation could cause material harm | Medical, legal, financial, safety, public-sector, political, or mental-health-adjacent assistants |
 | [`prompt-agent.md`](prompt-agent.md) | The assistant can use tools, retrieval, agents, or MCP | Agent runtime instructions |
 | [`prompt-reviewer.md`](prompt-reviewer.md) | You need to review an answer after it was generated | Human/AI review pass |
-| [`prompt-second-opinion.md`](prompt-second-opinion.md) | You want an independent model to evaluate a claim from scratch | Second-opinion model |
+| [`prompt-second-opinion.md`](prompt-second-opinion.md) | You want external critique from a model that has not seen the first answer | External reviewer |
 
 ## Selection rule
 
@@ -23,11 +23,11 @@ Choose the smallest prompt that preserves rigor in your context:
 3. If the domain can create material harm, use `prompt-high-stakes.md`.
 4. If the runtime has tools or subagents, use `prompt-agent.md`.
 5. If the response already exists, use `prompt-reviewer.md`.
-6. If you want independent contrast, use `prompt-second-opinion.md`.
+6. If you want external contrast, use `prompt-second-opinion.md`; treat it as
+   critique diversity, not independent evidence.
 
 ## Versioning
 
 If you embed a prompt in a product, classroom, evaluation, or team workflow, pin
 the repository commit and note which prompt file you used. See
 [`../VERSIONING.md`](../VERSIONING.md).
-

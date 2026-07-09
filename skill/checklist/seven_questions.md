@@ -3,7 +3,8 @@
 When you think you may have discovered something important, use this checklist
 to slow down before asking an LLM, a friend, or an audience to validate it.
 
-This is a calibration tool. It is not a diagnosis of you or your idea.
+This is a calibration aid. It is not a diagnosis of you or your idea, and it
+does not presume that unusual or dissenting claims are false.
 
 ---
 
@@ -12,123 +13,122 @@ This is a calibration tool. It is not a diagnosis of you or your idea.
 Write the claim clearly enough that someone else could disagree with it.
 
 ```text
-My claim:
+My atomic claim:
+My confidence:
 The strongest evidence I currently have:
 What I want to do with it:
+What could happen if I am wrong:
 ```
 
 ---
 
 ## The 7-question calibration
 
-### 1. State-of-the-art research
+### 1. What kind of claim is this?
 
-- [ ] Have I searched reputable sources, academic databases, expert summaries, or canonical references?
-- [ ] Do I know which field or expert community already studies this?
-- [ ] Have I read at least 2-3 sources that would exist even if my idea were wrong?
+- [ ] Have I separated the observation from my explanation of it?
+- [ ] Am I claiming fact, cause, prediction, value, interpretation, personal
+      experience, or a creative possibility?
+- [ ] Have I separated "true", "new", "important", and "useful"?
 
-If any answer is no, treat the discovery as premature. Do the search before
-expanding the theory.
+Different claims need different checks:
 
----
-
-### 2. Novelty honesty
-
-- [ ] Is this actually new, or have I rediscovered something known?
-- [ ] If it is known, when and where was it documented?
-- [ ] What, if anything, is genuinely new about my version, context, evidence, or application?
-
-Calibration:
-
-| Result | Meaning |
-|--------|---------|
-| Rediscovery | The core idea already exists. The useful move is to learn the field. |
-| Re-framing | The core idea exists, but your context or application may be useful. |
-| Genuinely new | Rare. Requires serious prior-art checking and expert review. |
+| Claim type | Useful check |
+|------------|--------------|
+| Empirical / descriptive | observations, definitions, counterexamples |
+| Causal / predictive | baselines, confounders, mechanisms, out-of-sample tests |
+| Normative / policy | values, tradeoffs, stakeholders, factual premises |
+| Interpretive / historical | provenance, corroboration, explanatory fit |
+| Personal / experiential | respect the report; test external generalizations separately |
+| Creative / hypothetical | coherence and usefulness, not real-world proof |
 
 ---
 
-### 3. Falsifiability
+### 2. Do confidence, evidence, and consequence match?
 
-- [ ] Can my claim be proven wrong?
-- [ ] What evidence would make me update or abandon it?
-- [ ] Have I stated the claim narrowly enough that someone else could test it?
+- [ ] Is my confidence proportionate to the evidence?
+- [ ] Is the scope of the conclusion proportionate to what I observed?
+- [ ] Am I asking for investigation, or mainly for validation?
+- [ ] If the claim is wrong, are the consequences material or hard to reverse?
+
+Novelty language, consensus disagreement, and suppression framing are reasons
+to inspect the claim, not reasons to accept or reject it.
+
+---
+
+### 3. What is known, and what is my contribution?
+
+- [ ] Have I searched reputable sources, databases, canonical references, and
+      serious criticism?
+- [ ] Can I state the scope, date, and limits of that search?
+- [ ] Do I know which field or community already studies this?
+- [ ] Is my contribution an independent rediscovery, a re-framing/application,
+      new evidence, a new method/implementation, or merely something for which I
+      found no close prior art?
+
+"No close prior art found in this search" is a valid provisional result. It is
+not proof that no prior art exists.
+
+---
+
+### 4. What would make me update?
+
+- [ ] What evidence would strengthen the claim?
+- [ ] What evidence would weaken, narrow, or overturn it?
+- [ ] For a normative claim, which values or tradeoffs drive my conclusion?
+- [ ] For an interpretive claim, what sources or competing readings matter?
+- [ ] Have I stated the claim narrowly enough for another person to challenge?
 
 Watch for claims that cannot lose:
 
-- "It has been suppressed."
+- "Missing evidence proves suppression."
 - "Only unusually smart people can see it."
 - "It is too subtle to measure."
 - "Every counterexample is actually proof."
 
 ---
 
-### 4. Evidence chain
+### 5. How good is the evidence for each link?
 
-- [ ] What are the major links in my argument?
-- [ ] What evidence supports each link?
+- [ ] Is the evidence directly relevant to the claim?
+- [ ] Is the method appropriate and uncertainty reported?
+- [ ] Are supposedly separate sources genuinely independent?
+- [ ] Has the result been replicated or corroborated?
+- [ ] Is it current enough for this domain?
+- [ ] Do I know the provenance, incentives, conflicts, and missing data?
 - [ ] If one link breaks, does the whole argument collapse?
 
-Evidence strength, from stronger to weaker:
-
-1. Peer-reviewed research or primary data.
-2. Expert synthesis or recognized institutional guidance.
-3. Reputable reporting or well-documented cases.
-4. Anecdote or personal experience.
-5. Intuition, vibe, or "it feels obvious."
-
-The weakest link deserves the most attention.
+Do not use a universal source ladder. Peer review, official data, systematic
+reviews, expert synthesis, documented cases, and personal observation answer
+different questions. Evaluate fitness and quality, not just the label.
 
 ---
 
-### 5. Alternative explanations
+### 6. What else could explain the observation?
 
-- [ ] Can I articulate at least two alternatives that would explain the same observation?
-- [ ] Have I steelmanned those alternatives rather than making them easy to defeat?
-- [ ] Am I more attached to being original than to understanding what is true?
+- [ ] What credible alternatives fit the same evidence?
+- [ ] Is there a null, base-rate, measurement, or selection explanation?
+- [ ] What new observation would distinguish among the live explanations?
+- [ ] Have I avoided inventing weak alternatives merely to look balanced?
 
-If you cannot name a serious alternative, you probably have not investigated the
-claim enough yet.
-
----
-
-### 6. Specificity and replication
-
-- [ ] Can I make the claim more specific?
-- [ ] Can I measure, count, compare, or operationalize it?
-- [ ] Could someone else test it without needing to share my intuition?
-
-Better claims usually move from:
-
-```text
-This changes everything.
-```
-
-to:
-
-```text
-In this specific context, I expect X to happen more often than Y. Here is what
-would count as a failure of that expectation.
-```
+There may be zero, one, or several credible alternatives. The goal is
+discrimination, not a mandatory number of sides.
 
 ---
 
-### 7. Intellectual humility
+### 7. What is the narrowest responsible next step?
 
-- [ ] Am I claiming certainty where I only have a lead?
-- [ ] Have I named what I do not know?
-- [ ] Would I actually update if a competent critic showed strong counter-evidence?
-- [ ] Have I asked someone or something that is not optimized to flatter me?
+- [ ] What is the narrowest conclusion the evidence supports?
+- [ ] What is my current confidence and largest uncertainty?
+- [ ] Is acting now reversible?
+- [ ] Do I need a primary source, domain expert, experiment, more data, or a
+      narrower claim?
+- [ ] Would I update if a competent critic corrected one of my premises?
+- [ ] Am I consulting reviewers for new arguments and sources rather than
+      counting how many models agree?
 
-Watch for defensive patterns:
-
-- "Everyone else is wrong."
-- "Experts are only protecting their status."
-- "The mainstream is too closed-minded to see it."
-- "People who disagree just do not understand."
-
-These patterns do not prove the idea is false, but they do mean you need outside
-calibration before escalating confidence.
+Different AI models can share training data and correlated errors. Their
+agreement is a lead to inspect, not independent corroboration.
 
 ---
 
@@ -138,19 +138,21 @@ Use these bands qualitatively. Do not turn them into a fake precision score.
 
 | Band | What it means | Next step |
 |------|---------------|-----------|
-| **Well grounded** | You have prior-art awareness, falsifiability, evidence, alternatives, and uncertainty. | Share a narrow version with knowledgeable critics. |
-| **Interesting but underdeveloped** | There may be something useful, but the evidence or framing is not ready. | Read more, narrow the claim, and define what would disprove it. |
-| **High risk of auto-validation** | The idea depends heavily on intuition, novelty, vague evidence, or dismissal of alternatives. | Pause expansion. Seek expert context or an adversarial review. |
-| **Not ready to claim** | The claim is not grounded, not falsifiable, or is mainly protected by certainty. | Reframe it as a question, not a discovery. Start with state-of-the-art research. |
+| **Well calibrated** | Scope, confidence, evidence, update conditions, and consequence are aligned. | Share the narrow claim with knowledgeable critics. |
+| **Promising but underdeveloped** | A useful contribution may exist, but evidence or scope needs work. | Narrow it and improve the load-bearing evidence. |
+| **High risk of confidence amplification** | Certainty, novelty, or significance substantially exceeds support. | Pause endorsement and seek source-level or expert review. |
+| **Not ready for action** | Evidence is insufficient for the requested decision or the downside is material. | Reframe as a question, gather evidence, or use a safer reversible step. |
 
 ---
 
 ## What to do after the checklist
 
 1. Rewrite the claim in its narrowest defensible form.
-2. Identify the strongest prior art against it.
-3. Ask a neutral reviewer or model to evaluate the claim from scratch.
-4. Preserve the useful observation even if the novelty claim fails.
+2. Record search scope and the strongest prior art or counter-evidence.
+3. Identify what would change your assessment.
+4. Seek an external source audit or adversarial review without showing the first
+   answer.
+5. Preserve the useful observation even if novelty or significance fails.
 
 ---
 
@@ -158,23 +160,23 @@ Use these bands qualitatively. Do not turn them into a fake precision score.
 
 The checklist applies to itself:
 
-- **State of the art:** It borrows from Sagan, Popper, critical thinking,
-  cognitive-bias work, and research on LLM sycophancy.
-- **Novelty:** It is a re-framing for LLM conversations, not an invention.
-- **Falsifiability:** It can be tested by comparing conversations with and
-  without the checklist.
-- **Evidence:** It is grounded in prior traditions, but its effectiveness still
-  depends on context and user willingness.
-- **Humility:** It can over-trigger, sound patronizing, or miss subtle
-  validation-seeking.
+- **Current knowledge:** it borrows from Sagan, Popper, critical-thinking
+  traditions, evidence appraisal, and research on LLM sycophancy.
+- **Contribution:** it is a re-framing for LLM conversations, not an invention.
+- **Update conditions:** it should be compared against simpler prompts on both
+  trigger and non-trigger cases.
+- **Evidence:** its effectiveness remains unestablished in this checkout.
+- **Adverse effects:** it can over-trigger, become patronizing or contrarian,
+  create false balance, or make a model cling to an initial error.
 
-Use it as a starting point, not gospel.
+Use it as a testable starting point, not gospel.
 
 ---
 
 ## Resources
 
 - **Carl Sagan**, *The Demon-Haunted World* - the original Baloney Detection Kit.
-- **Karl Popper**, *The Logic of Scientific Discovery* - falsifiability.
+- **Karl Popper**, *The Logic of Scientific Discovery* - falsifiability for
+  empirical claims.
 - **Daniel Kahneman**, *Thinking, Fast and Slow* - cognitive biases.
 - **Richard Feynman**, "Cargo Cult Science" - false scientific thinking.

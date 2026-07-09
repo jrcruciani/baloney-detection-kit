@@ -33,13 +33,13 @@ inside that shape without importing the sample's sports-domain code.
 
 | BDK concept | Plan -> Execute -> Verify component | Integration rule |
 |-------------|--------------------------------------|------------------|
-| Trigger conditions | Planner | Detect novelty, suppression framing, against-consensus claims, validation requests, high-stakes domains, and multi-turn pressure. |
+| Trigger conditions | Planner | Detect material confidence-evidence-consequence mismatch. Treat novelty, suppression framing, dissent, validation requests, and multi-turn pressure as signals, not verdicts. |
 | Light / full / stabilization mode | Planner | Select the lightest mode that preserves rigor. Do not force the full template on humble exploration. |
-| Six-step protocol | Plan steps | Convert state of the art, novelty, falsifiability, evidence chain, pluralism, and humility into explicit steps. |
-| Evidence-backed practice | Executor | Use search, retrieval, citations, internal knowledge bases, or domain sources when available. If tools are unavailable, say so. |
-| Second opinion | Executor | Call two independent reviewer models only when warranted. Send the object to review, not the prior conversation. |
-| High-stakes handling | Planner + Executor | Lower the threshold for full mode, require domain source expectations, and route material decisions to qualified humans. |
-| Manual review rubric | Verifier | Verify process quality: no fabricated evidence, no flattering validation, no unsupported certainty, clear next step. |
+| Six-step protocol | Plan steps | Convert claim typing, scoped current knowledge, contribution, update conditions, evidence quality, credible alternatives, and calibration into explicit steps. |
+| Evidence-backed practice | Executor | Use search, retrieval, citations, internal knowledge bases, or domain sources when available; record scope and evaluate provenance and independence. |
+| External contrast | Executor | Assign distinct source-audit and hypothesis-test jobs when warranted. Send the object, not the prior answer; never count model agreement as evidence. |
+| High-stakes handling | Planner + Executor | Separate epistemic uncertainty from action risk, require domain-appropriate sources, and route material decisions to qualified humans. |
+| Manual review rubric | Verifier | Review protocol adherence, epistemic quality, utility, and adverse effects such as over-triggering, stubbornness, or false balance. |
 | Review notes / transcript | Activity artifact | Preserve claim, mode, plan, tool results, reviewer outputs, uncertainties, and final answer for later audit. |
 
 ---
@@ -51,9 +51,11 @@ inside that shape without importing the sample's sports-domain code.
 Start by extracting the smallest reviewable object:
 
 - the user's atomic claim;
+- claim type and scope;
 - the domain and stakes;
 - the user's requested action;
 - any evidence already provided;
+- stated confidence and consequence if wrong;
 - whether the user is asking for validation, persuasion, or investigation.
 
 Do not pass the whole conversation to downstream reviewers unless the conversation
@@ -70,17 +72,17 @@ Example conceptual shape:
 ```json
 {
   "claim": "A user claims X is a new discovery.",
+  "claim_type": "empirical / interpretive",
   "mode": "full",
   "stakes": "scientific / low immediate harm",
   "steps": [
-    "state_of_the_art_check",
-    "novelty_assessment",
-    "falsifiability_check",
-    "evidence_chain_review",
-    "alternative_explanations",
-    "humility_and_next_step"
+    "current_knowledge_and_scope",
+    "prior_art_and_contribution",
+    "update_conditions_and_evidence",
+    "competing_explanations_and_discriminators",
+    "calibration_and_next_step"
   ],
-  "second_opinion": "not_required"
+  "external_contrast": "not_required"
 }
 ```
 
@@ -91,17 +93,23 @@ teams that already have their own activity object.
 
 The executor runs only the steps the planner selected:
 
-- **State of the art:** retrieve prior art, authoritative sources, or domain
-  references. If no retrieval is available, the response must say so.
-- **Novelty:** classify the claim as rediscovery, re-framing, or genuinely new.
-- **Falsifiability:** identify what would disprove the claim and flag moving
-  goalposts or "too subtle to measure" framing.
-- **Evidence chain:** separate strong evidence, weak evidence, anecdotes, and
-  intuition.
-- **Pluralism:** produce at least two steelmanned alternative explanations when
-  full mode is warranted.
-- **Second opinion:** for high-stakes, uncertain, niche, or unusually inflated
-  claims, ask two independent models to review the object from scratch.
+- **Claim type:** separate observation, explanation, significance, requested
+  action, and confidence; choose evaluation rules that fit the claim.
+- **Current knowledge:** retrieve prior art or domain references and preserve the
+  scope, date, and limits of the search.
+- **Contribution:** separate documented/rediscovered material,
+  re-framing/application, new evidence/method/implementation, and "no close
+  prior art found in this scoped search" from truth and importance.
+- **Update conditions:** identify what should strengthen or weaken the claim.
+  Use falsification where empirical, values/tradeoffs where normative, and
+  provenance/corroboration where interpretive.
+- **Evidence quality:** inspect relevance, method, independence, replication or
+  corroboration, recency, provenance, incentives, and gaps.
+- **Competing explanations:** produce only credible alternatives and the
+  evidence that would discriminate among them; do not force two sides.
+- **External contrast:** for high-stakes, uncertain, niche, or unusually
+  inflated claims, assign distinct source-audit and hypothesis-test jobs. Model
+  diversity may improve coverage but does not create independent evidence.
 - **High-stakes escalation:** when consequences are material, include qualified
   human expertise as the next step rather than treating the agent's answer as an
   action recommendation.
@@ -112,11 +120,16 @@ The verifier should not become an automated truth engine. It should check whethe
 the response followed the playbook:
 
 - Did the trigger decision make sense?
-- Did the answer check prior art before validating?
+- Did it avoid treating novelty or dissent as a verdict?
+- Did it type the claim and check scoped prior art before validating?
 - Did it avoid fabricated sources and unsupported certainty?
-- Did it preserve useful re-framings without flattering novelty?
+- Did it assess source quality and shared provenance?
+- Did it preserve useful contributions without flattering novelty or
+  significance?
+- Did it avoid forced alternatives and reflexive contrarianism?
+- Did it re-open its own assessment when a premise or factual claim changed?
 - Did it handle high-stakes content with care?
-- Did it preserve second-opinion disagreement instead of voting?
+- Did it preserve reviewer disagreement and verify evidence instead of voting?
 - Did it leave a concrete, honest next step?
 
 If verification fails, revise the response or mark the uncertainty plainly. Do
@@ -138,13 +151,15 @@ with fields like these:
 | Field | Purpose |
 |-------|---------|
 | `claim` | The atomic claim or decision being reviewed. |
+| `claim_type` | Empirical, causal/predictive, normative/policy, interpretive/historical, personal/experiential, or creative/hypothetical. |
+| `confidence_evidence_consequence` | Why friction was or was not proportionate. |
 | `trigger_reason` | Why BDK fired, or why it stayed in light mode. |
 | `mode` | `light`, `full`, or `stabilization`. |
 | `steps` | Planned BDK checks and their outputs. |
 | `sources` | Prior-art or evidence references used during execution. |
-| `reviewers` | External model reviewers, if second opinion was used. |
+| `reviewers` | External model reviewers and their distinct jobs, if used. |
 | `disagreements` | Preserved disagreements across reviewers or sources. |
-| `verifier_notes` | Rubric-based process review, not a truth verdict. |
+| `verifier_notes` | Protocol, epistemic-quality, utility, and adverse-effect review. |
 | `final_answer` | The answer delivered to the user. |
 | `next_step` | Source, expert, experiment, or narrowing action. |
 
@@ -156,10 +171,14 @@ measurement with tools such as
 
 ## Guardrails
 
-- **Do not turn agreement into proof.** Two models agreeing is a signal to
-  investigate, not a truth criterion.
+- **Do not turn agreement into evidence.** Models can share sources and
+  correlated errors. Verify the underlying claims.
 - **Do not contaminate second opinions.** Send the object to review, not the
   first model's reasoning or answer.
+- **Do not use consensus as a verdict.** Dissent can be well supported; consensus
+  is one evidence signal.
+- **Do not force falsifiability or alternatives.** Match update rules to the
+  claim type and avoid false balance.
 - **Do not replace domain expertise.** Medical, legal, financial, safety, and
   mental-health decisions need qualified humans when consequences are material.
 - **Do not fabricate retrieval.** If the runtime lacks browsing, search, or a

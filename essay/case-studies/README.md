@@ -1,6 +1,9 @@
 # Case studies
 
-Worked examples of running the playbook on real artifacts. Each case study is a self-contained markdown file showing the 6-step protocol applied end-to-end.
+Worked examples of running the playbook on real artifacts. Each case study is a
+self-contained Markdown file showing full-mode claim typing, scoped current
+knowledge, prior-art analysis, update conditions, evidence quality, credible
+alternatives, and calibrated next steps.
 
 The cases are deliberately not all clear wins or clear failures. The point is to show what the kit does in the messy middle, where most LLM users actually live.
 
@@ -13,8 +16,11 @@ The cases are deliberately not all clear wins or clear failures. The point is to
 A good case study:
 
 - Picks a real, citable artifact (paper, blog post, talk, tweet thread).
-- Runs all six steps explicitly, even when one step is trivial.
-- Names the state of the art in step 1 with concrete references.
-- Steelmans at least one alternative in step 5.
-- Ends with a *situating* verdict, not a verdict of correctness.
+- Uses full mode only when the trigger and consequence justify it.
+- Separates the claim and type before reviewing current knowledge or prior art.
+- States the scope and limits of any search and uses concrete references.
+- Includes only credible alternatives and says what evidence would distinguish
+  them; it does not force a second side.
+- Ends with calibrated confidence, uncertainty, and a next step rather than a
+  binary verdict.
 - Does not claim to adjudicate the underlying science.
