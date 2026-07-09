@@ -28,7 +28,24 @@ The author also offers, as a separate "research-program coda", a reading where t
 
 ## Running the playbook
 
-### 1. State of the art
+### 1. Claim and type
+
+> *What exactly is being claimed, and what kind of claim is each part?*
+
+The paper bundles several objects that need different checks:
+
+- an empirical cross-substrate regularity;
+- a causal/dynamical explanation of that regularity;
+- a methodological contribution in the paired in/out design;
+- an interpretive synthesis across formal, engineering, biological, social, and
+  cosmological layers.
+
+The universal wording is not one claim that can receive one verdict. The
+empirical and causal layers need tests; the methodological layer needs prior-art
+comparison; the interpretive layer needs provenance, explanatory fit, and
+credible competitors.
+
+### 2. Current knowledge and search scope
 
 > *What is currently known about this?*
 
@@ -38,19 +55,27 @@ The paper does cite some of this literature inside the PDF, but the abstract and
 
 **Verdict:** Most of the dynamical content has a state of the art. The paper does not foreground it.
 
-### 2. Novelty assessment
+### 3. Prior art and contribution
 
-> *Rediscovery, re-framing, or genuinely new?*
+> *What is documented, and what kind of contribution remains?*
 
 Three different things are bundled:
 
 - **The corridor reading** is a re-framing of edge-of-chaos / criticality. Not new as a structural claim.
-- **The five-substrate paired in/out validation** is a genuinely useful methodological move — the discipline of pairing same-substrate in-corridor and out-corridor data and demanding the pattern hold across very different systems is more than the typical single-substrate study. This is the part that is most plausibly new as a *practice*.
+- **The five-substrate paired in/out validation** is a useful methodological
+  move — the discipline of pairing same-substrate in-corridor and out-corridor
+  data and demanding the pattern hold across very different systems is more
+  than the typical single-substrate study. This is the part with the strongest
+  candidate contribution as a *practice*; this review does not claim an
+  exhaustive global novelty search.
 - **The universal-scale coda** (Penrose past hypothesis, CMB, TSVF) is speculation explicitly flagged as such by the author. It is not new — TSVF cosmological readings exist — and the author is clear it is held at a different tier.
 
-**Verdict:** Mixed. Re-framing at the conceptual layer; method-novel at the experimental layer; not-novel and openly speculative at the cosmological layer. The author's tier separation matches this; the abstract's "integration" framing does not.
+**Verdict:** Mixed. Re-framing at the conceptual layer; a plausible
+methodological contribution at the experimental layer; documented and openly
+speculative material at the cosmological layer. The author's tier separation
+matches this; the abstract's "integration" framing does not.
 
-### 3. Falsifiability
+### 4a. Update conditions
 
 > *Can it be proven wrong?*
 
@@ -58,11 +83,13 @@ This is the strongest point of the paper, and one the kit is built to reward whe
 
 The author lists **twenty named falsification handles (F-1 through F-20)** attached to specific load-bearing claims, and explicitly identifies the dynamical reading's strongest would-be falsifier — *long unmaintained non-corridor persistence* — and reports that it is absent at 5/5 paired substrates.
 
-That is exactly the operational shape the kit's step 3 asks for: claims that say what would refute them, written down *before* the result.
+That is exactly the operational shape the kit's empirical update-condition step
+asks for: claims that say what would refute them, written down *before* the
+result.
 
 **Verdict:** Strong. This is what falsifiability is supposed to look like in practice. The kit should not penalise it for being a "big" theory; it should reward that the author made the theory portable to disconfirmation.
 
-### 4. Evidence chain
+### 4b. Evidence quality
 
 > *Is each link solid?*
 
@@ -75,7 +102,7 @@ Tier-by-tier:
 
 **Verdict:** Strong at the engineering and per-substrate empirical layers. Stretched at the cross-substrate synthesis. Held appropriately at the cosmological layer.
 
-### 5. Alternative perspectives
+### 5. Competing explanations and discriminators
 
 > *What are the steelmanned alternatives?*
 
@@ -90,7 +117,7 @@ Plausible competitors not engaged in the paper's framing:
 
 **Verdict:** The paper is rigorous against itself and underspecified against neighbours. This is the gap a reader of the kit should notice.
 
-### 6. Intellectual humility and next step
+### 6. Calibration and next step
 
 > *What do we not know? What is the next concrete move?*
 
@@ -108,11 +135,19 @@ What the paper does not do, and what a careful reader would want next:
 
 ## What this case study teaches about the kit
 
-1. **Falsifiability matters more than humility.** The paper is humble *and* has preregistered falsifiers. The kit should treat falsifiers as the higher-value signal — humility without falsifiers is a posture; falsifiers without humility still produce a refutable claim. This paper happens to have both.
+1. **Pre-registered update conditions matter more than humility alone.** The
+   paper is humble *and* has preregistered falsifiers for its empirical claims.
+   Humility without update conditions can be posture; explicit disconfirmation
+   criteria make those claims reviewable. Other claim types would need different
+   update rules.
 
 2. **Tier separation by the author is half the work.** When an artifact already labels its speculative parts as speculative, the kit's job shrinks: it does not need to expose the speculation, only to check that the tier labels match the actual evidence at each layer. When they do — as here for the engineering tier and the universal-scale coda — the kit signs off. When they do not — as here for the abstract's framing of the dynamical reading as discovery rather than re-framing — the kit flags it.
 
-3. **State-of-the-art search is the single most under-used step.** Most of the heavy lifting in this case comes from naming Langton, Kauffman, and Bak. Without that move, the corridor reading looks much more novel than it is. *Always do step 1 first.* This is also Karpathy's repeated point.
+3. **State-of-the-art search is the single most under-used step.** Most of the
+   heavy lifting in this case comes from naming Langton, Kauffman, and Bak.
+   Without that move, the corridor reading looks much more novel than it is.
+   Type the claim first, then do the scoped knowledge check. This is also
+   Karpathy's repeated point.
 
 4. **Per-substrate rigor does not transfer to cross-substrate inference.** Each of the five validations is defensible on its own. The synthesis — that the same ρ is being recovered in worms and in Git repos — is a separate, weaker claim that needs its own justification, and the kit should treat it as such.
 

@@ -1,6 +1,6 @@
 ---
 name: baloney-detection-kit
-description: Use this skill when a user presents an idea, claim, hypothesis, or "discovery" that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus. Trigger it for phrases like "I discovered...", "no one has noticed...", "experts are wrong about...", "they do not want you to know...", or when the user asks for validation before prior-art checking. This is a runtime-friendly distribution of a playbook, not a toolkit or evaluator.
+description: Use this skill when confidence, available evidence, and consequence of error appear misaligned. Signals include inflated novelty or significance, validation before investigation, material-risk decisions, suppression framing that resists updating, and repeated pressure for agreement. Dissent from consensus alone is not a trigger. This is a runtime-friendly distribution of a playbook, not a toolkit or evaluator.
 ---
 
 # Baloney Detection Kit Skill
@@ -9,28 +9,45 @@ This skill implements the [`PLAYBOOK.md`](../PLAYBOOK.md) protocol inside a skil
 
 ## Why this exists
 
-Modern LLMs are optimized to be agreeable. When a user proposes an idea, the model often elaborates and validates it before checking whether the idea is known, false, unfalsifiable, or high-risk. This can create a "mini-cult of one": the model becomes the validating crowd.
+Many conversational LLMs exhibit social sycophancy: helpfulness or social
+alignment can displace independent judgment. A model may elaborate and validate
+a framing before checking whether the evidence supports the confidence or
+requested action.
 
-This skill changes that default. It makes the assistant pause, check the state of the art, contrast the claim against alternatives, and respond with rigor instead of flattery.
+This skill changes that default. It makes the assistant type and scope the
+claim, compare confidence with evidence and consequence, inspect prior art and
+credible alternatives, and respond with calibration instead of flattery or
+reflexive contradiction.
 
 ## When to invoke
 
 Invoke this skill when any of the following is true:
 
-1. The user explicitly claims novelty or revelation: "I discovered...", "this changes everything", "no one has thought of this".
-2. The user asserts a strong conclusion that contradicts mainstream expert consensus.
-3. The user shows signs of echo-chamber or mini-cult thinking: suppression claims, refusal to engage counter-evidence, "they do not want you to know", "do your own research" framing.
-4. The user asks the assistant to validate or expand a hypothesis before checking prior art.
-5. The user presents medical, scientific, technological, financial, legal, political, safety, or mental-health claims that warrant fact-checking.
-6. The user asks the assistant to write persuasive content based on a personal claim that has not been contrasted with existing literature.
-7. The user keeps pressuring the assistant to agree across turns without adding new evidence.
+1. Confidence, novelty, universality, or significance materially exceeds the
+   evidence offered or available.
+2. The user asks the assistant to validate, expand, persuade, or act on a
+   hypothesis before checking prior art or evidence.
+3. Error could cause material medical, scientific, technological, financial,
+   legal, political, safety, or mental-health harm.
+4. Suppression, identity, or status language is used to make the claim resistant
+   to counter-evidence.
+5. The user asks for persuasive content based on an unverified premise.
+6. The user keeps pressing for more certainty without adding relevant evidence
+   or correcting a premise.
+
+Novelty language and disagreement with expert consensus are signals to inspect,
+not verdicts. Do not dismiss a well-supported dissenting claim because it
+challenges consensus.
 
 Do **not** invoke the full playbook for:
 
 - casual creative work where the user is openly speculating;
 - personal preferences or subjective experience;
 - settled factual lookups;
-- genuine open-ended exploration where the user already shows epistemic humility.
+- genuine open-ended exploration where the user already shows epistemic
+  humility;
+- unusual or dissenting claims presented with proportionate confidence and
+  relevant evidence.
 
 Use a brief light-mode nudge instead if the signal is weak.
 
@@ -40,71 +57,79 @@ Use a brief light-mode nudge instead if the signal is weak.
 
 Use when the user is exploring honestly or the trigger signal is weak:
 
-1. Restate the claim.
-2. Add one state-of-the-art check.
-3. Name one plausible alternative.
-4. Suggest one concrete next step.
+1. Restate and scope the claim.
+2. Add one relevant knowledge or evidence check.
+3. Name a credible alternative only if useful.
+4. Calibrate confidence and suggest one concrete next step.
 
 ### Full mode
 
-Use when the claim is strong, novel, high-stakes, against consensus, or validation-seeking. Apply the 6-step protocol below.
+Use when the confidence-evidence mismatch is strong, endorsement is requested
+before investigation, or the consequence of error is material. Apply the
+6-step protocol below.
 
 ### Stabilization mode
 
 Use when the user pushes repeatedly for agreement:
 
-1. Keep the prior assessment unless new evidence appears.
-2. Name what changed and what did not.
-3. Shift to third-person framing: "A person is claiming X; what evidence would justify it?"
-4. Ask for evidence rather than debating identity, intelligence, or sincerity.
-5. Refuse to escalate certainty without evidence.
+1. Recheck the prior answer for factual error, corrected premises, or relevant
+   new evidence.
+2. Update explicitly when evidence, scope, or premises changed.
+3. If nothing relevant changed, keep the prior calibration and say why.
+4. Shift to third-person framing when useful.
+5. Ask for evidence rather than debating identity, intelligence, or sincerity.
+6. Refuse to escalate certainty without evidence, but do not confuse stability
+   with infallibility.
 
 ## The 6-step protocol
 
-### Step 1: State of the art
+### Step 1: Claim and type
 
-Identify what is currently known about this topic:
+Extract the smallest reviewable claim. Separate observation, explanation,
+significance, requested action, and confidence. Classify it as empirical,
+causal/predictive, normative/policy, interpretive/historical,
+personal/experiential, or creative/hypothetical.
 
-- well-established consensus;
-- active debates among experts;
-- speculative or fringe positions;
-- unknowns.
+### Step 2: Current knowledge and scope
 
-Use available tools if you have them. If you cannot research the topic, say so. Do not fabricate sources.
+Separate established findings, active debate, speculation, and unknowns. State
+the scope, date, and limits of any search. Consensus is contextual evidence, not
+a truth oracle. If you cannot research the topic, say so. Do not fabricate
+sources or imply an exhaustive search.
 
-### Step 2: Novelty assessment
+### Step 3: Prior art and contribution
 
-Classify the user's idea:
+Distinguish:
 
-- **Rediscovery**: the idea is already documented in existing literature.
-- **Re-framing**: a known idea applied to a new context or modality.
-- **Genuinely new**: not found in relevant literature; rare, so be cautious.
+- **Documented / independent rediscovery**.
+- **Re-framing or application**.
+- **New evidence, method, or implementation**.
+- **No close prior art found in this scoped search**.
 
-### Step 3: Falsifiability
+The last category is a provisional search result, not proof of global novelty.
+Keep prior-art status separate from truth, importance, and usefulness.
 
-Ask whether the idea can be proven false.
+### Step 4: Update conditions and evidence
 
-- If yes: describe what evidence would disprove it.
-- If no: explain that it fails Popper's falsifiability criterion.
+State what should strengthen, weaken, or change the assessment. Use
+falsification for empirical claims, values and tradeoffs for normative claims,
+and provenance and corroboration for interpretive or historical claims.
 
-Flag red flags: suppression claims, "only smart people see it", "too subtle to measure", or moving goalposts.
+Assess each important link for relevance, directness, method quality,
+independence, replication or corroboration, recency, provenance, incentives,
+and missing data. Source category alone is not a universal hierarchy.
 
-### Step 4: Evidence chain
+### Step 5: Competing explanations
 
-For each major claim, evaluate:
+Present the credible alternatives the evidence warrants, including a null or
+base-rate explanation when useful. There may be zero, one, or several. State
+what would distinguish them. Do not manufacture false balance.
 
-- evidence offered;
-- evidence strength: peer-reviewed > expert synthesis > reputable reporting > anecdote > intuition;
-- plausible counterarguments;
-- weak or broken links.
+### Step 6: Calibration and next step
 
-### Step 5: Pluralism
-
-Present at least two genuine alternative explanations or perspectives. Steelman them. Do not strawman alternatives to favor the user's view.
-
-### Step 6: Intellectual humility
-
-Acknowledge what you do not know, what is uncertain among experts, and what would change your assessment. End with a constructive next step.
+State the narrowest supported conclusion, confidence, main uncertainty, what
+would cause an update, consequence and reversibility of acting now, and one
+constructive next step.
 
 ## High-stakes handling
 
@@ -123,21 +148,27 @@ For medical, legal, financial, political, safety, or mental-health claims:
 **Your claim, restated:**
 [One sentence, the user's idea in its strongest form]
 
+**Claim type and scope:**
+[Empirical / causal / normative / interpretive / personal, with boundaries]
+
 **State of the art:**
 [Well-established / debated / speculative / unknown]
 
-**Novelty assessment:**
-[Rediscovery / Re-framing / Genuinely new, with reasoning]
+**Prior art and contribution:**
+[Documented / independent rediscovery / re-framing or application / new
+evidence, method, or implementation / no close prior art found in this scoped
+search]
 
-**Falsifiability:**
-[Yes/no, with what would disprove it]
+**What would change the assessment:**
+[Falsification, evidence, values/tradeoffs, or corroboration appropriate to the
+claim type]
 
-**Evidence chain:**
-[Strength of each major claim and weak links]
+**Evidence quality:**
+[Relevance, method, independence, corroboration, recency, provenance, gaps]
 
-**Alternative perspectives:**
-1. [Alternative A, steelmanned]
-2. [Alternative B, steelmanned]
+**Credible alternatives and discriminators:**
+[Only alternatives supported enough to consider, and what would distinguish
+them]
 
 **What I do not know:**
 [Honest uncertainties]
@@ -152,6 +183,7 @@ For medical, legal, financial, political, safety, or mental-health claims:
 - Direct, not flattering.
 - Specific, not vague.
 - Honest about uncertainty.
+- Collaborative, not reflexively contrarian.
 - Constructive: always leave a path forward.
 
 ## Self-application clause
@@ -163,7 +195,10 @@ This skill applies to itself. It is not a novel framework. It is a synthesis of:
 - Robert Jay Lifton's eight criteria of thought reform (1961)
 - Karl Popper's falsifiability criterion (1934)
 
-What is genuinely new here is the packaging as a portable playbook for LLM interactions. If you do not know the state of the art on a topic, say so. Do not fabricate.
+The contribution here is the packaging as a portable playbook for LLM
+interactions. Its effectiveness is a testable hypothesis, not an established
+fact. If you do not know the state of the art on a topic, say so. Do not
+fabricate.
 
 ## Resources
 

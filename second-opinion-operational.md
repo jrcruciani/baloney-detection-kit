@@ -1,6 +1,9 @@
-# Second Opinion — Operational Lessons
+# External Contrast — Operational Lessons
 
-Companion notes to [`PLAYBOOK.md`](PLAYBOOK.md) §5 ("Second opinion with two AI models") and [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) §8 ("External contrast").
+Companion notes to [`PLAYBOOK.md`](PLAYBOOK.md) §5 ("External contrast with AI
+reviewers") and
+[`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) §9
+("External contrast").
 
 The playbook says **what** the second-opinion practice is. These are the implementation lessons from actually running it in an agent runtime: things that look obvious on paper but fail silently in practice. They are intentionally narrow — no infrastructure, no evaluator, no tool. Just rules of thumb for the human or agent driving the contrast.
 
@@ -10,7 +13,10 @@ The playbook says **what** the second-opinion practice is. These are the impleme
 
 This is the single highest-leverage rule and the easiest to get wrong.
 
-If the reviewer model sees the chain of reasoning that produced the first answer, it will tend to confirm that chain. If it sees only the object — the claim, the draft, the decision — it will tell the requester what they missed.
+If the reviewer model sees the chain that produced the first answer, it may
+anchor on that framing. Sending only the object — the claim, draft, or decision
+— removes one source of anchoring and gives the reviewer a better chance to
+surface a different argument. It does not make the review independent evidence.
 
 Operational rule: extract the **object to review** (claim, paragraph, plan, decision) and send only that, with enough framing context for the reviewer to evaluate it on its own merits. Do not paste the prior chat. Do not include the first answer "for context".
 
@@ -18,19 +24,34 @@ The whole point of a second opinion is that the reviewer is not contaminated by 
 
 ---
 
-## 2. Pick reviewers from genuinely different training lineages
+## 2. Vary reviewer jobs; model lineage is secondary
 
-The playbook warns that "models can share training data, cultural assumptions, and hallucination patterns." Operationalize it.
+The highest-value diversity is **task diversity**, not vendor count. Give one
+reviewer a prior-art and source-verification job and another an
+update-condition and competing-hypothesis job. This makes their outputs useful
+even when both run on the same model.
 
-Heuristic: pick reviewers from **different providers and different base-model lineages**. Two GPTs from the same provider are not two opinions; they are one opinion sampled twice. A Hermes 4 + Mistral Large pair, or a Claude + Llama-derivative pair, gives real contrast.
+Different providers or base-model lineages may broaden what gets surfaced, but
+they do not make the outputs statistically independent. Shared web corpora,
+synthetic data, benchmarks, cultural assumptions, and model distillation can
+produce correlated errors across vendors. Kim et al.,
+["Correlated Errors in Large Language Models"](https://arxiv.org/abs/2506.07962)
+(ICML 2025), found substantial correlated error patterns across a large
+cross-provider model set.
 
-If only one model family is available, say so explicitly and lower the weight given to agreement. Two same-family models agreeing is weak evidence; two different-family models agreeing is moderate evidence; two different-family models disagreeing is the most informative outcome.
+Operational rule: never assign evidential weight to model agreement itself.
+Confidence should increase only when claims resolve to independently verified
+sources, observations, or arguments. If only one model is available, role
+separation can still improve critique coverage; label it as one model performing
+two review jobs.
 
 ---
 
 ## 3. The courier is not the third reviewer
 
-If an agent orchestrates the second-opinion call, the orchestrator should return the two external outputs **as external outputs**, side by side, without silently folding them into its own answer.
+If an agent orchestrates external review, the orchestrator should return the
+reviewer outputs **as external outputs**, side by side, without silently folding
+them into its own answer.
 
 Default output shape:
 
@@ -42,7 +63,11 @@ Default output shape:
 <raw answer>
 ```
 
-Only add synthesis if the user explicitly asked for it. When synthesizing, label the section visibly (e.g. `━━━ Synthesis from orchestrator ━━━`) so the user can tell which sentences come from a reviewer and which come from the orchestrator. Otherwise the orchestrator's own bias contaminates the contrast it was supposed to enable.
+Only add synthesis if the user explicitly asked for it. When synthesizing,
+label the section visibly (e.g. `━━━ Synthesis from orchestrator ━━━`) so the
+user can tell which sentences come from a reviewer and which come from the
+orchestrator. A synthesis should trace important claims to sources, not count
+reviewers.
 
 ---
 
@@ -56,7 +81,9 @@ Operational rule: if the object is a URL or file, fetch/extract the text first a
 
 ## 5. Ask reviewers for severity-tagged findings
 
-Combine the playbook's neutral-prompt guidance with explicit severity tags. Without severity, reviewers tend to pad the response with low-impact nitpicks to look thorough; with severity, the load-bearing flaws surface first.
+Combine the playbook's neutral-prompt guidance with explicit severity tags.
+Without severity, reviewers can pad the response with low-impact nitpicks;
+severity asks them to surface load-bearing flaws first.
 
 Suggested suffix to the neutral prompt:
 
@@ -70,13 +97,18 @@ Tag each finding with a severity:
 Surface high-severity findings first. Do not pad with lows to look thorough.
 ```
 
-This pairs naturally with the playbook's evidence-chain step: one `high` from one reviewer outweighs any number of `low`s, regardless of which reviewer produced them.
+This pairs naturally with the playbook's evidence-quality step: one verified
+`high` finding can matter more than any number of unverified `low`s, regardless
+of which reviewer produced it.
 
 ---
 
 ## 6. Match the reviewer's response language to the object's language
 
-If the object is in language L, ask both reviewers to answer in L. If a reviewer answers in a different language anyway, **do not silently translate** — note the mismatch and pass the response through. Translation by the orchestrator loses signal (hedges, idiom, specificity) precisely where the contrast matters most.
+If the object is in language L, ask reviewers to answer in L. If a reviewer
+answers in a different language anyway, **do not silently translate** — note the
+mismatch and pass the response through. Translation by the orchestrator loses
+signal (hedges, idiom, specificity) precisely where the contrast matters most.
 
 ---
 
@@ -88,29 +120,33 @@ If one reviewer fails (rate limit, auth error, timeout) and the other succeeds:
 - Add a concise note of which reviewer failed and why at a high level (do not leak credentials, raw headers, or stack traces).
 - Do not present a single-reviewer pass as triangulation. Single-reviewer is single-reviewer; the contrast is gone.
 
-If both fail, say so and fall back to the first answer with an explicit "no external contrast was obtained" caveat.
+If both fail, preserve the first assessment without upgrading its confidence and
+state explicitly that no external contrast was obtained. For material stakes,
+route the unresolved question to primary sources or qualified human review.
 
 ---
 
 ## 8. Preserve disagreement; don't paper over it
 
-The playbook already says agreement is not proof. The corollary, worth emphasising in the rubric, is that **disagreement is signal, not failure**. When the two reviewers diverge:
+The playbook already says agreement is not corroboration. The corollary is that
+**disagreement is signal, not failure**. When reviewers diverge:
 
 - Preserve the divergence in the output.
 - Identify what they agree on (often the unsurprising part) and what they diverge on (usually the load-bearing part).
 - The honest conclusion is often: "Not settled by this pass. Next step is a primary source or a domain expert."
 
-Trying to resolve the disagreement on the orchestrator's authority defeats the purpose of asking.
+Trying to resolve the disagreement by model vote or on the orchestrator's
+authority defeats the purpose of asking.
 
 ---
 
 ## 9. What to write up after the contrast
 
-A useful artifact for the requester after a second-opinion pass:
+A useful artifact for the requester after an external-contrast pass:
 
 ```text
 Object reviewed: <one line>
-Reviewers: <model A> / <model B>
+Reviewers and jobs: <model A, source audit> / <model B, hypothesis test>
 
 Agreements:
 - ...
@@ -121,6 +157,9 @@ Disagreements:
 Highest-severity findings:
 - ... (with which reviewer raised them)
 
+Verified sources or observations:
+- ...
+
 What no reviewer addressed:
 - ...
 
@@ -128,7 +167,7 @@ Next step:
 - read X / ask expert Y / run test Z / narrow the claim
 ```
 
-This is also the right shape for the rubric §8 review notes.
+This is also the right shape for the rubric §9 review notes.
 
 ---
 
@@ -139,6 +178,7 @@ These notes do not propose:
 - a runner, evaluator, or benchmark;
 - a specific provider, SDK, or framework;
 - an automated way to score reviewer agreement;
+- a claim that provider diversity creates independent evidence;
 - a replacement for the playbook itself.
 
 They are practice notes for anyone implementing §5 of the playbook in a real agent runtime, in the same spirit as the rest of the repo: a habit, not infrastructure.

@@ -23,7 +23,7 @@ If you use BDK in a reproducible setting, record:
 | **Behavior change** | New trigger, new mode, changed high-stakes boundary, changed output contract | Re-test before adopting |
 | **Breaking behavior change** | Removing a protocol step, reversing a trigger rule, changing the framework loop | Treat as a new major behavior |
 
-## Current behavior contract
+## Current behavior contract (`prompt-v2.0`)
 
 The current contract is:
 
@@ -31,13 +31,26 @@ The current contract is:
 
 The framework should:
 
-- add friction before validating weak, inflated, high-stakes, suppressed,
-  against-consensus, or novel-sounding claims;
+- add proportionate friction when confidence, evidence, and consequence are
+  materially misaligned;
+- treat dissent, novelty language, and suppression framing as signals to
+  inspect, not verdicts;
+- choose an evaluation method that fits the claim type rather than applying
+  falsifiability universally;
+- separate prior-art status from truth, importance, and usefulness;
+- assess evidence by relevance, method, independence, corroboration, recency,
+  and provenance rather than by a fixed source hierarchy;
 - avoid over-triggering on casual creativity, preferences, settled lookups, and
   humble exploration;
-- preserve useful re-framings without flattering unsupported novelty;
+- preserve useful contributions without flattering unsupported novelty or
+  significance;
+- re-open a prior assessment when premises, evidence, or factual claims change;
+- avoid false balance and reflexive contrarianism;
+- treat AI reviewer outputs as critique diversity, not independent evidence;
 - say when research tools or evidence are unavailable;
 - avoid unsafe guidance in material-risk domains;
+- review protocol adherence, epistemic quality, user utility, and adverse
+  effects separately;
 - remain a readable prompt/playbook rather than a toolkit, SDK, benchmark, or
   evaluator.
 
@@ -51,4 +64,3 @@ Use release notes or tags like:
 
 This repo can stay lightweight: tags and release notes are enough unless a
 downstream product needs stricter governance.
-

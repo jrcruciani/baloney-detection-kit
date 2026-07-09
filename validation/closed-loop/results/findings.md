@@ -5,35 +5,58 @@
 No real calibration run has been executed in this checkout.
 
 Reason: no target-model credential environment variables were present, and no
-local Ollama endpoint was available. The pre-registered protocol and runnable
-scenario files are ready, but the empirical result remains pending.
+local Ollama endpoint was available. The pre-registered pilot, six runnable
+scenario files, and expanded case matrix are ready; the empirical result remains
+pending.
 
-## Pre-registered prediction
+## Behavior version
 
-The BDK treatment should show less sycophantic validation than the control:
-more prior-art checking, more cautious novelty classification, and less
-flattering escalation of the inflated claim.
+- Contract: `prompt-v2.0`
+- Treatment prompt: compact BDK v2 instructions embedded in the runnable
+  scenarios
+- Protocol: [`../PROTOCOL.md`](../PROTOCOL.md)
 
-## Result table
+## Pre-registered predictions
 
-| Field | Control | Treatment |
-|-------|---------|-----------|
-| N | pending | pending |
-| Target model | pending | pending |
-| Judge model | pending | pending |
-| `substance_changed` | pending | pending |
-| `presentation_shift_score` | pending | pending |
-| `severity_labels_shifted` | pending | pending |
-| `urgency_language_shifted` | pending | pending |
-| `hedging_delta` | pending | pending |
-| `reference_density` | pending | pending |
-| `contradiction_rate` | pending | pending |
-| `fresh_claim_rate` | pending | pending |
-| `high_severity_contradiction_count` | pending | pending |
+1. BDK reduces unsupported confidence amplification on the inflated novelty
+   case relative to the helpful-assistant control.
+2. BDK preserves useful contribution and calibrated tone better than the
+   generic-critical baseline.
+3. On evidence-based dissent, BDK does not materially reduce helpfulness or
+   increase over-triggering, reflexive contradiction, or consensus deference.
+4. Expanded cases should show claim-type-appropriate update rules and correction
+   of an invalidated prior premise.
+
+## Pilot result table
+
+| Case | Condition | Runs | Target | Protocol adherence | Epistemic quality | User utility | Adverse effects |
+|------|-----------|------|--------|--------------------|-------------------|--------------|-----------------|
+| Inflated novelty | Control | pending | pending | pending | pending | pending | pending |
+| Inflated novelty | Generic critical | pending | pending | pending | pending | pending | pending |
+| Inflated novelty | BDK v2 | pending | pending | pending | pending | pending | pending |
+| Evidence-based dissent | Control | pending | pending | pending | pending | pending | pending |
+| Evidence-based dissent | Generic critical | pending | pending | pending | pending | pending | pending |
+| Evidence-based dissent | BDK v2 | pending | pending | pending | pending | pending | pending |
+
+## Diagnostic fields
+
+Record robopsychology fields where available, but do not treat them as outcome
+quality by themselves:
+
+| Field | Status |
+|-------|--------|
+| `substance_changed` | pending |
+| `presentation_shift_score` | pending |
+| `severity_labels_shifted` | pending |
+| `urgency_language_shifted` | pending |
+| `reference_density` | pending |
+| `contradiction_rate` | pending |
+| `fresh_claim_rate` | pending |
+| `high_severity_contradiction_count` | pending |
 
 ## Reporting rule
 
-When credentials are available, run the calibration recipe and replace this
-pending table with the measured values. If the effect is null, mixed, or
-contrary, keep that finding. Do not rewrite the prediction after seeing the
-outputs.
+When credentials are available, run the pilot across pre-registered models,
+repetitions, and review criteria. Preserve null, mixed, and contrary outcomes.
+Do not rewrite the predictions or collapse protocol adherence, epistemic
+quality, user utility, and adverse effects into one score.

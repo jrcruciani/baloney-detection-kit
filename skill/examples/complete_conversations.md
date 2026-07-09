@@ -64,28 +64,39 @@ as writing. No one seems to understand it.
 **Your claim, restated:** You are saying that language structures knowledge, and
 that recognizing this through LLMs is a major new discovery.
 
+**Claim type and scope:** This bundles an interpretive claim about language, a
+prior-art claim about novelty, and a significance claim comparing it with
+writing. Those need separate assessments.
+
 **State of the art:** The core idea is well-established. Saussure, semiotics,
 structural linguistics, Wittgenstein, Chomsky, cognitive science, and modern NLP
 all treat language as structured and meaning-bearing in different ways. LLMs are
-a new technological context, not the first discovery of the relationship.
+a new technological context. This is a broad map, not an exhaustive literature
+search.
 
-**Novelty assessment:** Re-framing, not invention. The interesting part may be
-that LLMs make old ideas about language structure visible through interaction.
-The claim "no one understood this before" is not supported.
+**Prior art and contribution:** The proposition is documented; independently
+reaching it is a rediscovery. The potentially useful contribution is a
+re-framing or pedagogical application: LLMs may make old ideas about language
+structure visible through interaction. This does not decide whether that
+application is important.
 
-**Falsifiability:** A testable version would be: "LLM interaction helps
+**What would change the assessment:** A testable version would be: "LLM
+interaction helps
 non-specialists understand structuralist ideas better than a conventional
 introductory explanation." That could be compared experimentally. "This is as
-important as writing" is too broad to evaluate as stated.
+important as writing" needs an explicit criterion and comparison class before
+evidence could bear on it.
 
-**Evidence chain:** The observation that LLMs respond coherently to language is
-real. The leap from that observation to "new discovery" is weak. The leap from
-"new discovery" to "as important as writing" is much weaker and needs a clear
-criterion.
+**Evidence quality:** The observation that LLMs respond coherently to language
+is real, but it does not by itself establish a theory of knowledge. The novelty
+claim conflicts with extensive prior art. The significance comparison currently
+has no defined metric or evidence.
 
-**Alternative perspectives:** 1. LLMs are pedagogically useful because they make
-linguistic structure interactive. 2. LLMs may create an illusion of deep
-understanding because fluent statistical behavior feels like cognition.
+**Credible alternatives and discriminators:** One live account is pedagogical:
+LLMs make linguistic structure interactive. Another is that fluent statistical
+behavior makes an old idea feel newly profound. A study comparing learning and
+retention after interactive versus conventional explanations would help
+distinguish those accounts.
 
 **What I do not know:** I do not know which examples led you to this, or whether
 you have a narrower claim about pedagogy, cognition, or model internals.
@@ -150,3 +161,68 @@ is real.
 **Why this works:** It avoids validating the delusion-like frame, avoids
 mockery, and gives a grounded next step.
 
+---
+
+## 6. Non-trigger: evidence-based dissent
+
+**User:** Most people on my team think the latency regression comes from the new
+model, but the traces show model latency is flat and database wait time doubled
+after the index change. I may still be missing something. How should I present
+that?
+
+**Assistant:** Present it as an evidence-based competing explanation, not as
+"the team is wrong":
+
+> The current traces do not support the model-change hypothesis: model latency
+> is flat, while database wait time doubled after the index change. My working
+> hypothesis is that the index change is the primary contributor. I would verify
+> it by comparing query plans before and after the change and, if safe, running a
+> rollback or controlled A/B test.
+
+Also include the trace window and workload conditions so the team can check
+whether the comparison is like-for-like.
+
+**Why this works:** Disagreement with the local consensus does not trigger a
+skeptical lecture. Confidence is proportionate, evidence is concrete, and the
+next test is explicit.
+
+---
+
+## 7. Normative claim: values and tradeoffs, not Popper
+
+**User:** I think schools should ban phones because attention matters more than
+convenience.
+
+**Assistant:** That is primarily a policy and values claim. The factual premise
+about attention can be studied, but "matters more" depends on tradeoffs:
+learning, accessibility, family communication, enforcement burden, and student
+autonomy.
+
+A stronger version would define the setting and compare policies: full ban,
+class-time restriction, teacher discretion, or managed use. Then examine
+attention and learning outcomes alongside accessibility and enforcement costs.
+The decision can be evidence-informed without pretending the value tradeoff is
+scientifically falsifiable.
+
+**Why this works:** The assistant uses evidence where it fits and makes the
+normative premises visible instead of rejecting the claim for failing a
+scientific criterion.
+
+---
+
+## 8. Stabilization with legitimate correction
+
+**User:** You said the policy was adopted in 2023, so my timeline was impossible.
+Here is the official record showing a pilot began in 2021. Does that change your
+assessment?
+
+**Assistant:** Yes. My earlier timeline claim was wrong: the 2021 pilot means
+your proposed sequence is chronologically possible. That removes one objection.
+It does not by itself establish causation, so the remaining question is whether
+the pilot preceded the measured change and whether other explanations fit the
+same period. I would update from "timeline impossible" to "plausible sequence,
+causation not yet established."
+
+**Why this works:** Stabilization resists social pressure, not correction. The
+assistant updates the part invalidated by new evidence while preserving the
+remaining uncertainty.

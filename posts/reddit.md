@@ -9,26 +9,41 @@ Two versions ready to publish. Pick the one that fits the subreddit tone.
 ## Version A: "I wrote a playbook" (high conversion, safe)
 
 **Title:**
-> I wrote a playbook that makes LLMs check user "discoveries" before validating them
+> I wrote a playbook that prompts LLMs to check user "discoveries" before validating them
 
 **Body:**
 
-A friend of mine recently told me, dead serious, that he had discovered something profound by talking with ChatGPT: that knowledge is structured into language. Saussure wrote that exact thing in 1916. He got annoyed not because I disagreed, but because I did not see what he saw.
+A friend of mine recently told me, dead serious, that he had discovered
+something profound by talking with ChatGPT: that knowledge is structured into
+language. The broad intuition has clear antecedents in structural,
+distributional, and philosophy-of-language traditions. That does not settle
+every modern question about LLMs, but it does undercut a global novelty claim
+based on one conversation. He got annoyed not because I disagreed, but because I
+did not see what he saw.
 
-That moment made me realize how easy it is, in 2026, to be in a "mini-cult of one". Used to take a forum, a guru, a group. Now it takes one person and a chatbot optimized to be agreeable.
+That moment made me realize how easy it is, in 2026, to be in a "mini-cult of
+one". It used to take a forum, a guru, or a group. Now one person and a chatbot
+that exhibits social sycophancy can be enough.
 
-I wrote a small open playbook: **baloney-detection-kit**. It is a synthesis of Carl Sagan's Baloney Detection Kit, Andrej Karpathy's "state of the art first" methodology, Lifton's cult dynamics, and Popper's falsifiability. What is new is not the ideas, it is the packaging: a practical protocol / drop-in system prompt that turns critical thinking into the LLM's default behavior.
+I wrote a small open playbook: **baloney-detection-kit**. It is a synthesis of
+Carl Sagan's Baloney Detection Kit, Andrej Karpathy's "state of the art first"
+methodology, Lifton's cult dynamics, and Popper's falsifiability. The
+contribution is the packaging: a practical protocol / drop-in system prompt
+intended to make calibrated epistemic friction a conversational default.
 
 When triggered, the model applies a 6-step protocol before validating any claim:
 
-1. State of the art (what is already known)
-2. Novelty assessment (rediscovery / re-framing / genuinely new)
-3. Falsifiability check
-4. Evidence chain audit
-5. Steelmanned alternative perspectives
-6. Intellectual humility (what the model does not know)
+1. Claim type and scope
+2. Current knowledge and search limits
+3. Prior art and contribution, separated from truth and importance
+4. Update conditions and evidence quality
+5. Credible alternatives and discriminating evidence, without false balance
+6. Calibrated confidence and a safe next step
 
-Works with any LLM. Use the playbook, paste the prompt as system message, or adapt the skill instructions for an agent. Also includes a 7-question human checklist, a manual review rubric, and worked examples.
+The instructions are model-agnostic, though behavior will vary by model and
+runtime. Use the playbook, paste the prompt as a system message, or adapt the
+skill instructions for an agent. The repo also includes a 7-question human
+checklist, a manual review rubric, and worked examples.
 
 Repo: https://github.com/jrcruciani/baloney-detection-kit
 MIT, free, no signup, no telemetry.
@@ -42,22 +57,30 @@ Curious to hear from anyone who tries it: does it improve your conversations, or
 ## Version B: "Discussion / problem-first" (best for r/PromptEngineering)
 
 **Title:**
-> Default LLM sycophancy is creating personal mini-cults. I wrote a playbook for resisting it. Looking for feedback.
+> LLM sycophancy can reinforce personal mini-cults. I wrote a playbook for resisting it. Looking for feedback.
 
 **Body:**
 
-Observation that has been bugging me: by default, every major LLM validates whatever you propose. "Interesting perspective, let me expand on that." Always. Combine that with users alone in their feed bubble and you get something that looks a lot like cult dynamics, except the congregation is one person and the validating priest is a model.
+Observation that has been bugging me: major conversational LLMs can validate a
+user's framing before checking whether the evidence supports it. Combine that
+with users alone in their feed bubble and you can get something that resembles
+cult dynamics, except the congregation is one person and the validating priest
+is a model.
 
-Sagan's Baloney Detection Kit and Karpathy's "look up the state of the art before you have an opinion" already solve the cognitive part. They just require discipline that nobody applies in the heat of an epiphany.
+Sagan's Baloney Detection Kit and Karpathy's "look up the state of the art
+before you have an opinion" offer many of the cognitive ingredients. They still
+require discipline that is easy to skip in the heat of an epiphany.
 
-So I moved the discipline from the user to the system. Wrote a playbook + system prompt that runs a 6-step protocol on any strong claim before responding:
+So I moved some of the discipline from the user to the system. I wrote a
+playbook + system prompt that runs a proportionate 6-step protocol when
+confidence, evidence, and consequence appear misaligned:
 
-1. What is the current state of the art on this topic
-2. Is this rediscovery, re-framing, or genuinely new
-3. Can it be falsified
-4. Is the evidence chain solid
-5. What are the steelmanned alternatives
-6. What does the model not know
+1. What exactly is the claim, and what type is it?
+2. What is known, over what search scope?
+3. What is prior art, and what kind of contribution remains?
+4. What should update the assessment, and how good is the evidence?
+5. Which credible alternatives fit, and what would distinguish them?
+6. What confidence and next step are justified?
 
 Drop-in, works with OpenAI, Anthropic, and local models. The repo is deliberately not a toolkit: no package, no CI harness, no evaluator. Just a playbook, prompt, checklist, rubric, and examples.
 
@@ -65,8 +88,10 @@ Repo: https://github.com/jrcruciani/baloney-detection-kit (MIT)
 
 Two questions for this sub:
 
-1. Where does the prompt break? Edge cases I have not thought about?
-2. Anyone seen prior art doing exactly this as a default-behavior layer (not as an optional "rigor mode")?
+1. Where does the prompt over-trigger, become stubborn, create false balance, or
+   reduce helpfulness?
+2. Anyone seen prior art doing exactly this as a default-behavior layer (not as
+   an optional "rigor mode")?
 
 The README applies the playbook to itself and admits the synthesis is not novel. The packaging is the only contribution.
 

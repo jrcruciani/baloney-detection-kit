@@ -43,12 +43,15 @@ How:
 
 What you get:
 
-- The agent can invoke the protocol when the user claims novelty, rejects consensus, asks for validation, or enters high-stakes territory.
+- The agent can invoke the protocol when confidence, evidence, and consequence
+  are materially misaligned without treating novelty or dissent as a verdict.
 - The output remains consistent enough for human review.
 
 Watch out for:
 
-- **Trigger calibration.** Too often becomes annoying; too rarely becomes useless.
+- **Trigger calibration.** Too often becomes annoying or contrarian; too rarely
+  becomes useless. Include well-supported dissent and humble exploration in
+  non-trigger review cases.
 - **Persona conflicts.** A "make the user feel right" persona will defeat the playbook.
 - **Format pressure.** Some UIs make structured output too heavy. Use light mode when appropriate.
 
@@ -63,7 +66,9 @@ How:
 1. Collect a small set of representative conversations.
 2. Include cases that should trigger the playbook and cases that should not.
 3. Have a human reviewer use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md).
-4. Discuss misses: false positives, false negatives, bad tone, bad evidence, or failure under pressure.
+4. Discuss misses: false positives, false negatives, bad tone, bad evidence,
+   false balance, reflexive contradiction, or failure to revise an initial
+   error.
 5. Update instructions or examples, not code.
 6. Pin the prompt version or repository commit if the review is part of a reproducible process.
 
@@ -77,6 +82,8 @@ Watch out for:
 - **Do not turn the repo into the evaluator.** If you need automated scoring, use an external eval tool or a separate repo.
 - **Review set staleness.** Claims age. Refresh examples as domains change.
 - **Judge sycophancy.** LLM-as-judge review can have the same agreeableness problem; keep human review in the loop.
+- **Compliance is not outcome quality.** Review source correctness, confidence,
+  and usefulness separately from whether the assistant followed every step.
 
 ---
 
@@ -88,8 +95,10 @@ How:
 
 1. Use the playbook as an inference-time behavior instruction.
 2. Add domain-specific source expectations: clinical guidelines, case law, policy, standards, or primary literature.
-3. Use full mode more readily.
-4. Require human expertise before action when the stakes are material.
+3. Use full mode more readily when evidence-confidence mismatch is material,
+   but keep epistemic response length separate from action restrictions.
+4. Require human expertise before action when the consequences are material or
+   hard to reverse.
 5. Review incidents manually with the rubric.
 
 What you get:
@@ -119,7 +128,8 @@ How:
 What you get:
 
 - A practical artifact for teaching epistemic friction.
-- A way to discuss sycophancy, novelty, falsifiability, and evidence without starting with tooling.
+- A way to discuss sycophancy, claim types, update conditions, evidence quality,
+  and calibration without starting with tooling.
 
 Watch out for:
 
@@ -134,20 +144,29 @@ Watch out for:
 
 How:
 
-1. **Design** — capture "apply epistemic friction before validating novel/high-stakes claims" as a behavioral requirement. Keep BDK's [`ROOT_PROMPT.md`](ROOT_PROMPT.md) as the portable form of that requirement.
+1. **Design** — capture "apply proportionate epistemic friction when
+   confidence, evidence, and consequence are materially misaligned; remain
+   collaborative otherwise" as a behavioral requirement. Keep BDK's
+   [`ROOT_PROMPT.md`](ROOT_PROMPT.md) as the portable form of that requirement.
 2. **Embed** — put `ROOT_PROMPT.md` (or [`skill/`](skill/)) inside the system prompt of the agents you govern with AGT. BDK becomes the conversational layer; AGT remains the enforcement layer underneath it.
-3. **Specify and test** — express the 6-step protocol as an ASSERT spec so ASSERT generates and scores test cases that check whether the agent runs the protocol when trigger conditions fire. Re-run it as a regression gate.
+3. **Specify and test** — express the behavior contract as an ASSERT spec with
+   trigger cases, non-trigger cases, well-supported dissent, normative claims,
+   and multi-turn corrections. Score calibration and helpfulness as well as
+   unsupported validation. Re-run it as a regression gate.
 4. **Diagnose** — when an evaluation case or a production incident shows the agent still validated a weak claim, hand the transcript to [robopsychology](https://github.com/jrcruciani/robopsychology) to diagnose whether the cause was the model, the runtime, or the conversation.
 
 What you get:
 
 - A defense-in-depth posture: conversational friction (BDK, advisory) under runtime enforcement (AGT, hard), with reproducible evaluation (ASSERT) and per-case diagnosis (robopsychology) around it.
-- A clear division of labor: BDK prevents, ASSERT measures, AGT governs, robopsychology explains.
+- A clear division of labor: BDK attempts to mitigate, ASSERT measures, AGT
+  governs, and robopsychology explains.
 
 Watch out for:
 
 - **A prompt is advisory.** BDK shapes reasoning; it cannot block an action. That is why AGT must still govern the actions BDK only talks the model out of — do not treat BDK as enforcement.
-- **ASSERT tests observable behavior**, not internal cognition, and its LLM-judge scores are not deterministic. Keep human review in the loop.
+- **ASSERT tests observable behavior**, not internal cognition, and its
+  LLM-judge scores are not deterministic. Keep blinded human review in the loop,
+  and do not let protocol adherence stand in for source correctness or utility.
 - **Do not absorb the stack into this repo.** BDK stays a playbook; the spec config, governance policies, and orchestration live in the downstream system.
 
 ---

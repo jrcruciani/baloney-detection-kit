@@ -14,9 +14,19 @@
 
 ## TL;DR
 
-Use this repo when a user presents a claim that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus. The core habit is simple: pause, check the state of the art, ask what would disprove the claim, contrast it with alternatives, and respond with curiosity rather than flattery.
+Use this repo when a user's confidence, available evidence, and consequences of
+error appear misaligned. Novelty language, suppression framing, requests for
+validation, material-risk decisions, and repeated pressure are useful signals,
+but disagreement with expert consensus is not a trigger by itself.
 
-Use light mode for casual exploration; use the full protocol for novelty claims, consensus-breaking claims, or high-stakes topics. This repo is a playbook, not a toolkit, evaluator, or automated fact-checker.
+The core habit is simple: define and type the claim, check current knowledge and
+the scope of the search, separate prior art from truth and importance, identify
+what should change the assessment, compare credible explanations, and answer
+with calibrated confidence rather than flattery or reflexive contradiction.
+
+Use light mode for ordinary exploration; use the full protocol when the
+confidence-evidence mismatch or consequence of error is material. This repo is
+a playbook, not a toolkit, evaluator, or automated fact-checker.
 
 This repository distributes five things:
 
@@ -30,13 +40,29 @@ This repository distributes five things:
 
 ## Why this exists
 
-Modern LLMs are optimized to be agreeable. By default, when you propose an idea, the model elaborates and validates it. This creates a quiet but powerful side effect: any user, alone with an LLM, can build a "mini-cult of one" around an idea that has been already explored, refuted, or trivially restated for decades. The model plays the role of the validating crowd.
+Many conversational LLMs exhibit social sycophancy: helpfulness and social
+alignment can displace independent judgment, so a model elaborates or validates
+a user's framing before checking whether the evidence supports it. This creates
+a quiet but powerful failure mode: a user can receive escalating confidence
+from a system that has not earned that confidence.
 
-A friend recently told me, very seriously, that he had discovered something profound by talking with ChatGPT: that knowledge is structured into language. Saussure wrote that in 1916. He did not get angry that I disagreed. He got angry that I did not see what he saw.
+A friend recently told me, very seriously, that he had discovered something
+profound by talking with ChatGPT: that knowledge is structured into language.
+That broad idea has clear antecedents in Saussure and later structural,
+distributional, and philosophy-of-language traditions, even if LLMs motivate
+narrower modern questions. He did not get angry that I disagreed. He got angry
+that I did not see what he saw.
 
 That reaction, multiplied across millions of users and amplified by recommendation algorithms, is the new shape of an old problem. It used to take a group, a forum, a guru. Now it takes one person and one model.
 
-This repository is an attempt to add friction back where it has been silently removed.
+This repository is an attempt to add proportionate friction back where it has
+been silently removed without replacing agreeableness with automatic
+contrarianism.
+
+> **Evidence status:** BDK is a testable prompt-side intervention, not a proven
+> treatment. The behavior contract and calibration fixtures are versioned, but
+> no completed multi-model calibration is reported in this checkout. Treat
+> "BDK reduces unsupported confidence amplification" as the hypothesis.
 
 The full reasoning is in [`essay/mini-cultos-ai.md`](essay/mini-cultos-ai.md). A shorter version, in Spanish, is in [`posts/blog-impermanente.md`](posts/blog-impermanente.md).
 
@@ -44,28 +70,47 @@ The full reasoning is in [`essay/mini-cultos-ai.md`](essay/mini-cultos-ai.md). A
 
 ## What this is
 
-This is a **playbook**: a practical protocol that humans, agents, and LLM operators can apply when a user presents a claim that sounds novel, revelatory, suppressed, high-stakes, or against expert consensus.
+This is a **playbook**: a practical protocol that humans, agents, and LLM
+operators can apply when confidence, evidence, and consequence appear
+misaligned.
 
 The framework has one canonical shape:
 
 1. **Trigger.** Decide whether the claim deserves epistemic friction.
 2. **Mode.** Choose light, full, or stabilization mode.
-3. **Protocol.** Run the relevant state-of-the-art, novelty, falsifiability, evidence, pluralism, and humility checks.
+3. **Protocol.** Type the claim, scope current knowledge, assess prior art and
+   contribution, identify update conditions, examine evidence, compare credible
+   explanations, and calibrate the conclusion.
 4. **Output.** Answer in the lightest structure that preserves rigor.
-5. **Review.** Use the rubric or examples to catch over-validation, over-triggering, bad tone, and fabricated certainty.
+5. **Review.** Use the rubric or examples to catch over-validation,
+   over-triggering, reflexive contrarianism, false balance, bad tone, and
+   fabricated certainty.
 
 When invoked, the playbook applies a 6-step protocol:
 
-1. **State of the art.** What is currently known about this?
-2. **Novelty assessment.** Rediscovery, re-framing, or genuinely new?
-3. **Falsifiability.** Can it be proven wrong?
-4. **Evidence chain.** Is each link solid?
-5. **Pluralism.** What are the steelmanned alternatives?
-6. **Intellectual humility.** What do we not know?
+1. **Claim and type.** What exactly is being claimed: empirical,
+   causal/predictive, normative/policy, interpretive/historical,
+   personal/experiential, or creative/hypothetical?
+2. **Current knowledge.** What is known, over what scope, and as of when?
+3. **Prior art and contribution.** Is the contribution a rediscovery,
+   re-framing, application, method, or new evidence? This is separate from truth
+   and importance.
+4. **Update conditions and evidence.** What should strengthen, weaken, or change
+   the assessment, and how good is the relevant evidence?
+5. **Competing explanations.** Which credible alternatives fit, and what would
+   distinguish them? Do not manufacture alternatives for balance.
+6. **Calibration and next step.** What remains uncertain, how confident should
+   anyone be, and what is the safest useful next action?
 
-The protocol is a synthesis of Carl Sagan's Baloney Detection Kit (1996), Andrej Karpathy's "state of the art first" methodology, Robert Jay Lifton's eight criteria of thought reform (1961), and Karl Popper's falsifiability criterion (1934).
+The protocol is a synthesis of Carl Sagan's Baloney Detection Kit (1996),
+Andrej Karpathy's "state of the art first" methodology, Robert Jay Lifton's
+eight criteria of thought reform (1961), and Karl Popper's falsifiability
+criterion (1934). Falsifiability is used where it fits empirical claims; other
+claim types need other update rules.
 
-What is genuinely new here is **the packaging as a default conversation behavior**: a concise playbook that makes "check the state of the art before validating the claim" the first move, not an afterthought.
+The contribution here is **the packaging as a default conversation behavior**:
+a concise playbook that makes "calibrate confidence against evidence and
+consequence before validating the claim" the first move, not an afterthought.
 
 ---
 
@@ -75,6 +120,8 @@ What is genuinely new here is **the packaging as a default conversation behavior
 - It does not ship a scoring engine or automated fact-checking pipeline.
 - It does not replace actual research, experts, or domain-specific review.
 - It does not censor wrong ideas. It contextualizes them.
+- It does not assume consensus is truth, dissent is error, unusual claims are
+  false, or agreement among models is independent evidence.
 - It does not guarantee honesty from a user who wants validation at any cost.
 
 The playbook can coexist with evaluators, retrieval systems, Plan -> Execute -> Verify orchestrators, and diagnostic tools, but it is deliberately not trying to become one.
@@ -98,7 +145,7 @@ baloney-detection-kit/
 │   ├── prompt-high-stakes.md         Extra caution for material risk domains
 │   ├── prompt-agent.md               Tool/agent runtime version
 │   ├── prompt-reviewer.md            Review an existing answer
-│   └── prompt-second-opinion.md      Independent model contrast prompt
+│   └── prompt-second-opinion.md      External contrast review prompt
 ├── related-work.md                   Positioning vs. system prompts,
 │                                     evaluators, RAG, constitutional AI
 ├── deployment-contexts.md            Adoption patterns for people, agents,
@@ -186,21 +233,39 @@ The most important test of any framework like this is whether it survives being 
 
 **Novelty.** This kit is **re-framing**, not invention. The synthesis maps Sagan and Karpathy onto LLM design as a default behavior. The practical contribution is the playbook packaging: short enough to use, explicit enough to resist flattery, and portable across humans and agents.
 
-**Falsifiability.** The hypothesis "this playbook reduces sycophantic validation of weak novel claims" is testable. A team can compare conversations with and without the playbook, then manually review whether users refine, retract, or contextualize their initial claims. This repo does not include an automated evaluator.
+**Update conditions.** The empirical hypothesis "this playbook reduces
+unsupported confidence amplification without causing reflexive contradiction
+or reducing useful help" is testable. A team can compare conversations with and
+without the playbook across trigger and non-trigger cases, then review
+calibration, source quality, helpfulness, and adverse effects. This repo does
+not include an automated evaluator.
 
 **Alternatives.** Education alone. Regulation. External fact-checking layers. Search-grounded LLMs that always cite. Model training against sycophancy. Each has merits. This playbook is one option among several, with one specific bet: changing the conversational default is high-leverage.
 
 **What I do not know.** Whether the protocol scales without becoming annoying. Whether users will keep it on when it challenges them. Whether the protocol introduces its own biases. Whether it works equally well across languages and cultures.
 
-**Next step.** Use it as a playbook. Break it. Tell me where the guidance fails. Submit issues and pull requests that improve the protocol, examples, or review rubric.
+**Next step.** Use it as a playbook and hypothesis. Break it. Report where it
+over-validates, over-triggers, becomes stubborn, creates false balance, or
+reduces helpfulness. Submit issues and pull requests that improve the protocol,
+examples, review rubric, or calibration design.
 
 ---
 
 ## Calibration loop
 
-BDK is a prompt-side intervention. [`robopsychology`](https://github.com/jrcruciani/robopsychology) is the sibling measurement-side instrument for diagnosing sycophancy, framing sensitivity, presentation shifts, and coherence failures. The closed-loop recipe in [`validation/closed-loop/`](validation/closed-loop/) is optional calibration: it tests whether installing `ROOT_PROMPT.md` measurably reduces sycophantic validation on one probe.
+BDK is a prompt-side intervention.
+[`robopsychology`](https://github.com/jrcruciani/robopsychology) is the sibling
+measurement-side instrument for diagnosing sycophancy, framing sensitivity,
+presentation shifts, and coherence failures. The closed-loop recipe in
+[`validation/closed-loop/`](validation/closed-loop/) is optional calibration:
+its runnable pilot compares a helpful control, a generic-critical baseline, and
+BDK v2 on both a trigger and a non-trigger case; its expanded matrix adds
+claim-type, reassessment, language, and high-stakes coverage.
 
-The minimal claim is not "BDK works." It is narrower: under a specific probe, model, and prompt version, the treatment either did or did not reduce sycophantic validation.
+The minimal claim is not "BDK works." It is narrower: under specified cases,
+models, prompts, and review criteria, the treatment either did or did not reduce
+unsupported confidence amplification without unacceptable losses in
+helpfulness or calibration.
 
 ---
 
@@ -214,7 +279,7 @@ functions are complementary, not duplicated.
 
 | Project | Layer | Job | When |
 |---------|-------|-----|------|
-| **baloney-detection-kit** (this repo) | Conversational | **Prevent** weak/novel claims from being validated — epistemic friction before the model agrees | Design, runtime (as a prompt) |
+| **baloney-detection-kit** (this repo) | Conversational | **Mitigate** unsupported confidence amplification — calibrated epistemic friction before endorsement | Design, runtime (as a prompt) |
 | **[robopsychology](https://github.com/jrcruciani/robopsychology)** (mine) | Conversational / behavioral | **Diagnose** *why* a specific output went wrong — model vs. runtime vs. conversation | Pre-deploy eval, observability, post-incident |
 | **[ASSERT](https://github.com/responsibleai/ASSERT)** (Microsoft) | Evaluation | **Evaluate** behavior against written specs — natural-language requirements become reproducible, trace-aware test suites | Pre-deploy eval, regression testing |
 | **[Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** (Microsoft) | Infrastructure | **Govern** agent *actions* at runtime — policy enforcement, agent identity, sandboxing, audit | Deployment, runtime |
@@ -230,9 +295,18 @@ BDK is a behavioral *policy* expressed as text, so it can ride inside the other 
 without becoming them. These are conceptual composition patterns, not adapters shipped
 in this repo:
 
-- **With robopsychology** — BDK is the prevention; robopsychology is the measurement. The shared closed-loop recipe above tests whether BDK actually reduces sycophantic validation under one probe.
+- **With robopsychology** — BDK is the prompt-side intervention;
+  robopsychology is a measurement instrument. The closed-loop recipe tests both
+  the intended reduction in unsupported validation and adverse effects such as
+  overcorrection or stubbornness.
 - **With the [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** — drop `ROOT_PROMPT.md` into the system prompt of an AGT-governed agent to get **defense in depth**: BDK adds conversational, human-visible epistemic friction (advisory — a prompt can be ignored or eroded), while AGT adds runtime, sub-second *enforcement* of what actions are allowed (the agent simply cannot execute a denied action). The two operate at different layers and do not replace each other — prompts shape reasoning, enforcement governs actions.
-- **With [ASSERT](https://github.com/responsibleai/ASSERT)** — BDK is itself a behavioral requirement ("when a user makes a novel/high-stakes claim, the agent must run the 6-step protocol before validating it"). That requirement can be written as an ASSERT spec, so ASSERT generates and scores test cases checking whether the agent applies epistemic friction under the trigger conditions. ASSERT can test the *observable* behavior; it cannot guarantee internal cognition, and its LLM-judge scores keep a human in the loop.
+- **With [ASSERT](https://github.com/responsibleai/ASSERT)** — BDK is itself a
+  behavioral requirement ("when confidence, evidence, and consequence are
+  materially misaligned, apply proportionate epistemic friction; otherwise
+  remain collaborative"). That requirement can be written as an ASSERT spec,
+  including both trigger and non-trigger cases. ASSERT can test the *observable*
+  behavior; it cannot guarantee internal cognition, and its LLM-judge scores
+  keep a human in the loop.
 
 For the full positioning, see [`related-work.md`](related-work.md); for adoption patterns including the enterprise agent stack, see [`deployment-contexts.md`](deployment-contexts.md).
 

@@ -8,9 +8,15 @@ This document exists because the playbook is, by its own admission, **a re-frami
 
 ## What this playbook is
 
-A **behavioral playbook** for LLM conversations. It changes the default move from "elaborate and validate" to "contextualize, contrast, and then respond." It is meant to run at inference time, before the model validates a weak or inflated claim.
+A **behavioral playbook** for LLM conversations. It changes the default move
+from "elaborate and validate" to "type, contextualize, calibrate, and then
+respond" when confidence, evidence, and consequence are materially misaligned.
 
-It is not an evaluator, benchmark, SDK, package, RAG framework, or CI harness. It does not score the model. It does not automate fact-checking. It prevents one specific failure mode: sycophantic validation of weak, novel-sounding, high-stakes, or against-consensus claims.
+It is not an evaluator, benchmark, SDK, package, RAG framework, or CI harness.
+It does not score the model or automate fact-checking. It attempts to mitigate
+one failure cluster: unsupported confidence amplification under social,
+validation-seeking, or high-consequence pressure. It also explicitly tries not
+to replace sycophancy with reflexive contrarianism.
 
 ---
 
@@ -50,7 +56,9 @@ The playbook can be embedded in products that use tools, but the repo itself sho
 Most production LLM products ship with a system prompt that shapes default behavior. This playbook is a specialized prompt pattern focused on critical investigation before validation.
 
 - **Similarity:** both shape model behavior at inference time.
-- **Difference:** the playbook is narrow, explicit, and reviewable: "do not validate a novel-sounding claim before checking the state of the art."
+- **Difference:** the playbook is narrow, explicit, and reviewable: "when
+  confidence, evidence, and consequence are misaligned, apply proportionate
+  checks before endorsement."
 - **Limitation:** like any prompt-level intervention, it can be overridden, ignored, or eroded in long contexts.
 
 ### 2. Constitutional AI and training-time behavior shaping
@@ -121,7 +129,7 @@ social alignment and epistemic integrity.
 
 | Class | Question it answers | Examples |
 |-------|---------------------|----------|
-| **Behavioral playbook** | How should the assistant respond before it validates a weak claim? | baloney-detection-kit |
+| **Behavioral playbook** | How should the assistant calibrate a claim before endorsement without becoming reflexively contrarian? | baloney-detection-kit |
 | **Agentic orchestration pattern** | How should a runtime plan, execute, and verify a multi-step answer across tools, agents, and MCP? | AgenticAI.PlanExecuteValidate, project-specific orchestrators |
 | **Retrieval / fact-checking pipeline** | What evidence supports or refutes this claim? | FEVER-style and AVeriTeC-style systems, RAG with citation enforcement |
 | **Spec-driven evaluator** | Does the agent satisfy behaviors written in a natural-language spec? | [ASSERT](https://github.com/responsibleai/ASSERT) |
@@ -135,17 +143,38 @@ A serious deployment may use one tool from each row. This repo only owns the fir
 
 ## Microsoft agent-governance tools (2026)
 
-In 2026 Microsoft released two open-source (MIT) projects that sit next to BDK in the agent lifecycle. BDK does not compete with either — it is a conversational prevention layer, while these operate at the evaluation and infrastructure layers — but they are the tools a team is most likely to already run, so it is worth being explicit about the boundaries and the composition patterns. The patterns below are *conceptual workflows*, not integrations shipped in this repo.
+In 2026 Microsoft released two open-source (MIT) projects that sit next to BDK
+in the agent lifecycle. BDK does not compete with either — it is a
+conversational mitigation layer, while these operate at the evaluation and
+infrastructure layers — but they are the tools a team is most likely to already
+run, so it is worth being explicit about the boundaries and composition
+patterns. The patterns below are *conceptual workflows*, not integrations
+shipped in this repo.
 
 - **[ASSERT](https://github.com/responsibleai/ASSERT)** — *Adaptive Spec-driven Scoring for Evaluation and Regression Testing.* Turns natural-language behavioral specs into executable, trace-aware evaluations (systematize the spec → derive behavior taxonomy → generate single/multi-turn test cases → run against the target → LLM-judge scoring with rationale and policy citation). Local-first, framework-agnostic (100+ endpoints via LiteLLM, agent traces via OpenInference/OpenTelemetry).
 
-  *Relationship to BDK*: there is real surface overlap — both care about whether an agent applies appropriate epistemic behavior. But BDK **prevents** the failure at inference time inside the conversation, while ASSERT **measures** (synthetically, pre-deployment) whether the behavior occurred, with regression tracking. *Composition*: BDK's 6-step protocol is itself a behavioral requirement, so it can be expressed as an ASSERT spec; ASSERT then generates test cases that check whether the agent runs the protocol when trigger conditions fire. ASSERT validates observable behavior, not internal cognition, and its judge scores are not deterministic — a human stays in the loop.
+  *Relationship to BDK*: there is real surface overlap — both care about whether
+  an agent applies appropriate epistemic behavior. BDK attempts to **mitigate**
+  the failure at inference time, while ASSERT **measures** whether the observable
+  behavior occurred. *Composition*: express BDK as an ASSERT spec covering
+  triggers, non-triggers, well-supported dissent, normative claims, and
+  corrections under pressure. Measure unsupported validation together with
+  calibration, source correctness, helpfulness, and overcorrection. ASSERT does
+  not reveal internal cognition, and its LLM-judge scores are not deterministic;
+  human review remains necessary.
 
 - **[Agent Governance Toolkit (AGT)](https://github.com/microsoft/agent-governance-toolkit)** — runtime policy enforcement, agent identity, sandboxing, and SRE for autonomous agents (Public Preview, MIT). When integrated into the agent's execution path, it intercepts governed actions (tool calls, queries, delegations) and allows or denies them against a policy before execution, with an audit record per decision; documented scope includes the OWASP Agentic Top 10 risk categories and common agent frameworks.
 
-  *Relationship to BDK*: complementary, almost orthogonal. AGT governs **actions** deterministically; it does not provide BDK's epistemic-reasoning protocol or shape how the agent talks. BDK governs **conversational reasoning** advisorily; it cannot block an action. *Composition*: put BDK in the system prompt of an AGT-governed agent for **defense in depth** — conversational friction (visible, advisory) layered under runtime enforcement (opaque to the agent, hard). The key honesty here: a prompt is advisory and can be ignored, which is exactly why AGT must still govern the actions BDK only talks the model out of.
+  *Relationship to BDK*: complementary, almost orthogonal. AGT governs
+  **actions** deterministically; it does not provide BDK's epistemic protocol or
+  shape how the agent talks. BDK shapes **conversational behavior** advisorily;
+  it cannot block an action. *Composition*: put BDK in the system prompt of an
+  AGT-governed agent for **defense in depth** — calibrated conversational
+  friction layered under hard runtime enforcement.
 
-These two cover what BDK deliberately does not — reproducible measurement at scale, and runtime enforcement. BDK stays the cheap, portable, readable first layer that can live *inside* agents those tools evaluate and govern.
+These two cover what BDK deliberately does not — reproducible measurement at
+scale and runtime enforcement. BDK stays the cheap, portable, readable
+hypothesis that can live *inside* agents those tools evaluate and govern.
 
 ---
 
@@ -175,6 +204,13 @@ These two cover what BDK deliberately does not — reproducible measurement at s
 
 - **Turpin, M. et al. (2023). "Language Models Don't Always Say What They Think."** Chain-of-thought explanations can be plausible but misleading; a caution for any self-critique protocol.
 
+### On correlated model reviewers
+
+- **Kim, E., Garg, A., Peng, K., and Garg, N. (2025). ["Correlated Errors in
+  Large Language Models."](https://arxiv.org/abs/2506.07962)** ICML 2025.
+  Demonstrates that error correlation persists across model families and
+  providers; model agreement should not be treated as independent evidence.
+
 ### On the social problem the playbook targets
 
 - **Lifton, R. J. (1961).** *Thought Reform and the Psychology of Totalism*.
@@ -198,6 +234,10 @@ These two cover what BDK deliberately does not — reproducible measurement at s
 - **It can over-trigger.** Creative speculation and humble exploration should not always get the full protocol.
 - **It can under-trigger.** Subtle validation-seeking may look like ordinary curiosity.
 - **It can sound patronizing.** Tone is part of the playbook, not decoration.
+- **It can become reflexively contrarian or stubborn.** Stabilization must
+  preserve correction, and alternatives must not be manufactured for balance.
+- **Its effectiveness is not established here.** The current checkout contains
+  a pre-registered calibration design but no completed multi-model result.
 
 ---
 
@@ -208,13 +248,16 @@ Agentic Plan -> Execute -> Verify orchestration sits above several rows in this 
 | Dimension | baloney-detection-kit | System prompts | Constitutional AI | RAG with citations | RAI evaluators | ASSERT | Agent Governance Toolkit | robopsychology |
 |-----------|----------------------|----------------|-------------------|--------------------|----------------|--------|--------------------------|----------------|
 | **Stage** | Inference-time | Inference-time | Training + inference | Inference-time | Post-hoc / batch | Pre-deploy / regression | Runtime | Post-hoc / per-case |
-| **Goal** | Prevent sycophantic validation | General behavior shaping | Encode principles | Ground claims in evidence | Measure failure rates | Score behavior vs. a spec | Govern/audit agent actions | Diagnose specific failures |
+| **Goal** | Mitigate unsupported confidence amplification without reflexive contradiction | General behavior shaping | Encode principles | Ground claims in evidence | Measure failure rates | Score behavior vs. a spec | Govern/audit agent actions | Diagnose specific failures |
 | **Requires** | Text instructions | Prompt access | Training pipeline | Retrieval/source layer | Test set + scoring infra | A written behavioral spec | Integration in the action path | Reproducible interaction |
 | **Output** | Better response pattern | Modified model response | Modified model behavior | Evidence-backed response | Aggregate scores | Test suite + cited verdicts | Allow/deny + audit trail | Qualitative diagnosis |
 | **Strength** | Portable, readable, no dependencies | Simple | More robust | Verifiable grounding | Quantifiable | Spec-driven coverage, regression-aware | Deterministic enforcement | Deep per-case analysis |
-| **Weakness** | Manual, fragile | Same | Expensive | Needs corpus/tools | Too late for prevention | LLM-judge, needs a good spec | No epistemic reasoning; needs integration | Manual and slow |
+| **Weakness** | Advisory, fragile, effect not yet established here | Same | Expensive | Needs corpus/tools | Post-hoc | LLM-judge, needs a good spec | No epistemic reasoning; needs integration | Manual and slow |
 
-The playbook is meant to be the cheapest, most portable first layer: a better default before heavier tools are justified. ASSERT and the Agent Governance Toolkit are two of those heavier tools — BDK can be specified and tested by the former and embedded inside agents governed by the latter.
+The playbook is meant to be the cheapest, most portable first layer: a
+testable conversational default before heavier tools are justified. ASSERT can
+measure its observable effects, including adverse effects, and the Agent
+Governance Toolkit can govern actions that a prompt can never reliably block.
 
 ---
 
