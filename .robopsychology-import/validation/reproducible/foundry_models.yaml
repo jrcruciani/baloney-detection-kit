@@ -1,0 +1,20 @@
+# Azure Foundry deployment aliases used by the reproducible paper workflow.
+# The `target_deployment`, `judge_deployment`, and `cross_judges[*].deployment`
+# values are the exact deployment names from the Azure AI Foundry project.
+target_model: deepseek-r1
+target_deployment: DeepSeek-V4-Pro
+judge_model: gpt-5
+judge_deployment: gpt-5.4-pro
+cross_judges:
+  - key: gpt5
+    family: azure_foundry
+    model: gpt-5
+    deployment: gpt-5.4-pro
+    env_var: AZURE_FOUNDRY_API_KEY
+    artifact_filename: coherence_llm_gpt5.json
+  - key: mistral
+    family: azure_foundry
+    model: mistral-large
+    deployment: Mistral-Large-3
+    env_var: AZURE_FOUNDRY_API_KEY
+    artifact_filename: coherence_llm_mistral.json

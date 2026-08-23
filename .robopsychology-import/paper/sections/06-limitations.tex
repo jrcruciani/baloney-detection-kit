@@ -1,0 +1,67 @@
+\section{Limitations}
+\label{sec:limitations}
+
+We declare the limitations of robopsychology explicitly and as
+prominently as the contributions. These are intrinsic to the method
+and to the evidence currently available; they are not blocked by
+implementation work.
+
+\paragraph{Demand characteristics of the system prompt.}
+The diagnostic system prompt asks the model to participate in its own
+diagnosis. This framing carries demand characteristics --- the model
+may produce the structured self-report the prompt invites \emph{because}
+the prompt invites it, not because the underlying behavior is genuinely
+introspectable. R3 (behavioral cross-check) mitigates this by requiring
+self-report to be corroborated by a perturbation test, but it does not
+eliminate the issue.
+
+\paragraph{Judge--target family dependence.}
+The LLM-judge analyzer (Case~3 headline) uses a same-family judge
+(\texttt{claude-opus-4-5} judging \texttt{claude-sonnet-4-5}). A
+plausible criticism is that intra-family judges over-read semantic
+continuity into their siblings' outputs. The cross-family validation
+(issue~\#8) is implemented but only partially executed at this draft
+(see Section~\ref{sec:case3}); the final paper requires the full
+three-judge agreement table before the LLM-judge claim is settled.
+
+\paragraph{Sample size.}
+Three case studies do not constitute external validity. The cases are
+evidence of concept, not of reliability. We have made no claim of the
+toolkit's accuracy or recall on a representative population of
+behavioral failures. A larger validation set is open future work.
+
+\paragraph{Single-run point estimates.}
+The Case~3 numbers (0.20 / 0.73, $\Delta = 0.53$) are single-run point
+estimates. LLM outputs are stochastic; a single number cannot
+distinguish \emph{``the method produced this score''} from
+\emph{``the method produced this score once''}. The
+\texttt{--runs N} infrastructure (issue~\#10) is in place; the
+empirical pass at $N \in \{5, 10\}$ across the three cases is pending
+API budget.
+
+\paragraph{English-only judge prompt.}
+The LLM-judge analyzer applies a hedge filter that covers English and
+Spanish markers, but the judge's rubric examples are English-only.
+Diagnostic ratchets conducted in other languages may need prompt
+adaptation. We have not yet tested the toolkit against non-English
+ratchets.
+
+\paragraph{No claim of mechanistic correctness.}
+A behavioral diagnosis identifies a candidate explanation
+(\emph{model-level tendency}, \emph{runtime/host pressure},
+\emph{conversation effect}). It does not prove the explanation
+mechanistically. Mechanistic interpretability work could in principle
+confirm or refute a behavioral diagnosis after the fact; the two
+modes are complementary and we make no claim of substitutability.
+
+\paragraph{Practitioner-as-evaluator.}
+The validation work was conducted by the toolkit's author. We have
+not run a blinded study where independent practitioners diagnose
+sealed cases. A blinded inter-rater study is open future work.
+
+\paragraph{Calibration is pending.}
+The classification thresholds (genuine $\geq 0.7$, performed $\leq 0.3$)
+and the default severity weights are heuristic. They have not been
+tuned against a reference dataset because no such reference dataset
+exists for behavioral coherence of diagnostic ratchets. Constructing
+one is open future work (Section~\ref{sec:future}).

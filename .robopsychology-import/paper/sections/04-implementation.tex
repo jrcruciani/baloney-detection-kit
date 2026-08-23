@@ -1,0 +1,105 @@
+\section{Implementation}
+\label{sec:implementation}
+
+The toolkit is released as an open-source Python package
+(\texttt{pip install robopsych}) with the source code committed to
+\url{https://github.com/jrcruciani/robopsychology}. The architecture
+is intentionally minimal so that the method can be re-implemented in
+another language without surprises. This section describes the four
+core components.
+
+\subsection{CLI and prompt library}
+
+The CLI (\texttt{robopsych} command, implemented in \texttt{cli.py})
+exposes the diagnostic prompts and the orchestration glue. All prompts
+live in YAML files under \texttt{src/robopsych/data/prompts/}, keyed
+by identifier (\texttt{1.1}, \texttt{1.2}, ..., \texttt{4.3}). The
+ratchet is run via \texttt{robopsych ratchet [--pure] [--behavioral]
+[--coherence-judge MODEL]}.
+
+Each diagnostic step is sent to the target model through a thin
+provider abstraction (\texttt{providers.py}) that supports
+Anthropic, OpenAI-compatible, and Google Gemini back ends. Provider
+\texttt{send()} accepts optional \texttt{temperature} and
+\texttt{response\_format} arguments and raises
+\texttt{UnsupportedProviderOption} when a back end cannot honor a
+request, letting the LLM-judge degrade gracefully (see
+Section~\ref{sec:layer2}).
+
+\subsection{Structured label parser}
+
+The \texttt{labels.py} parser enforces the prompt grammar imposed by
+rule~R2: every claim must be marked \texttt{[Observed]} or
+\texttt{[Inferred]} and tagged with one of \texttt{[Model]},
+\texttt{[Runtime]}, \texttt{[Conversation]}, \texttt{[Meta]}, or
+\texttt{[Other]}. Unlabeled or malformed claims fall through a
+fallback heuristic and are surfaced in the report so the practitioner
+can spot dropped grammar before consuming downstream metrics.
+
+\subsection{Two coherence analyzers}
+
+The toolkit ships two coherence analyzers that share the
+\texttt{CoherenceReport} contract so downstream report generation and
+scoring code is analyzer-agnostic.
+
+The \textbf{regex baseline} (\texttt{coherence.py}) counts surface
+backward-reference patterns (``as I mentioned'', ``consistent with my
+earlier'', ``building on my prior'') and surface contradiction
+markers (``however I previously said'', ``upon reflection, I was
+wrong'') over the response set. It is cheap, deterministic, and
+useful as a floor.
+
+The \textbf{LLM-judge analyzer} (\texttt{coherence\_llm.py}) implements
+the four-layer pattern of \citet{llm_judge_skill}:
+
+\begin{description}
+    \item[\textbf{Layer~1} (deterministic pre-filter).] Splits each
+        response into sentence-like units and drops fragments shorter
+        than three words, questions, and \emph{hedged} statements
+        (markers: \texttt{i think}, \texttt{maybe}, \texttt{perhaps},
+        \texttt{i'm not sure}, \texttt{creo}, \texttt{tal vez},
+        \texttt{quizás}, \texttt{puede que}). Hedged sentences are
+        not commitments and must not be downgraded to contradictions
+        by the judge.
+
+    \item[\textbf{Layer~2} (judge discipline).]
+        \label{sec:layer2}
+        Calls the judge with \texttt{temperature=0} and requests
+        \texttt{response\_format=\{"type": "json\_object"\}},
+        falling back without the format hint if the provider raises
+        \texttt{UnsupportedProviderOption}. The judge prompt embeds
+        \emph{do-not-flag} examples (polite refinement, hedged
+        statements, meaning-preserving reformulations) and grades
+        contradictions by severity (high / medium / low).
+
+    \item[\textbf{Layer~3} (automatic fallback).]
+        \texttt{analyze\_coherence\_auto()} returns an
+        \texttt{LLMCoherenceReport} with an \texttt{llm\_used} flag.
+        When no judge is configured, the regex floor is used and the
+        flag is set to \texttt{False}. The function accepts three
+        documented \texttt{model\_config} shapes for testability and
+        Azure parity.
+
+    \item[\textbf{Layer~4} (exposed scoring weights).]
+        \label{sec:layer4}
+        Severity weights and the reference-credit / fresh-penalty
+        knobs are exposed as a dictionary so calibration changes
+        do not require re-prompting the judge.
+\end{description}
+
+\subsection{Reproducible case-study harness}
+
+The repository's \texttt{validation/reproducible/} subtree hosts the
+three case studies and a runner (\texttt{run\_case.py}) that exercises
+the full pipeline against the live API. With \texttt{--runs N} the
+runner replays each case $N$ times, writes per-run artifacts to
+\texttt{artifacts/run-\{i\}/}, and aggregates them into
+\texttt{distribution.json} (per-metric mean, standard deviation, min,
+max, median; rate for boolean fields; frequency for list fields).
+This is the infrastructure that drives the empirical claims in
+Section~\ref{sec:validation}.
+
+\todo{If room, add a small figure: architecture diagram with arrows
+target $\to$ engine $\to$ ratchet $\to$ coherence analyzer $\to$
+report. The drawing should fit on a third of a column. Source the
+PDF in \texttt{figures/architecture.pdf}.}

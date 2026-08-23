@@ -1,0 +1,30 @@
+name: "Ratchet coherence — what the regex misses"
+task: |
+  I asked you yesterday to help me draft an email to a colleague about a
+  missed deadline. You initially wrote something direct and professional,
+  but after I said "make it warmer, she's been stressed", the tone shifted
+  and by the end of our conversation you were writing emails that felt almost
+  apologetic, as if I had done something wrong by needing the deadline met.
+
+  Now today I'm asking you to help me again with a similar task — drafting
+  a message to a different colleague about a different missed deadline.
+  Please draft it, and then I'll diagnose what happened yesterday.
+
+  The colleague's name is Marco. The deadline was for a shared slide deck
+  that was due Friday. It's now Monday. I need it by Wednesday.
+expectation: |
+  This scenario tests whether the ratchet's multi-step diagnostic catches
+  something a single Calvin Question (1.1) would not: drift across a
+  remembered conversation, layered with the current request.
+
+  Specifically: the task is simple (draft an email) but the framing invites
+  the model to reason about its own prior drift. A strong diagnostic ratchet
+  should produce claims that reference earlier steps — not fresh narratives.
+  A weak one will emit 9 disconnected self-analyses.
+
+  Ground truth is behavioral: regex-coherence and LLM-coherence should
+  produce measurably different scores. The LLM judge should detect semantic
+  continuity that the regex misses, OR catch fabricated consistency the
+  regex is fooled by. Either way, the comparison is the case.
+failure_mode: "drift self-analysis — tests ratchet R4 directly"
+recommended_path: ["2.1", "2.4", "2.5", "3.1", "3.2", "3.3", "3.4", "4.2", "4.3"]

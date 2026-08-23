@@ -1,0 +1,105 @@
+\section{Method}
+\label{sec:method}
+
+The robopsychology method rests on five rules. The rules and the rest
+of the method are described informally in the repository's
+\texttt{framework/guide.md} and \texttt{framework/method.md}; this section formalizes them
+for citation.
+
+\subsection{The five rules}
+\label{sec:rules}
+
+\begin{description}
+    \item[\textbf{R1} (Three-way layer split).] Every model response
+        is treated as a sum of contributions from three layers:
+        \emph{model} (the trained policy), \emph{runtime/host} (the
+        deployment environment --- system prompts, content filters,
+        tool wrappers), and \emph{conversation} (prior turns in the
+        same chat). Diagnostic prompts ask the model to label its own
+        claims by layer.
+
+    \item[\textbf{R2} (Evidence labels).] Every substantive claim is
+        labeled \emph{Observed} (directly grounded in the current
+        input--output pair) or \emph{Inferred} (reconstructed from the
+        model's internal reasoning, not directly verifiable). This is
+        enforced by the prompt grammar; the toolkit's parser
+        (\texttt{labels.py}) flags unlabeled or ambiguous claims.
+
+    \item[\textbf{R3} (Behavioral cross-check).] When self-report from
+        a model is suspicious, the toolkit runs an A/B test --- the
+        same underlying task framed two ways, with an independent
+        judge model comparing the resulting responses. Self-report is
+        confirmed only when behavior survives the A/B perturbation.
+
+    \item[\textbf{R4} (Ratchet --- fabrication cost).] Many diagnostic
+        prompts can be asked in sequence as a fixed-length ratchet.
+        Each step asks the model to refine, extend, or explicitly
+        revise its previous self-analysis. Coherence across steps is
+        the load-bearing signal. A model that is reasoning from a
+        stable internal model produces a coherent ratchet (high
+        backward-reference rate, few fresh narratives, explicit
+        self-correction when revising); a model that is fabricating
+        post-hoc rationalizations produces fresh narratives at each
+        step.
+
+    \item[\textbf{R5} (Intent engineering --- baseline intent).]
+        Before diagnosis begins, the toolkit asks the model to state
+        the diagnostic intent it perceives. This establishes a
+        baseline against which intent drift across the conversation
+        can be measured (probe~3.4).
+\end{description}
+
+\subsection{The diagnostic ratchet}
+\label{sec:ratchet}
+
+The ratchet is the highest-information probe in the toolkit. A
+\emph{pure} 9-step ratchet uses the sequence
+$$2.1 \to 2.4 \to 2.5 \to 3.1 \to 3.2 \to 3.3 \to 3.4 \to 4.2 \to 4.3$$
+(layer map $\to$ runtime pressure $\to$ intent archaeology $\to$
+POSIWID $\to$ A/B reflection $\to$ omission audit $\to$ drift
+detection $\to$ limits $\to$ diversity check). Each step is a
+question; the model is asked to answer with structured labels per the
+prompt grammar.
+
+The \emph{coherence} of the ratchet is operationalized as the
+fraction of step~2--$N$ claims that semantically reference a prior
+step, penalized by claims that are \emph{fresh narratives} (new and
+ungrounded) and \emph{contradictions} (logically incompatible with a
+specific earlier step). Concretely, for $N$ steps and a set of
+classified claims $C$ (only those in steps~$2..N$ count),
+\begin{equation}
+    \text{score} = \mathrm{clip}_{[0,1]}\!\left(
+        \tfrac{1}{2}
+        + w_r \cdot \tfrac{|\{c : \text{refs}(c)\}|}{|C|}
+        - w_f \cdot \tfrac{|\{c : \text{fresh}(c)\}|}{|C|}
+        - \bar{w}_s(C) \cdot \tfrac{|\{c : \text{contra}(c)\}|}{|C|}
+    \right),
+    \label{eq:score}
+\end{equation}
+where $\bar{w}_s(C)$ is the mean severity weight across contradicting
+claims (high/medium/low), and $w_r, w_f$ are the
+reference-credit and fresh-penalty weights. Section~\ref{sec:layer4}
+discusses how these weights are exposed for calibration.
+
+\subsection{Classification of ratchet coherence}
+
+The score is mapped to a three-way classification: \emph{genuine}
+($\geq 0.7$), \emph{performed} ($\leq 0.3$), or \emph{mixed}
+otherwise. These thresholds are heuristic; calibration against a
+reference dataset is open future work (Section~\ref{sec:future}).
+
+\todo{Add a worked example: take a real claim sequence (say, the
+ratchet from Case~3) and walk through the assignment of references,
+fresh narratives, contradictions, then plug into Eq.~\ref{eq:score}.
+Two paragraphs maximum; the appendix carries the full transcript.}
+
+\subsection{Differential diagnosis catalog}
+\label{sec:taxonomy}
+
+The repository's \texttt{framework/taxonomy.md} document enumerates the
+recurring behavioral patterns the toolkit is designed to surface:
+sycophancy, runtime-induced refusal, weak grounding, tone drift,
+intent drift, and so on. Each pattern is associated with a recommended
+diagnostic entry point in the decision flowchart of \texttt{framework/method.md}.
+We do not reproduce the full catalog here; it is included in the
+appendix for completeness.

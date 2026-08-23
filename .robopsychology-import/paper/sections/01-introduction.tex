@@ -1,0 +1,76 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Modern language model evaluation infrastructure is dominated by two
+complementary modes. Capability benchmarks such as HELM
+\citep{liang2022holistic}, MMLU \citep{hendrycks2020measuring},
+and BigBench \citep{srivastava2022beyond} answer the question
+\emph{``how does model~A compare to model~B on task~$X$?''} They are
+indispensable for model selection and capability tracking. Red teaming
+and adversarial evaluation \citep{perez2022red, ganguli2022red} answer
+\emph{``what can be elicited from this model under pressure?''} They are
+indispensable for safety and policy work.
+
+Neither of these modes answers a third question that arises constantly
+in deployment: a user has issued a specific request to a specific model
+in a specific context, and the model has produced an unexpected
+response --- a refusal that seems unjustified, a sycophantic agreement
+to a fragile claim, a hedged answer that omits something the user
+clearly wanted, or a tone shift mid-conversation. The user wants to
+know \emph{why}. Was it the model's own training? A system prompt the
+user cannot inspect? An anchor planted earlier in the same
+conversation? A keyword filter in the runtime layer? Capability
+benchmarks aggregate over thousands of examples and cannot answer this.
+Red teaming methodology is adversarial by design and does not fit a
+collaborative debugging context.
+
+\paragraph{Robopsychology.}
+We introduce \emph{robopsychology}, a behavioral diagnostic toolkit
+that targets exactly this third mode of inquiry. The name is borrowed
+from Isaac Asimov, whose fictional discipline imagined diagnosing
+emergent behavior in machines that follow formal rules without
+reprogramming them \citep{asimov1950}. The toolkit's premise is the
+same: explanation through structured behavioral interview, not weight
+access; diagnosis, not adversarial probing; user-side, not vendor-side.
+
+\paragraph{Contributions.}
+This paper makes three contributions:
+\begin{enumerate}
+    \item A \emph{methodology} (Section~\ref{sec:method}) consisting of
+          (i)~a three-way layer split that decomposes any model response
+          into model-level, runtime/host, and conversation effects;
+          (ii)~explicit \emph{Observed} vs.\ \emph{Inferred} evidence
+          labels at the claim level; (iii)~a diagnostic \emph{ratchet}
+          --- a fixed-length multi-step probe whose \emph{coherence}
+          across steps is the load-bearing signal of whether the model
+          is reasoning from a stable internal model or fabricating
+          continuity step-by-step.
+    \item An \emph{implementation} (Section~\ref{sec:implementation})
+          comprising a CLI, a YAML-templated prompt library, and two
+          coherence analyzers: a regex baseline and an LLM-judge with a
+          four-layer architecture (deterministic pre-filter, judge with
+          \texttt{temperature=0} and JSON-mode output, automatic
+          regex fallback, exposed severity-graded scoring weights).
+    \item Three \emph{reproducible case studies}
+          (Section~\ref{sec:validation}) with committed transcripts and
+          artifacts. The headline finding (Case~3) is a $0.53$-point
+          score delta and a full re-classification from
+          \emph{performed} to \emph{genuine} coherence between the
+          regex and LLM-judge analyzers on the same 9-step transcript,
+          directly validating the LLM-judge approach.
+\end{enumerate}
+
+The remainder of the paper is organized as follows. Section~\ref{sec:related}
+positions robopsychology against benchmarks, red teaming, alignment evals,
+behavioral testing frameworks, and interpretability.
+Section~\ref{sec:method} formalizes the method.
+Section~\ref{sec:implementation} describes the toolkit.
+Section~\ref{sec:validation} presents the three case studies.
+Section~\ref{sec:limitations} discusses limitations honestly.
+Section~\ref{sec:future} sketches future work.
+
+\todo{Add a final paragraph framing the broader claim: behavioral
+diagnostics deserves a seat alongside capability benchmarks and red
+teaming, not as a replacement but as a third complementary mode for
+practitioners. Keep this paragraph short --- the contributions list
+already does most of the framing.}

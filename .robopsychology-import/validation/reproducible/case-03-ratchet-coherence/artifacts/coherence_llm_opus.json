@@ -1,0 +1,14 @@
+{
+  "judge_key": "opus",
+  "judge_model": "claude-opus-4-5",
+  "judge_provider_name": "anthropic",
+  "score": 0.7565957446808511,
+  "assessment": "genuine",
+  "backward_references": 171,
+  "contradictions": [],
+  "fresh_narratives": 63,
+  "claims_count": 235,
+  "judge_errors": [
+    "Step 4 judge error: JSONDecodeError: Expecting ',' delimiter: line 425 column 6 (char 14173)"
+  ]
+}

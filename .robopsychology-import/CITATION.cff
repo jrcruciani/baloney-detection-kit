@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this framework, cite the essay as the canonical source of the method. Cite the CLI release only when you depend on the reference implementation."
+title: "Robopsychology: A Framework for Behavioral Diagnostics of AI Systems"
+abstract: >-
+  Robopsychology is a framework for diagnosing the behavior of large language
+  model systems from the outside. It separates any observed output into three
+  layers — model tendencies, runtime/host pressure, and conversation effects —
+  and offers a sixteen-prompt toolkit, a five-rule operating protocol, and a
+  nine-step diagnostic ratchet that makes performed transparency expensive and
+  genuine transparency cheap. This repository hosts the framework documents,
+  modular prompt cards, no-CLI templates, reproducible validation cases, a
+  paper scaffold, and the `robopsych` reference CLI implementation.
+type: software
+authors:
+  - family-names: Cruciani
+    given-names: JR
+    website: "https://en.impermanente.es"
+repository-code: "https://github.com/jrcruciani/robopsychology"
+url: "https://en.impermanente.es/essays/robopsychology/"
+license: CC-BY-4.0
+version: "5.0.3"
+date-released: "2026-05-26"
+doi: "10.5281/zenodo.20396020"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20396020"
+    description: "Concept DOI (always points to the latest version)."
+  - type: doi
+    value: "10.5281/zenodo.20396095"
+    description: "DOI for v5.0.2."
+keywords:
+  - artificial intelligence
+  - large language models
+  - behavioral diagnostics
+  - ai safety
+  - evaluation
+  - robopsychology
+  - asimov
+  - posiwid
+preferred-citation:
+  type: article
+  title: "Robopsychology"
+  authors:
+    - family-names: Cruciani
+      given-names: JR
+  year: 2026
+  url: "https://en.impermanente.es/essays/robopsychology/"

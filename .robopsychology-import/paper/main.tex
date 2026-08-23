@@ -1,0 +1,100 @@
+% Workshop preprint draft — Robopsychology: behavioral diagnostics for AI.
+% Issue: https://github.com/jrcruciani/robopsychology/issues/11
+%
+% Target venue (in order of fit):
+%   1. NeurIPS SafetyML workshop
+%   2. ICLR BlogTrack
+%   3. ACL RepL4NLP
+%   4. HEAL workshop
+%
+% Build:
+%   pdflatex main.tex
+%   bibtex main
+%   pdflatex main.tex
+%   pdflatex main.tex
+%
+% Or with latexmk:
+%   latexmk -pdf main.tex
+%
+% This draft uses the generic `article` class so it compiles without
+% venue-specific style files. Swap the preamble for `neurips_2026.sty`
+% or `iclr2026_conference.sty` once a venue is selected.
+
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!60!black,
+    urlcolor=blue!60!black,
+}
+
+% Highlight unwritten / placeholder content while the draft is in flight.
+\newcommand{\todo}[1]{\textcolor{red!70!black}{\textbf{[TODO: #1]}}}
+
+\title{Robopsychology: Behavioral Diagnostics for AI \\
+       \large A Practitioner Toolkit for Post-hoc, User-side Interpretation}
+
+\author{JR Cruciani \\
+        \texttt{jrcruciani@gmail.com} \\
+        \url{https://github.com/jrcruciani/robopsychology}}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present \emph{robopsychology}, a behavioral diagnostic toolkit for
+language models that complements capability benchmarks and red-teaming
+suites by addressing a different question: not \emph{how well does a
+model perform on a task}, but \emph{why did a specific model produce a
+specific unexpected output in a specific context}. The toolkit consists
+of (i)~a set of structured diagnostic prompts that decompose a response
+into model-level, runtime/host, and conversation effects;
+(ii)~\emph{Observed} vs.\ \emph{Inferred} evidence labels at the
+claim level; (iii)~an LLM-judge coherence analyzer that catches
+semantic backward-reference patterns that simpler regex analyzers miss;
+and (iv)~three reproducible case studies. The headline empirical finding
+is on Case~3, a 9-step diagnostic ratchet over which a regex-based
+coherence analyzer scores 0.20 (``performed coherence'') while an
+LLM-judge over the same transcript scores 0.73 (``genuine coherence'')
+\citep{robopsych_repo}\footnote{Single-run numbers; distribution
+statistics across $N$ runs and cross-family judge agreement are
+work-in-progress (issues~\#10 and~\#8 in the repository).}.
+Robopsychology is positioned as orthogonal to existing evaluation
+infrastructure: it is user-side, post-hoc, and situational.
+\end{abstract}
+
+\input{sections/01-introduction}
+\input{sections/02-related-work}
+\input{sections/03-method}
+\input{sections/04-implementation}
+\input{sections/05-validation}
+\input{sections/06-limitations}
+\input{sections/07-future-work}
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography}
+
+\appendix
+\input{appendix/A-prompts}
+\input{appendix/B-case-transcripts}
+\input{appendix/C-code-snippets}
+
+\end{document}

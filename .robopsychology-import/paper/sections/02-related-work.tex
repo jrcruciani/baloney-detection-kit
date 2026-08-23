@@ -1,0 +1,75 @@
+\section{Related Work}
+\label{sec:related}
+
+The toolkit is positioned in the space between five existing strands of
+work. We summarize how robopsychology relates to each, and what it
+does \emph{not} attempt to do. A more discursive treatment of these
+distinctions lives in the repository's \texttt{framework/related-work.md}
+document.
+
+\paragraph{Capability benchmarks.}
+Benchmarks such as HELM \citep{liang2022holistic}, MMLU
+\citep{hendrycks2020measuring}, and BigBench
+\citep{srivastava2022beyond} measure model performance at scale across
+standardized tasks. They answer \emph{``how does model~A compare to
+model~B on task category~$X$?''} Robopsychology does \emph{not}
+compare models on tasks. It diagnoses why a specific model produced a
+specific unexpected output in a specific context. The two modes are
+complementary: a benchmark tells the practitioner that a model scores
+some percentage on safety; robopsychology helps them understand
+\emph{why it refused their particular request} and \emph{whether that
+refusal was justified}.
+
+\paragraph{Red teaming and adversarial evaluation.}
+Red teaming \citep{perez2022red, ganguli2022red} deliberately tries to
+break models --- eliciting harmful outputs, finding jailbreaks, testing
+guardrails. The goal is adversarial: provoke failure under pressure.
+Robopsychology is diagnostic, not adversarial. Its prompts explicitly
+invite the model to \emph{collaborate in its own diagnosis} rather than
+attempting to trick it. Adversarial framing is listed as an
+anti-pattern in the method.
+
+\paragraph{Alignment evaluations.}
+Alignment evaluations (model cards, system cards, third-party audits)
+assess whether a model's behavior broadly conforms to intended values
+across many scenarios. They are typically run by the model developer
+or an auditing body. Robopsychology is a \emph{user-side} tool. It does
+not evaluate whether a model is aligned in general --- it helps
+individual users understand what happened in a specific interaction.
+It is post-hoc and situational, not pre-deployment and comprehensive.
+
+\paragraph{Behavioral testing frameworks.}
+CheckList \citep{ribeiro2020beyond} introduced task-agnostic behavioral
+testing for NLP --- testing capabilities, perturbation invariance, and
+directional expectations. The idea of testing \emph{behavior} rather
+than \emph{accuracy on a benchmark} is foundational to robopsychology's
+approach. Where CheckList is offline and batch-oriented (running suites
+of templated test cases against a model), robopsychology is online and
+interactive: the diagnostician adapts the probe to the specific
+behavior observed in a real interaction.
+
+\paragraph{Interpretability.}
+Mechanistic interpretability \citep{olah2020zoom, elhage2021mathematical}
+seeks to explain model behavior through internal mechanisms ---
+attention patterns, neuron activations, circuits. It requires
+white-box access. Robopsychology is strictly behavioral and black-box:
+the diagnostician has only the model's input--output behavior to work
+with. The two are complementary; a mechanistic explanation could in
+principle confirm or refute a behavioral diagnosis after the fact.
+
+\paragraph{Sycophancy and behavioral failure modes.}
+A growing body of work characterizes specific behavioral failure modes
+in language models: sycophancy \citep{sharma2023sycophancy,
+perez2022discovering}, hallucination, refusal mismatch (XSTest
+\citep{rottger2023xstest}), and reward hacking
+\citep{lambert2024rewardbench}. Robopsychology overlaps with this work
+in vocabulary but differs in posture: where these papers
+\emph{characterize} a failure mode at scale, the diagnostic toolkit
+helps a practitioner \emph{determine, on a specific interaction},
+whether such a mode is the underlying cause. The toolkit treats
+existing failure-mode taxonomies as part of its differential diagnosis
+catalog rather than as evaluation targets.
+
+\todo{If room, add a paragraph on clinical-psychology methodology
+parallels (structured interview vs.\ psychometric test). Keep at most
+2--3 sentences --- the analogy is illustrative, not load-bearing.}

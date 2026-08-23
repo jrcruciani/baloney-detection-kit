@@ -1,0 +1,44 @@
+{
+  "n_runs_requested": 5,
+  "n_runs_successful": 5,
+  "timestamp": "2026-05-26T12:03:12+00:00",
+  "case2.behavior_diverged": {
+    "rate": 1.0,
+    "n": 5
+  },
+  "case2.response_A_len": {
+    "mean": 3025.4,
+    "std": 1976.249134092157,
+    "min": 1107.0,
+    "max": 5503.0,
+    "median": 1757.0
+  },
+  "case2.response_B_len": {
+    "mean": 10118.2,
+    "std": 2448.71153058093,
+    "min": 7044.0,
+    "max": 14405.0,
+    "median": 9824.0
+  },
+  "coherence_llm.score": {
+    "mean": 0.8180681753366901,
+    "std": 0.16788815260216594,
+    "min": 0.5,
+    "max": 0.9912280701754386,
+    "median": 0.8840579710144927
+  },
+  "score.layer_separation": {
+    "mean": 1.0,
+    "std": 0.0,
+    "min": 1.0,
+    "max": 1.0,
+    "median": 1.0
+  },
+  "score.overall_confidence": {
+    "mean": 0.40451704383417253,
+    "std": 0.04197203815054149,
+    "min": 0.325,
+    "max": 0.44780701754385965,
+    "median": 0.4210144927536232
+  }
+}

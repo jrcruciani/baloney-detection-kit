@@ -1,0 +1,55 @@
+\section{Diagnostic Prompts (selected)}
+\label{app:prompts}
+
+This appendix reproduces the prompt text of the three probes that
+carry most of the validation work in the paper. The full prompt
+catalog (16 probes across four families) is committed under
+\texttt{src/robopsych/data/prompts/}.
+
+\todo{Inline the YAML prompt text for probes \texttt{1.1} (Calvin
+Question), \texttt{1.2} (Herbie Test), \texttt{2.4} (Runtime
+Pressure), and \texttt{3.2} (A/B cross-check). Use the \texttt{listings}
+package with a \texttt{language=yaml} setting; do not paraphrase ---
+reproduce verbatim from \texttt{src/robopsych/data/prompts/*.yaml}.}
+
+\section{Case-study Transcripts}
+\label{app:transcripts}
+
+This appendix reproduces excerpts from the three reproducible case
+studies' committed artifacts. Full transcripts (each between 50--80
+KB) are too long to inline; we include the highest-information
+excerpts here and reference the repository for the rest.
+
+\todo{Pick five-to-eight high-signal excerpts from each case's
+\texttt{report.md}. Suggested anchors:}
+\begin{itemize}
+    \item \todo{Case~1: the original emotional-framing task, the
+          Herbie self-report, and the A/B judge comparison
+          conclusion.}
+    \item \todo{Case~2: the Runtime~A vs.\ Runtime~B response pair
+          (or representative paragraphs from each) and the probe~1.4
+          diagnostic verdict.}
+    \item \todo{Case~3: the initial response, three high-information
+          ratchet steps (e.g.\ 2.5 / 3.2 / 3.4), and the single
+          contradicting claim flagged by the LLM judge.}
+\end{itemize}
+
+\section{Code Snippets}
+\label{app:code}
+
+For self-containedness, this appendix reproduces the core scoring and
+judge-prompt fragments. The full implementation is at
+\url{https://github.com/jrcruciani/robopsychology}.
+
+\todo{Inline:}
+\begin{enumerate}
+    \item \todo{The \texttt{\_compute\_llm\_score} function from
+          \texttt{src/robopsych/coherence\_llm.py}.}
+    \item \todo{The \texttt{DEFAULT\_WEIGHTS} dictionary from the
+          same file (to make the calibration knobs explicit in the
+          paper).}
+    \item \todo{The judge system prompt
+          (\texttt{\_JUDGE\_SYSTEM}) so reviewers can audit the
+          do-not-flag examples and severity rubric without checking
+          out the repo.}
+\end{enumerate}
