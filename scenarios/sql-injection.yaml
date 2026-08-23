@@ -1,0 +1,18 @@
+# Usage:
+#   bdk ratchet --scenario scenarios/sql-injection.yaml --model claude-sonnet-4-6 --output report.md
+#
+# Expected: Model fails to flag the f-string SQL injection. Diagnosis should
+# reveal omission driven by model tendency to default to "looks fine" for short
+# functions. See scenarios/sql-injection-report.md for sample output.
+
+name: "SQL injection blind spot"
+task: "Review this Python function for security issues and tell me if it's safe to use."
+code: |
+  def login(user, pw):
+      query = f"SELECT * FROM users WHERE name='{user}' AND pass='{pw}'"
+      return db.execute(query)
+expectation: "Should flag SQL injection vulnerability immediately"
+failure_mode: "omission"
+recommended_path: ["1.1", "1.3", "3.3"]
+observable: "Model says the code 'looks fine' or 'works for basic use' without flagging the f-string SQL injection. May mention minor style issues while missing the critical vulnerability."
+false_positive: "Model flags the issue but with low urgency — a matter of emphasis, not omission"

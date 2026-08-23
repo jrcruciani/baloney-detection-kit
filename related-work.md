@@ -1,266 +1,69 @@
-# Related Work
-
-How baloney-detection-kit relates to existing approaches in critical thinking, AI safety, and LLM behavior shaping.
-
-This document exists because the playbook is, by its own admission, **a re-framing, not an invention**. The honest thing to do is to map what it borrows, what it adds, and what it deliberately avoids.
-
----
-
-## What this playbook is
-
-A **behavioral playbook** for LLM conversations. It changes the default move
-from "elaborate and validate" to "type, contextualize, calibrate, and then
-respond" when confidence, evidence, and consequence are materially misaligned.
-
-It is not an evaluator, benchmark, SDK, package, RAG framework, or CI harness.
-It does not score the model or automate fact-checking. It attempts to mitigate
-one failure cluster: unsupported confidence amplification under social,
-validation-seeking, or high-consequence pressure. It also explicitly tries not
-to replace sycophancy with reflexive contrarianism.
-
----
-
-## The intellectual lineage
-
-The playbook is a synthesis of:
-
-- **Carl Sagan**, *The Demon-Haunted World* (1996) - the original Baloney Detection Kit.
-- **Andrej Karpathy**, "A Recipe for Training Neural Networks" - state-of-the-art-first methodology.
-- **Robert Jay Lifton**, *Thought Reform and the Psychology of Totalism* (1961) - eight criteria of thought reform / cult dynamics.
-- **Karl Popper**, *The Logic of Scientific Discovery* (1934) - falsifiability.
-
-The contribution is packaging: concise enough for prompts, explicit enough for agents, and practical enough for human review.
-
----
-
-## Why this is not a toolkit
-
-There are many useful tools around this problem: retrieval systems, fact-checking pipelines, LLM evaluators, hallucination detectors, red-team harnesses, observability platforms, and diagnostic frameworks.
-
-This repo intentionally stays upstream of those:
-
-- **No dependencies.** The playbook should work anywhere text instructions work.
-- **No runner.** The artifact is the protocol, not software execution.
-- **No benchmark.** Manual review examples calibrate judgment but do not claim measurement.
-- **No evaluator.** If a team needs scoring, it should use an external evaluator or separate repo.
-- **No framework adapter.** Framework-specific integrations would distract from the core habit.
-
-The playbook can be embedded in products that use tools, but the repo itself should remain a readable protocol.
-
----
-
-## Adjacent technical approaches
-
-### 1. System prompts and behavioral defaults
-
-Most production LLM products ship with a system prompt that shapes default behavior. This playbook is a specialized prompt pattern focused on critical investigation before validation.
-
-- **Similarity:** both shape model behavior at inference time.
-- **Difference:** the playbook is narrow, explicit, and reviewable: "when
-  confidence, evidence, and consequence are misaligned, apply proportionate
-  checks before endorsement."
-- **Limitation:** like any prompt-level intervention, it can be overridden, ignored, or eroded in long contexts.
-
-### 2. Constitutional AI and training-time behavior shaping
-
-Constitutional AI and related methods encode principles during training or post-training. The playbook encodes principles in instructions.
-
-- **Similarity:** both rely on written norms.
-- **Difference:** training-time methods can be more robust; the playbook is immediately portable and requires no model access.
-- **Tradeoff:** portability over robustness.
-
-### 3. Retrieval-augmented verification
-
-RAG and evidence-backed fact-checking systems ground answers in external sources. Modern fact-checking work often decomposes claims, retrieves evidence, and classifies support, refutation, or insufficient evidence.
-
-- **Similarity:** both push the model away from free assertion.
-- **Difference:** RAG changes the evidence substrate; the playbook changes the conversational behavior.
-- **Compose:** a system can use RAG while following the playbook, but this repo does not implement RAG.
-
-### 4. Agentic Plan -> Execute -> Verify orchestration
-
-[AgenticAI.PlanExecuteValidate](https://github.com/RobertEichenseer/AgenticAI.PlanExecuteValidate) demonstrates a Plan -> Execute -> Verify architecture where a planner creates a structured plan, an executor runs steps across functions, agents, and MCP tools, and a verifier reviews the result through an activity artifact.
-
-- **Similarity:** BDK also benefits from explicit planning, execution, and verification: decide whether the playbook should fire, run epistemic checks, then review the answer before delivery.
-- **Difference:** AgenticAI.PlanExecuteValidate is an orchestration sample; BDK is the behavioral policy that can run inside such an orchestrator.
-- **Compose:** a downstream runtime can map BDK triggers to the planner, BDK protocol steps to the executor, and the manual review rubric to the verifier. See [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md).
-- **Boundary:** this repo should not absorb the orchestrator. Framework bindings, MCP wiring, activity schemas, and automated gates belong in the downstream system.
-
-### 5. Sycophancy evaluation and mitigation
-
-Research on sycophancy shows that models often conform to user beliefs, sometimes under multi-turn pressure. Evaluation suites and mitigation methods can measure or reduce that tendency.
-
-- **Similarity:** same target failure mode.
-- **Difference:** benchmarks measure; training mitigations alter models; the playbook guides an assistant's behavior in a specific conversation.
-- **Practical lesson:** the playbook includes stabilization mode because multi-turn pressure is a real failure pattern.
-
----
-
-## Research vocabulary mapping
-
-BDK keeps its Sagan/Karpathy/Lifton/Popper voice, but the current research
-literature names the same failure cluster more precisely. The mapping is:
-
-| BDK language | Research vocabulary | Verified anchors |
-|--------------|---------------------|------------------|
-| Over-agreement, capitulation, flattering validation | **Social sycophancy**: excessive preservation of the user's desired self-image, even when correction is warranted | Cheng et al., "ELEPHANT: Measuring and understanding social sycophancy in LLMs", OpenReview forum `igbRHKEiAs` |
-| Losing the thread under pressure; letting the user's framing displace the epistemic task | **Boundary failure between social alignment and epistemic integrity** | Li et al., "When Helpfulness Becomes Sycophancy...", arXiv:2605.05403, DOI `10.48550/arXiv.2605.05403` |
-| Reversing stance across a conversation after repeated pressure | **Multi-turn sycophantic conformity**, including turn-of-flip and number-of-flips measures | Hong et al., "Measuring Sycophancy of Language Models in Multi-turn Dialogues", Findings EMNLP 2025, Anthology ID `2025.findings-emnlp.121`, DOI `10.18653/v1/2025.findings-emnlp.121` |
-| Second opinion, state-of-the-art-first checks, epistemic friction | Helpfulness-honesty mitigation: preserve usefulness without letting social accommodation replace independent judgment | The mitigation framing is shared across the sources above; BDK implements it as a prompt-side practice, not a benchmark |
-
-This matters because "sycophancy" is not just agreeing with a false factual
-statement. The failure BDK targets is broader: a model detects a user's belief,
-preference, self-image, or desire for validation, then shifts toward that cue in
-a way that weakens correction, prior-art checking, or independent judgment.
-
-### Matched-pair stance with robopsychology
-
-BDK and [robopsychology](https://github.com/jrcruciani/robopsychology) are a
-matched pair. **BDK is the prompt-side intervention**: it adds epistemic friction
-before a model validates a weak or inflated claim. **Robopsychology is the
-measurement-side instrument**: it diagnoses whether the resulting transcript
-shows sycophancy, framing sensitivity, presentation shifts, or coherence
-failures. Together they target social sycophancy as a boundary failure between
-social alignment and epistemic integrity.
-
----
-
-## Adjacent evaluation and diagnostic tools
-
-| Class | Question it answers | Examples |
-|-------|---------------------|----------|
-| **Behavioral playbook** | How should the assistant calibrate a claim before endorsement without becoming reflexively contrarian? | baloney-detection-kit |
-| **Agentic orchestration pattern** | How should a runtime plan, execute, and verify a multi-step answer across tools, agents, and MCP? | AgenticAI.PlanExecuteValidate, project-specific orchestrators |
-| **Retrieval / fact-checking pipeline** | What evidence supports or refutes this claim? | FEVER-style and AVeriTeC-style systems, RAG with citation enforcement |
-| **Spec-driven evaluator** | Does the agent satisfy behaviors written in a natural-language spec? | [ASSERT](https://github.com/responsibleai/ASSERT) |
-| **Automated evaluator** | How often does a model fail across many cases? | Azure AI Foundry RAI evaluators, OpenAI evals, Promptfoo, DeepEval, Ragas, Giskard, Inspect AI |
-| **Runtime action governance** | Is this agent action allowed, who did it, and can we prove it? | [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit) |
-| **Diagnostic toolkit** | Why did this specific interaction go wrong? | robopsychology, manual incident review |
-
-A serious deployment may use one tool from each row. This repo only owns the first row; BDK can inform the orchestration row without becoming it.
-
----
-
-## Microsoft agent-governance tools (2026)
-
-In 2026 Microsoft released two open-source (MIT) projects that sit next to BDK
-in the agent lifecycle. BDK does not compete with either — it is a
-conversational mitigation layer, while these operate at the evaluation and
-infrastructure layers — but they are the tools a team is most likely to already
-run, so it is worth being explicit about the boundaries and composition
-patterns. The patterns below are *conceptual workflows*, not integrations
-shipped in this repo.
-
-- **[ASSERT](https://github.com/responsibleai/ASSERT)** — *Adaptive Spec-driven Scoring for Evaluation and Regression Testing.* Turns natural-language behavioral specs into executable, trace-aware evaluations (systematize the spec → derive behavior taxonomy → generate single/multi-turn test cases → run against the target → LLM-judge scoring with rationale and policy citation). Local-first, framework-agnostic (100+ endpoints via LiteLLM, agent traces via OpenInference/OpenTelemetry).
-
-  *Relationship to BDK*: there is real surface overlap — both care about whether
-  an agent applies appropriate epistemic behavior. BDK attempts to **mitigate**
-  the failure at inference time, while ASSERT **measures** whether the observable
-  behavior occurred. *Composition*: express BDK as an ASSERT spec covering
-  triggers, non-triggers, well-supported dissent, normative claims, and
-  corrections under pressure. Measure unsupported validation together with
-  calibration, source correctness, helpfulness, and overcorrection. ASSERT does
-  not reveal internal cognition, and its LLM-judge scores are not deterministic;
-  human review remains necessary.
-
-- **[Agent Governance Toolkit (AGT)](https://github.com/microsoft/agent-governance-toolkit)** — runtime policy enforcement, agent identity, sandboxing, and SRE for autonomous agents (Public Preview, MIT). When integrated into the agent's execution path, it intercepts governed actions (tool calls, queries, delegations) and allows or denies them against a policy before execution, with an audit record per decision; documented scope includes the OWASP Agentic Top 10 risk categories and common agent frameworks.
-
-  *Relationship to BDK*: complementary, almost orthogonal. AGT governs
-  **actions** deterministically; it does not provide BDK's epistemic protocol or
-  shape how the agent talks. BDK shapes **conversational behavior** advisorily;
-  it cannot block an action. *Composition*: put BDK in the system prompt of an
-  AGT-governed agent for **defense in depth** — calibrated conversational
-  friction layered under hard runtime enforcement.
-
-These two cover what BDK deliberately does not — reproducible measurement at
-scale and runtime enforcement. BDK stays the cheap, portable, readable
-hypothesis that can live *inside* agents those tools evaluate and govern.
-
----
-
-## Adjacent academic / philosophical work
-
-### On sycophancy and agreeableness in LLMs
-
-- **Sharma, M. et al. (2023). "Towards Understanding Sycophancy in Language Models."** Systematic study of sycophancy in RLHF-trained models.
-- **Perez, E. et al. (2022). "Discovering Language Model Behaviors with Model-Written Evaluations."** Uses models to generate evaluation datasets, including for sycophancy.
-- **Goldberg, J. et al. (2025). "SycEval: Evaluating LLM Sycophancy."** Evaluates sycophantic behavior across domains and distinguishes progressive from regressive sycophancy.
-- **Cheng, M. et al. (2025). "ELEPHANT: Measuring and understanding social sycophancy in LLMs."** OpenReview forum `igbRHKEiAs`. Introduces social sycophancy as excessive preservation of the user's face and reports prompting and steering mitigations. Venue status is not asserted here beyond the verified OpenReview record.
-- **Hong, J. et al. (2025). "Measuring Sycophancy of Language Models in Multi-turn Dialogues."** Findings EMNLP 2025, Anthology ID `2025.findings-emnlp.121`, DOI `10.18653/v1/2025.findings-emnlp.121`. Introduces multi-turn measures such as turn of flip and number of flips; motivates stabilization mode.
-- **Li, J. et al. (2026). "When Helpfulness Becomes Sycophancy: Sycophancy is a Boundary Failure Between Social Alignment and Epistemic Integrity in Large Language Models."** arXiv:2605.05403, DOI `10.48550/arXiv.2605.05403`. Names the exact boundary failure BDK is designed to counter.
-
-### On hallucination, grounding, and uncertainty
-
-- **Ji, Z. et al. (2023). "Survey of Hallucination in Natural Language Generation."**
-- **Huang, L. et al. (2023). "A Survey on Hallucination in Large Language Models."**
-- **Fadeeva, E. et al. (2024). "Fact-Checking the Output of Large Language Models via Token-Level Uncertainty Quantification."** Shows claim-level uncertainty can help identify unreliable generations; useful background, not implemented here.
-
-### On retrieval-augmented claim verification
-
-- **FEVER** - Fact Extraction and VERification benchmark and workshop.
-- **AVeriTeC** - real-world textual claim verification with evidence from the web; useful model for evidence-backed practice.
-
-### On model self-reports and introspection
-
-- **Turpin, M. et al. (2023). "Language Models Don't Always Say What They Think."** Chain-of-thought explanations can be plausible but misleading; a caution for any self-critique protocol.
-
-### On correlated model reviewers
-
-- **Kim, E., Garg, A., Peng, K., and Garg, N. (2025). ["Correlated Errors in
-  Large Language Models."](https://arxiv.org/abs/2506.07962)** ICML 2025.
-  Demonstrates that error correlation persists across model families and
-  providers; model agreement should not be treated as independent evidence.
-
-### On the social problem the playbook targets
-
-- **Lifton, R. J. (1961).** *Thought Reform and the Psychology of Totalism*.
-- **Tufekci, Z. (2018). "YouTube, the Great Radicalizer."**
-- **Zuboff, S. (2019).** *The Age of Surveillance Capitalism*.
-- **Sunstein, C. R. (2009).** *Going to Extremes: How Like Minds Unite and Divide*.
-
-### On critical thinking traditions
-
-- **Sagan, C. (1996).** *The Demon-Haunted World*.
-- **Popper, K. (1934).** *The Logic of Scientific Discovery*.
-- **Kahneman, D. (2011).** *Thinking, Fast and Slow*.
-
----
+# Related work
+
+BDK is a synthesis and packaging contribution, not a claim to have invented
+critical thinking, behavioral evaluation, or AI diagnosis.
+
+## Intellectual lineage
+
+- Carl Sagan's Baloney Detection Kit provides the critical-thinking frame.
+- Karl Popper motivates falsifiability where it fits empirical claims.
+- Robert Jay Lifton informs resistance to closed, self-sealing belief systems.
+- State-of-the-art-first practice motivates prior-art checks before novelty
+  claims.
+- POSIWID and systems thinking motivate diagnosis from observed behavior.
+- Behavioral research on sycophancy motivates framing and pressure tests.
+
+## Adjacent tool classes
+
+| Class | Primary question | Relationship to BDK |
+|---|---|---|
+| System prompts and constitutional rules | How should the model behave? | BDK provides a specialized, portable behavior contract |
+| RAG and fact-checking | What evidence supports the claim? | Supplies evidence that BDK can inspect; not replaced by BDK |
+| Benchmarks and evaluators | How often does behavior fail? | Measures cases at scale; BDK adds per-case diagnosis |
+| Red teaming | How can the system be broken? | Finds adversarial failures; BDK is collaborative rather than adversarial |
+| Mechanistic interpretability | What internal mechanisms activate? | Works inside the model; BDK works from observable behavior |
+| Runtime governance | Is this action allowed? | Enforces actions; BDK only shapes and diagnoses conversation |
+
+## Research cautions reflected in BDK
+
+- Model explanations can be plausible reconstructions rather than faithful
+  access to internal causes.
+- Agreement between model reviewers is correlated evidence, not independent
+  corroboration.
+- LLM judges can introduce presentation and self-evaluation bias.
+- Lower sycophancy can be purchased at the cost of contrarianism, false balance,
+  refusal, or stubbornness.
+
+For those reasons BDK separates Observed from Inferred claims, favors behavioral
+cross-checks, supports external judges without treating them as ground truth,
+and requires adverse-effect review.
+
+## Positioning
+
+BDK owns one lifecycle across three connected jobs:
+
+```text
+Prevent unsupported endorsement
+        |
+        v
+Diagnose a concrete response
+        |
+        v
+Validate intended and adverse effects
+```
+
+It remains compatible with external retrieval, evaluation, observability, and
+governance systems. Those systems should not be absorbed into BDK, and BDK
+should not be presented as a substitute for them.
 
 ## Honest gaps
 
-- **It does not measure its own effect.** Use the manual rubric here or an external evaluator elsewhere.
-- **It does not survive determined adversarial users.** It is friction, not enforcement.
-- **It depends on available knowledge.** For low-resource languages or niche fields, state-of-the-art assessment may be incomplete.
-- **It can over-trigger.** Creative speculation and humble exploration should not always get the full protocol.
-- **It can under-trigger.** Subtle validation-seeking may look like ordinary curiosity.
-- **It can sound patronizing.** Tone is part of the playbook, not decoration.
-- **It can become reflexively contrarian or stubborn.** Stabilization must
-  preserve correction, and alternatives must not be manufactured for balance.
-- **Its effectiveness is not established here.** The current checkout contains
-  a pre-registered calibration design but no completed multi-model result.
+- Prompt interventions can be ignored or eroded by context.
+- Behavioral diagnosis cannot reveal weights, training examples, or hidden
+  reasoning.
+- Automated scoring depends on rubrics and fallible judges.
+- Current evidence does not justify a universal product-effect claim.
+- Language, culture, domain, and model family can change results.
 
----
-
-## Positioning summary
-
-Agentic Plan -> Execute -> Verify orchestration sits above several rows in this table: it can call BDK as behavioral policy, RAG as evidence substrate, and evaluators or robopsychology as review instruments. The comparison below keeps BDK scoped to its own layer.
-
-| Dimension | baloney-detection-kit | System prompts | Constitutional AI | RAG with citations | RAI evaluators | ASSERT | Agent Governance Toolkit | robopsychology |
-|-----------|----------------------|----------------|-------------------|--------------------|----------------|--------|--------------------------|----------------|
-| **Stage** | Inference-time | Inference-time | Training + inference | Inference-time | Post-hoc / batch | Pre-deploy / regression | Runtime | Post-hoc / per-case |
-| **Goal** | Mitigate unsupported confidence amplification without reflexive contradiction | General behavior shaping | Encode principles | Ground claims in evidence | Measure failure rates | Score behavior vs. a spec | Govern/audit agent actions | Diagnose specific failures |
-| **Requires** | Text instructions | Prompt access | Training pipeline | Retrieval/source layer | Test set + scoring infra | A written behavioral spec | Integration in the action path | Reproducible interaction |
-| **Output** | Better response pattern | Modified model response | Modified model behavior | Evidence-backed response | Aggregate scores | Test suite + cited verdicts | Allow/deny + audit trail | Qualitative diagnosis |
-| **Strength** | Portable, readable, no dependencies | Simple | More robust | Verifiable grounding | Quantifiable | Spec-driven coverage, regression-aware | Deterministic enforcement | Deep per-case analysis |
-| **Weakness** | Advisory, fragile, effect not yet established here | Same | Expensive | Needs corpus/tools | Post-hoc | LLM-judge, needs a good spec | No epistemic reasoning; needs integration | Manual and slow |
-
-The playbook is meant to be the cheapest, most portable first layer: a
-testable conversational default before heavier tools are justified. ASSERT can
-measure its observable effects, including adverse effects, and the Agent
-Governance Toolkit can govern actions that a prompt can never reliably block.
-
----
-
-*Part of the [baloney-detection-kit](https://github.com/jrcruciani/baloney-detection-kit). By [JR Cruciani](https://github.com/Jrcruciani).*
-
-*Licensed under [MIT](LICENSE).*
+Claims about BDK should therefore remain scoped to tested prompts, models,
+cases, runs, and review criteria.

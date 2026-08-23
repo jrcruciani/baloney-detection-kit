@@ -1,8 +1,9 @@
-# Closed-loop calibration recipe: BDK -> robopsychology
+# Closed-loop calibration recipe
 
 This recipe checks whether BDK changes model behavior in the intended direction
-without creating unacceptable adverse effects. BDK is the prompt-side
-intervention; `robopsychology` is one measurement-side instrument.
+without creating unacceptable adverse effects. The intervention prompts change
+the target behavior; BDK diagnostics measure framing sensitivity, coherence,
+and other observable effects.
 
 It is not part of the core framework and it is not a benchmark. The framework
 remains the prompt/playbook behavior. This directory provides a small,
@@ -71,69 +72,67 @@ predictions after the fact.
 
 ## Requirements
 
-- A working `robopsych` CLI. Prefer the sibling `robopsychology` checkout or a
-  release where `ratchet --behavioral` preserves `system_prompt`.
+- A working `bdk` CLI from this repository. Use a release where
+  `ratchet --behavioral` preserves `system_prompt`.
 - One target-model credential, such as `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
   `GEMINI_API_KEY`, or the Azure Foundry variables documented by
-  robopsychology.
+  BDK.
 - Prefer a judge from a different model family from the target, but do not treat
   model-family diversity as independent evidence.
 - Human reviewers who are blind to condition for the outcome review.
 
 ## Run the pilot
 
-From the parent workspace that contains both repositories:
+From the repository root:
 
 ```bash
 export TARGET_MODEL="claude-sonnet-4-6"
 export JUDGE_MODEL="gpt-4o"
-
-cd robopsychology
 ```
 
 Run each scenario with the same target and judge settings:
 
 ```bash
-robopsych ratchet \
-  --scenario ../baloney-detection-kit/validation/closed-loop/scenario-control.yaml \
+bdk ratchet \
+  --scenario validation/closed-loop/scenario-control.yaml \
   --model "$TARGET_MODEL" --behavioral --judge "$JUDGE_MODEL" \
   --coherence-judge "$JUDGE_MODEL" \
-  --output ../baloney-detection-kit/validation/closed-loop/results/trigger-control.report.json \
+  --output validation/closed-loop/results/trigger-control.report.json \
   --format json
 
-robopsych ratchet \
-  --scenario ../baloney-detection-kit/validation/closed-loop/scenario-generic-critical.yaml \
+bdk ratchet \
+  --scenario validation/closed-loop/scenario-generic-critical.yaml \
   --model "$TARGET_MODEL" --behavioral --judge "$JUDGE_MODEL" \
   --coherence-judge "$JUDGE_MODEL" \
-  --output ../baloney-detection-kit/validation/closed-loop/results/trigger-generic-critical.report.json \
+  --output validation/closed-loop/results/trigger-generic-critical.report.json \
   --format json
 
-robopsych ratchet \
-  --scenario ../baloney-detection-kit/validation/closed-loop/scenario-treatment.yaml \
+bdk ratchet \
+  --scenario validation/closed-loop/scenario-treatment.yaml \
   --model "$TARGET_MODEL" --behavioral --judge "$JUDGE_MODEL" \
   --coherence-judge "$JUDGE_MODEL" \
-  --output ../baloney-detection-kit/validation/closed-loop/results/trigger-bdk.report.json \
+  --output validation/closed-loop/results/trigger-bdk.report.json \
   --format json
 
-robopsych ratchet \
-  --scenario ../baloney-detection-kit/validation/closed-loop/scenario-nontrigger-control.yaml \
+bdk ratchet \
+  --scenario validation/closed-loop/scenario-nontrigger-control.yaml \
   --model "$TARGET_MODEL" --behavioral --judge "$JUDGE_MODEL" \
   --coherence-judge "$JUDGE_MODEL" \
-  --output ../baloney-detection-kit/validation/closed-loop/results/nontrigger-control.report.json \
+  --output validation/closed-loop/results/nontrigger-control.report.json \
   --format json
 
-robopsych ratchet \
-  --scenario ../baloney-detection-kit/validation/closed-loop/scenario-nontrigger-generic-critical.yaml \
+bdk ratchet \
+  --scenario validation/closed-loop/scenario-nontrigger-generic-critical.yaml \
   --model "$TARGET_MODEL" --behavioral --judge "$JUDGE_MODEL" \
   --coherence-judge "$JUDGE_MODEL" \
-  --output ../baloney-detection-kit/validation/closed-loop/results/nontrigger-generic-critical.report.json \
+  --output validation/closed-loop/results/nontrigger-generic-critical.report.json \
   --format json
 
-robopsych ratchet \
-  --scenario ../baloney-detection-kit/validation/closed-loop/scenario-nontrigger-treatment.yaml \
+bdk ratchet \
+  --scenario validation/closed-loop/scenario-nontrigger-treatment.yaml \
   --model "$TARGET_MODEL" --behavioral --judge "$JUDGE_MODEL" \
   --coherence-judge "$JUDGE_MODEL" \
-  --output ../baloney-detection-kit/validation/closed-loop/results/nontrigger-bdk.report.json \
+  --output validation/closed-loop/results/nontrigger-bdk.report.json \
   --format json
 ```
 
@@ -143,7 +142,7 @@ matrix across target-model families before making a general claim.
 
 ## Outcome review
 
-Keep robopsychology diagnostics, but do not use presentation changes as a proxy
+Keep BDK diagnostics, but do not use presentation changes as a proxy
 for truth or usefulness. Blind human reviewers to condition and use
 [`../../skill/checklist/review_rubric.md`](../../skill/checklist/review_rubric.md)
 to review four separate outcomes:
@@ -165,7 +164,7 @@ At minimum, record:
 - correction responsiveness;
 - helpfulness and actionability;
 - contrarianism, false balance, and overrefusal;
-- robopsychology diagnostic fields, where available.
+- BDK diagnostic fields, where available.
 
 For multi-turn expansion, also record turn-of-flip, number of flips, whether a
 flip followed relevant evidence, and whether the assistant held position when

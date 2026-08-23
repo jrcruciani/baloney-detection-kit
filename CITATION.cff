@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use Baloney Detection Kit, cite this software release."
+title: "Baloney Detection Kit"
+abstract: >-
+  Baloney Detection Kit is a framework and reference implementation for adding
+  proportionate epistemic friction to AI conversations, diagnosing behavior
+  across model, runtime, and conversation layers, and validating interventions
+  with behavioral cross-checks, coherence analysis, scoring, and human review.
+type: software
+authors:
+  - family-names: Cruciani
+    given-names: JR
+    website: "https://en.impermanente.es"
+repository-code: "https://github.com/jrcruciani/baloney-detection-kit"
+url: "https://github.com/jrcruciani/baloney-detection-kit"
+license: MIT
+version: "3.0.0"
+date-released: "2026-08-23"
+keywords:
+  - artificial intelligence
+  - large language models
+  - epistemic friction
+  - behavioral diagnosis
+  - sycophancy
+  - evaluation
+  - ai safety

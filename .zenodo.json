@@ -1,0 +1,29 @@
+{
+  "title": "Baloney Detection Kit",
+  "description": "<p>Baloney Detection Kit is a framework and reference implementation for adding proportionate epistemic friction to AI conversations, diagnosing behavior across model, runtime, and conversation layers, and validating interventions with behavioral cross-checks and human review.</p>",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Cruciani, JR",
+      "affiliation": "Independent"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "large language models",
+    "epistemic friction",
+    "behavioral diagnosis",
+    "sycophancy",
+    "evaluation",
+    "ai safety"
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/jrcruciani/baloney-detection-kit",
+      "relation": "isSupplementTo"
+    }
+  ]
+}

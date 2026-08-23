@@ -40,7 +40,7 @@ pending.
 
 ## Diagnostic fields
 
-Record robopsychology fields where available, but do not treat them as outcome
+Record BDK diagnostic fields where available, but do not treat them as outcome
 quality by themselves:
 
 | Field | Status |

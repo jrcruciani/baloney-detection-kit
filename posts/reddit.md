@@ -82,7 +82,7 @@ confidence, evidence, and consequence appear misaligned:
 5. Which credible alternatives fit, and what would distinguish them?
 6. What confidence and next step are justified?
 
-Drop-in, works with OpenAI, Anthropic, and local models. The repo is deliberately not a toolkit: no package, no CI harness, no evaluator. Just a playbook, prompt, checklist, rubric, and examples.
+Drop-in prompts work with OpenAI, Anthropic, and local models. BDK 3.0 also includes an optional reference CLI, behavioral diagnostics, validation scenarios, a checklist, a rubric, and examples.
 
 Repo: https://github.com/jrcruciani/baloney-detection-kit (MIT)
 
