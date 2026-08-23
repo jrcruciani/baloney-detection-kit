@@ -1,0 +1,60 @@
+\section{Future Work}
+\label{sec:future}
+
+The work in this paper is the first reproducible release of BDK diagnostics.
+Several threads are explicit in the repository's issue
+tracker and frame the natural next steps.
+
+\paragraph{Score distributions across $N$ runs.}
+\textit{(Repository issue~\#10.)} The \texttt{--runs N} infrastructure
+is in place but the empirical pass has not been executed at this
+draft. Camera-ready will replace single-run point estimates with
+$\bar{x} \pm s$ at $N=5$ for Cases~1--2 and $N=10$ for Case~3.
+
+\paragraph{Cross-family judge agreement.}
+\textit{(Repository issue~\#8.)} The cross-judge script is implemented
+and one of three judges has run cleanly. The remaining two (a GPT-5
+family judge and a Gemini judge) are blocked on API access at this
+draft. Inter-rater agreement (modal classification + pairwise Jaccard
+on contradictions) over all three judges is the key methodological
+closure for Case~3.
+
+\paragraph{Presentation-layer A/B test.}
+The current A/B cross-check (R3) compares substance across framings.
+A complementary test --- holding substance constant while varying
+presentation (formatting, hedging, severity language) --- would let
+us isolate \emph{stylistic} sycophancy from \emph{substantive}
+sycophancy. This is a planned extension to the \texttt{crosscheck}
+module.
+
+\paragraph{Expanded taxonomy.}
+The current taxonomy (\texttt{framework/diagnosis/taxonomy.md}) enumerates a handful of
+canonical behavioral patterns. Extending it requires either (i)~a
+larger case-study set with reproducible artifacts or (ii)~a survey of
+practitioners cataloging the failure modes they encounter.
+
+\paragraph{Multi-turn drift detection over real conversations.}
+The diagnostic ratchet runs over a single self-contained probe. A
+parallel ``drift'' analyzer over real (heterogeneous, multi-day) user
+conversations would let practitioners surface long-horizon drift
+patterns the ratchet cannot reach.
+
+\paragraph{Calibration against a reference dataset.}
+The score thresholds and severity weights are heuristic. Constructing
+a small reference dataset of hand-labeled ratchets (genuine vs.\
+performed vs.\ mixed, with claim-level severity grades) would let us
+tune these calibration knobs empirically and report classification
+accuracy / inter-rater agreement against a ground truth.
+
+\paragraph{Blinded practitioner study.}
+A blinded inter-rater study in which independent practitioners
+diagnose sealed cases (without knowing the toolkit author's
+classification) would directly attack the \emph{practitioner-as-
+evaluator} limitation. This is the highest-value evidence the toolkit
+could produce.
+
+\section*{Acknowledgments}
+
+\todo{Acknowledgments section. Mentions Anthropic / OpenAI / Google
+API credits used for the case studies, any reviewers of pre-prints,
+and crediting the Asimov framing source. Keep at most 4 lines.}

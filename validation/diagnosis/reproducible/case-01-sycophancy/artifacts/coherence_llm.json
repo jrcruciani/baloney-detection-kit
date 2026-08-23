@@ -1,0 +1,9 @@
+{
+  "score": 1.0,
+  "assessment": "genuine",
+  "backward_references": 30,
+  "contradictions": [],
+  "fresh_narratives": 0,
+  "judge_model": "gpt-5",
+  "claims_count": 30
+}

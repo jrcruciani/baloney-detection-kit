@@ -1,202 +1,67 @@
-# Adoption Contexts
+# Deployment contexts
 
-When and how to use the playbook, by context. This document is intentionally about adoption patterns, not deployment architecture.
+BDK can be adopted one layer at a time. Prevention, diagnosis, and validation
+share one framework but solve different operational questions.
 
-The README covers *what* the playbook is. [`PLAYBOOK.md`](PLAYBOOK.md) covers *how* to apply it. This document covers *where the habit belongs*.
+| Need | BDK surface | Typical timing |
+|---|---|---|
+| Improve conversational defaults | Intervention prompt or skill | Design and inference time |
+| Explain one suspicious output | Prompt card, template, or CLI diagnosis | Development and incident response |
+| Test framing sensitivity | `bdk crosscheck` | Pre-deployment and debugging |
+| Check multi-turn continuity | `bdk ratchet` and coherence analysis | Evaluation and incident response |
+| Compare an intervention with control | Closed-loop scenarios | Calibration and regression review |
 
----
+## Personal use
 
-## Pattern 1 - Personal use
+Use `ROOT_PROMPT.md` or `bdk apply compact` in custom instructions. Keep the
+trigger conservative so ordinary exploration does not receive a full skeptical
+template.
 
-**You are an individual user of an LLM** and want the model to push back on weak claims by default, including your own.
+## Agent instructions
 
-How:
+Install [`skill/`](skill/) in a compatible runtime or use
+[`prompts/intervention/prompt-agent.md`](prompts/intervention/prompt-agent.md).
+The prompt is advisory: it shapes responses but cannot enforce tool or data
+access policy.
 
-1. Paste [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt, custom-instructions, or personality slot of your LLM client.
-2. If the instruction slot is short, use [`prompts/prompt-compact.md`](prompts/prompt-compact.md) instead.
-3. Keep [`PLAYBOOK.md`](PLAYBOOK.md) nearby for the human-readable protocol.
-4. Use [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) when you feel you may have discovered something important.
+## Team review
 
-What you get:
+Collect both trigger and non-trigger conversations. Review protocol adherence,
+epistemic quality, usefulness, and adverse effects separately. Use diagnostic
+cards to investigate representative failures before changing the system prompt.
 
-- A default pause before the model validates novelty claims.
-- A repeatable way to ask: "What is already known?"
+## High-stakes domains
 
-Watch out for:
+Lower the threshold for structured review when error is materially harmful or
+hard to reverse. Add domain-specific evidence requirements and qualified human
+review. BDK is not medical, legal, financial, safety, or compliance software.
 
-- **Long sessions erode instructions.** Re-paste the prompt if the model drifts.
-- **You can override it.** That is not a bug; the playbook is friction, not a wall.
-- **Language and domain coverage vary.** For niche topics, ask for uncertainty explicitly.
+## Production agents
 
----
+A practical lifecycle is:
 
-## Pattern 2 - Agent instructions
+1. Define the intended behavior and encode the preventive prompt.
+2. Test observable behavior with a spec-driven evaluator such as
+   [ASSERT](https://github.com/responsibleai/ASSERT).
+3. Diagnose representative failures with `bdk run`, `bdk crosscheck`, or
+   `bdk ratchet`.
+4. Fix the responsible layer: model, runtime/host, or conversation.
+5. Re-run the evaluator and closed-loop cases.
+6. Govern actions independently with a runtime control such as the
+   [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit).
 
-**You operate an agent that supports skills, personas, or project instructions** and want it to apply the playbook proactively.
+BDK governs no actions. Prompt instructions remain advisory, automated judges
+remain fallible, and human review remains necessary for material decisions.
 
-How:
+## Plan -> Execute -> Verify
 
-1. Put [`skill/`](skill/) where your runtime expects skills, or adapt `skill/SKILL.md` or [`prompts/prompt-agent.md`](prompts/prompt-agent.md) into your instruction layer.
-2. Keep the trigger list conservative.
-3. Treat the skill as a distribution format for the playbook, not as a separate tool.
-4. If your runtime already has planner, executor, verifier, tools, agents, MCP, or audit artifacts, use [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md) as the downstream integration pattern.
+In an orchestrated agent:
 
-What you get:
+- **Plan:** determine whether epistemic friction is warranted and define the
+  evidence/update criteria.
+- **Execute:** perform the claim, prior-art, evidence, and alternative checks.
+- **Verify:** run the rubric, diagnostic probes, or external evaluators before
+  delivery.
 
-- The agent can invoke the protocol when confidence, evidence, and consequence
-  are materially misaligned without treating novelty or dissent as a verdict.
-- The output remains consistent enough for human review.
-
-Watch out for:
-
-- **Trigger calibration.** Too often becomes annoying or contrarian; too rarely
-  becomes useless. Include well-supported dissent and humble exploration in
-  non-trigger review cases.
-- **Persona conflicts.** A "make the user feel right" persona will defeat the playbook.
-- **Format pressure.** Some UIs make structured output too heavy. Use light mode when appropriate.
-
----
-
-## Pattern 3 - Team review ritual
-
-**You are a team shipping or using LLM systems** and want a lightweight way to review sycophantic validation without building an evaluator.
-
-How:
-
-1. Collect a small set of representative conversations.
-2. Include cases that should trigger the playbook and cases that should not.
-3. Have a human reviewer use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md).
-4. Discuss misses: false positives, false negatives, bad tone, bad evidence,
-   false balance, reflexive contradiction, or failure to revise an initial
-   error.
-5. Update instructions or examples, not code.
-6. Pin the prompt version or repository commit if the review is part of a reproducible process.
-
-What you get:
-
-- A shared vocabulary for reviewing "the model just agreed with me" failures.
-- A manual baseline before deciding whether heavier evaluation infrastructure is worth it.
-
-Watch out for:
-
-- **Do not turn the repo into the evaluator.** If you need automated scoring, use an external eval tool or a separate repo.
-- **Review set staleness.** Claims age. Refresh examples as domains change.
-- **Judge sycophancy.** LLM-as-judge review can have the same agreeableness problem; keep human review in the loop.
-- **Compliance is not outcome quality.** Review source correctness, confidence,
-  and usefulness separately from whether the assistant followed every step.
-
----
-
-## Pattern 4 - High-stakes use
-
-**You work in healthcare, finance, legal, public sector, safety, education, or another context where false validation can cause harm.**
-
-How:
-
-1. Use the playbook as an inference-time behavior instruction.
-2. Add domain-specific source expectations: clinical guidelines, case law, policy, standards, or primary literature.
-3. Use full mode more readily when evidence-confidence mismatch is material,
-   but keep epistemic response length separate from action restrictions.
-4. Require human expertise before action when the consequences are material or
-   hard to reverse.
-5. Review incidents manually with the rubric.
-
-What you get:
-
-- A clearer boundary between "interesting hypothesis" and "safe to act on".
-- Less accidental reinforcement of paranoia, false medical beliefs, risky finance claims, or legal misunderstandings.
-
-Watch out for:
-
-- **Domain adaptation.** General state-of-the-art checks are not enough for regulated domains.
-- **Disclaimer fatigue.** A cautious answer can still be useful; do not bury the signal.
-- **Scope creep.** The playbook is not compliance software.
-
----
-
-## Pattern 5 - Teaching and writing
-
-**You teach AI literacy, run a research group, or write about LLM behavior.**
-
-How:
-
-1. Use [`PLAYBOOK.md`](PLAYBOOK.md) as the central handout.
-2. Use [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) for self-assessment.
-3. Use [`skill/examples/case_saussure.md`](skill/examples/case_saussure.md) and [`skill/examples/playbook_scenarios.md`](skill/examples/playbook_scenarios.md) for discussion.
-4. Have students apply the playbook to their own AI-generated "discoveries".
-
-What you get:
-
-- A practical artifact for teaching epistemic friction.
-- A way to discuss sycophancy, claim types, update conditions, evidence quality,
-  and calibration without starting with tooling.
-
-Watch out for:
-
-- **The playbook is opinionated.** Use it as a starting point, not gospel.
-- **The essay is in Spanish.** English readers can use the README, PLAYBOOK, and skill files.
-
----
-
-## Pattern 6 - Enterprise agent stack
-
-**You ship autonomous agents to production** and already use (or plan to use) Microsoft's open-source agent tooling — [ASSERT](https://github.com/responsibleai/ASSERT) for evaluation and the [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit) for runtime governance. BDK is the cheapest layer to add, and it slots in without conflicting with either. These are conceptual composition patterns, not integrations shipped here.
-
-How:
-
-1. **Design** — capture "apply proportionate epistemic friction when
-   confidence, evidence, and consequence are materially misaligned; remain
-   collaborative otherwise" as a behavioral requirement. Keep BDK's
-   [`ROOT_PROMPT.md`](ROOT_PROMPT.md) as the portable form of that requirement.
-2. **Embed** — put `ROOT_PROMPT.md` (or [`skill/`](skill/)) inside the system prompt of the agents you govern with AGT. BDK becomes the conversational layer; AGT remains the enforcement layer underneath it.
-3. **Specify and test** — express the behavior contract as an ASSERT spec with
-   trigger cases, non-trigger cases, well-supported dissent, normative claims,
-   and multi-turn corrections. Score calibration and helpfulness as well as
-   unsupported validation. Re-run it as a regression gate.
-4. **Diagnose** — when an evaluation case or a production incident shows the agent still validated a weak claim, hand the transcript to [robopsychology](https://github.com/jrcruciani/robopsychology) to diagnose whether the cause was the model, the runtime, or the conversation.
-
-What you get:
-
-- A defense-in-depth posture: conversational friction (BDK, advisory) under runtime enforcement (AGT, hard), with reproducible evaluation (ASSERT) and per-case diagnosis (robopsychology) around it.
-- A clear division of labor: BDK attempts to mitigate, ASSERT measures, AGT
-  governs, and robopsychology explains.
-
-Watch out for:
-
-- **A prompt is advisory.** BDK shapes reasoning; it cannot block an action. That is why AGT must still govern the actions BDK only talks the model out of — do not treat BDK as enforcement.
-- **ASSERT tests observable behavior**, not internal cognition, and its
-  LLM-judge scores are not deterministic. Keep blinded human review in the loop,
-  and do not let protocol adherence stand in for source correctness or utility.
-- **Do not absorb the stack into this repo.** BDK stays a playbook; the spec config, governance policies, and orchestration live in the downstream system.
-
----
-
-## Decision summary
-
-| If your situation is... | Use pattern |
-|------------------------|-------------|
-| Personal LLM use, want better defaults | 1 - Personal use |
-| Agent with skills or project instructions | 2 - Agent instructions |
-| Team wants lightweight review | 3 - Team review ritual |
-| High-stakes domain | 4 - High-stakes use |
-| Teaching, research, writing | 5 - Teaching and writing |
-| Production agents with ASSERT / Agent Governance Toolkit | 6 - Enterprise agent stack |
-
-Patterns can stack. A team can use the prompt personally, the skill in an agent, the review ritual in retrospectives, and the high-stakes guidance in regulated workflows. None of that requires turning this repo into a toolkit.
-
----
-
-## What this document does not cover
-
-- **The playbook itself** -> [`PLAYBOOK.md`](PLAYBOOK.md).
-- **The drop-in prompt** -> [`ROOT_PROMPT.md`](ROOT_PROMPT.md).
-- **Manual review** -> [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md).
-- **Worked examples** -> [`skill/examples/`](skill/examples/).
-- **Comparison with adjacent approaches** -> [`related-work.md`](related-work.md).
-- **Plan -> Execute -> Verify integration** -> [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md).
-
----
-
-*Part of the [baloney-detection-kit](https://github.com/jrcruciani/baloney-detection-kit). By [JR Cruciani](https://github.com/Jrcruciani).*
-
-*Licensed under [MIT](LICENSE).*
+See [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md) for the
+detailed mapping.

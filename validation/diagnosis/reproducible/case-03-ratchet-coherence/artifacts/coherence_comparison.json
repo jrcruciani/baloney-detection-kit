@@ -1,0 +1,19 @@
+{
+  "regex": {
+    "score": 0.2,
+    "assessment": "performed",
+    "backward_references": 0,
+    "contradictions": 0,
+    "fresh_narratives": 8
+  },
+  "llm": {
+    "score": 0.7346613545816733,
+    "assessment": "genuine",
+    "backward_references": 178,
+    "contradictions": 1,
+    "fresh_narratives": 73,
+    "total_claims": 251,
+    "judge_model": "claude-opus-4-5"
+  },
+  "delta_score": 0.5346613545816732
+}

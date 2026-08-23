@@ -1,352 +1,195 @@
-> **Before you clone**
->
-> What you see here is an artifact: the concrete shape my problem took. It almost certainly doesn't fit your personal scenario perfectly, and that's fine. The interesting part isn't the code, it's the pattern of how I thought about the problem — that's what transfers. Read it, steal the idea, write your own. If any of this was useful to you, after clicking on the star, drop by [impermanente.es](https://impermanente.es) — there are posts and photos you might like.
->
-> Context: [Seguimos compartiendo el producto, no la idea](https://impermanente.es/2026/05/25/seguimos-compartiendo-el-producto-no.html)
+# Baloney Detection Kit
 
----
+> Epistemic friction, behavioral diagnosis, and validation for AI conversations.
 
-# baloney-detection-kit
+Baloney Detection Kit (BDK) helps practitioners prevent unsupported confidence
+amplification, diagnose why an AI response went wrong, and test whether an
+intervention improved behavior without making the assistant reflexively
+contrarian.
 
-> A playbook for adding epistemic friction to LLM conversations before weak claims become private revelations.
+BDK 3.0 has one operating loop:
 
----
-
-## TL;DR
-
-Use this repo when a user's confidence, available evidence, and consequences of
-error appear misaligned. Novelty language, suppression framing, requests for
-validation, material-risk decisions, and repeated pressure are useful signals,
-but disagreement with expert consensus is not a trigger by itself.
-
-The core habit is simple: define and type the claim, check current knowledge and
-the scope of the search, separate prior art from truth and importance, identify
-what should change the assessment, compare credible explanations, and answer
-with calibrated confidence rather than flattery or reflexive contradiction.
-
-Use light mode for ordinary exploration; use the full protocol when the
-confidence-evidence mismatch or consequence of error is material. This repo is
-a playbook, not a toolkit, evaluator, or automated fact-checker.
-
-This repository distributes five things:
-
-| Artifact | Use it when you need |
-|----------|----------------------|
-| **Framework** | A repeatable mental model: Trigger -> Mode -> Protocol -> Output -> Review |
-| **Drop-in prompts** | Copy-paste instructions for personal LLMs, agents, reviewers, or second opinions |
-| **Agent skill** | Runtime-friendly instructions for skill-based agents |
-| **Human checklist** | A self-assessment before turning a weak idea into a private revelation |
-| **Calibration recipes** | Manual and optional measurement patterns for checking whether the behavior helped |
-
-## Why this exists
-
-Many conversational LLMs exhibit social sycophancy: helpfulness and social
-alignment can displace independent judgment, so a model elaborates or validates
-a user's framing before checking whether the evidence supports it. This creates
-a quiet but powerful failure mode: a user can receive escalating confidence
-from a system that has not earned that confidence.
-
-A friend recently told me, very seriously, that he had discovered something
-profound by talking with ChatGPT: that knowledge is structured into language.
-That broad idea has clear antecedents in Saussure and later structural,
-distributional, and philosophy-of-language traditions, even if LLMs motivate
-narrower modern questions. He did not get angry that I disagreed. He got angry
-that I did not see what he saw.
-
-That reaction, multiplied across millions of users and amplified by recommendation algorithms, is the new shape of an old problem. It used to take a group, a forum, a guru. Now it takes one person and one model.
-
-This repository is an attempt to add proportionate friction back where it has
-been silently removed without replacing agreeableness with automatic
-contrarianism.
-
-> **Evidence status:** BDK is a testable prompt-side intervention, not a proven
-> treatment. The behavior contract and calibration fixtures are versioned, but
-> no completed multi-model calibration is reported in this checkout. Treat
-> "BDK reduces unsupported confidence amplification" as the hypothesis.
-
-The full reasoning is in [`essay/mini-cultos-ai.md`](essay/mini-cultos-ai.md). A shorter version, in Spanish, is in [`posts/blog-impermanente.md`](posts/blog-impermanente.md).
-
----
-
-## What this is
-
-This is a **playbook**: a practical protocol that humans, agents, and LLM
-operators can apply when confidence, evidence, and consequence appear
-misaligned.
-
-The framework has one canonical shape:
-
-1. **Trigger.** Decide whether the claim deserves epistemic friction.
-2. **Mode.** Choose light, full, or stabilization mode.
-3. **Protocol.** Type the claim, scope current knowledge, assess prior art and
-   contribution, identify update conditions, examine evidence, compare credible
-   explanations, and calibrate the conclusion.
-4. **Output.** Answer in the lightest structure that preserves rigor.
-5. **Review.** Use the rubric or examples to catch over-validation,
-   over-triggering, reflexive contrarianism, false balance, bad tone, and
-   fabricated certainty.
-
-When invoked, the playbook applies a 6-step protocol:
-
-1. **Claim and type.** What exactly is being claimed: empirical,
-   causal/predictive, normative/policy, interpretive/historical,
-   personal/experiential, or creative/hypothetical?
-2. **Current knowledge.** What is known, over what scope, and as of when?
-3. **Prior art and contribution.** Is the contribution a rediscovery,
-   re-framing, application, method, or new evidence? This is separate from truth
-   and importance.
-4. **Update conditions and evidence.** What should strengthen, weaken, or change
-   the assessment, and how good is the relevant evidence?
-5. **Competing explanations.** Which credible alternatives fit, and what would
-   distinguish them? Do not manufacture alternatives for balance.
-6. **Calibration and next step.** What remains uncertain, how confident should
-   anyone be, and what is the safest useful next action?
-
-The protocol is a synthesis of Carl Sagan's Baloney Detection Kit (1996),
-Andrej Karpathy's "state of the art first" methodology, Robert Jay Lifton's
-eight criteria of thought reform (1961), and Karl Popper's falsifiability
-criterion (1934). Falsifiability is used where it fits empirical claims; other
-claim types need other update rules.
-
-The contribution here is **the packaging as a default conversation behavior**:
-a concise playbook that makes "calibrate confidence against evidence and
-consequence before validating the claim" the first move, not an afterthought.
-
----
-
-## What this is not
-
-- It is not a toolkit, SDK, package, benchmark, evaluator, CI suite, or RAG framework.
-- It does not ship a scoring engine or automated fact-checking pipeline.
-- It does not replace actual research, experts, or domain-specific review.
-- It does not censor wrong ideas. It contextualizes them.
-- It does not assume consensus is truth, dissent is error, unusual claims are
-  false, or agreement among models is independent evidence.
-- It does not guarantee honesty from a user who wants validation at any cost.
-
-The playbook can coexist with evaluators, retrieval systems, Plan -> Execute -> Verify orchestrators, and diagnostic tools, but it is deliberately not trying to become one.
-
----
-
-## What is in this repo
-
+```text
+Detect risk -> Apply friction -> Diagnose behavior -> Validate outcomes
 ```
+
+The project is framework-first. Every layer can be used manually with prompts
+and templates. The `bdk` Python CLI is a reference implementation for teams that
+need repeatable model runs, cross-checks, scoring, and reports.
+
+## What BDK includes
+
+| Layer | Question | Main artifacts |
+|---|---|---|
+| Detection | Is confidence misaligned with evidence or consequence? | Trigger rules, claim typing, human checklist |
+| Intervention | How should the assistant respond before endorsing the claim? | Compact, full, high-stakes, agent, reviewer, and second-opinion prompts |
+| Diagnosis | Why did this output emerge? | Model/runtime/conversation split, 16 diagnostic prompts, nine-step ratchet |
+| Validation | Did the intervention help, and what did it damage? | A/B cross-checks, coherence analysis, scoring, scenarios, reports |
+
+BDK does not claim to inspect model weights or reveal hidden reasoning.
+Diagnostic explanations are hypotheses constrained by observable behavior.
+Behavioral probes and human review carry more weight than model self-report.
+
+## Quick start without installing anything
+
+For prevention:
+
+1. Read [`PLAYBOOK.md`](PLAYBOOK.md).
+2. Choose a prompt from [`prompts/intervention/`](prompts/intervention/).
+3. Use the checklist in [`skill/checklist/`](skill/checklist/).
+
+For diagnosis:
+
+1. Write the expected outcome, constraints, and verification.
+2. Identify the observed symptom.
+3. Select a card from
+   [`prompts/diagnosis/cards/`](prompts/diagnosis/cards/).
+4. Label every diagnostic claim as Observed or Inferred.
+5. Escalate through the ratchet only when the consequence justifies it.
+6. Preserve the transcript in [`templates/diagnosis/`](templates/diagnosis/).
+
+## Reference CLI
+
+Requires Python 3.11 or newer.
+
+```bash
+git clone https://github.com/jrcruciani/baloney-detection-kit.git
+cd baloney-detection-kit
+python -m pip install -e .
+```
+
+Retrieve a preventive intervention:
+
+```bash
+bdk apply compact
+bdk apply high-stakes --output system-prompt.md
+```
+
+Run diagnosis:
+
+```bash
+bdk guided --model claude-sonnet-4-6
+bdk run 1.2 --model gpt-4o --response "the suspicious response"
+bdk ratchet --scenario scenarios/sycophancy.yaml --model gpt-4o
+bdk compare 1.1 --models claude-sonnet-4-6,gpt-4o --response "the response"
+```
+
+Run behavioral checks and scoring:
+
+```bash
+bdk crosscheck --task "Explain the evidence" --model gpt-4o
+bdk coherence report.json
+bdk score report.json
+```
+
+## The intervention protocol
+
+When confidence, evidence, and consequence are materially misaligned:
+
+1. Define and type the smallest reviewable claim.
+2. Scope current knowledge and the limits of any search.
+3. Separate prior art from truth, importance, and usefulness.
+4. State update conditions and assess evidence quality.
+5. Compare only credible alternatives and their discriminators.
+6. Calibrate the conclusion and recommend one useful next step.
+
+Use light mode for ordinary exploration, full mode for material mismatch, and
+stabilization mode when pressure for agreement repeats without new evidence.
+Disagreement with expert consensus is a signal to inspect, not a verdict.
+
+## The diagnostic protocol
+
+BDK separates behavioral hypotheses into three layers:
+
+| Layer | Examples |
+|---|---|
+| Model | Base-model tendencies, approval-seeking, style defaults |
+| Runtime/host | System prompts, policies, tools, memory, workflow rules |
+| Conversation | Framing, local assumptions, inferred user preferences |
+
+Five rules keep diagnosis disciplined:
+
+1. Split every diagnosis across model, runtime/host, and conversation.
+2. Label substantive claims as Observed or Inferred.
+3. Prefer behavioral cross-checks over self-report.
+4. Use diagnostic depth as a coherence ratchet.
+5. Define baseline intent before diagnosing when possible.
+
+The complete method lives in [`framework/diagnosis/`](framework/diagnosis/).
+
+## Validation
+
+BDK ships two complementary validation surfaces:
+
+- [`validation/diagnosis/`](validation/diagnosis/) contains reproducible
+  diagnostic cases, calibration material, and runner scripts.
+- [`validation/closed-loop/`](validation/closed-loop/) tests preventive BDK
+  prompts against control and generic-critical conditions.
+
+The scenario format is shared by the CLI and the validation recipes:
+
+```yaml
+name: example
+system_prompt: |
+  Optional intervention prompt.
+task: |
+  Task sent to the target model.
+expectation: >
+  Observable behavior expected from the response.
+recommended_path:
+  - "1.2"
+  - "3.2"
+```
+
+LLM judges are review aids, not ground truth. Any product claim should report
+cases, models, prompts, run counts, reviewer process, uncertainty, and adverse
+effects.
+
+## Repository map
+
+```text
 baloney-detection-kit/
-├── README.md                         You are here
-├── PLAYBOOK.md                       Operational playbook: triggers, modes,
-│                                     evidence practice, high-stakes handling
-├── ROOT_PROMPT.md                    Self-contained drop-in prompt
-├── VERSIONING.md                     Behavioral versioning for prompts and
-│                                     framework changes
-├── prompts/                          Copy-paste prompt distribution
-│   ├── README.md                     Prompt matrix and selection guide
-│   ├── prompt-compact.md             Short custom-instructions version
-│   ├── prompt-full.md                Full system-prompt version
-│   ├── prompt-high-stakes.md         Extra caution for material risk domains
-│   ├── prompt-agent.md               Tool/agent runtime version
-│   ├── prompt-reviewer.md            Review an existing answer
-│   └── prompt-second-opinion.md      External contrast review prompt
-├── related-work.md                   Positioning vs. system prompts,
-│                                     evaluators, RAG, constitutional AI
-├── deployment-contexts.md            Adoption patterns for people, agents,
-│                                     teams, high-stakes contexts, teaching
-├── agentic-plan-execute-verify.md    Guide for downstream Plan -> Execute ->
-│                                     Verify orchestration
+├── PLAYBOOK.md                    Preventive operating protocol
+├── ROOT_PROMPT.md                 Self-contained intervention prompt
+├── framework/
+│   └── diagnosis/                 Behavioral diagnostic method
+├── prompts/
+│   ├── intervention/              Preventive prompt variants
+│   └── diagnosis/                 Diagnostic cards and catalog
+├── skill/                         Runtime-friendly agent skill
+├── src/bdk/                       Reference CLI and analysis engine
+├── tests/                         Unit and integration tests
+├── scenarios/                     Runnable scenario examples
+├── templates/diagnosis/           Human diagnostic worksheets
 ├── validation/
-│   └── closed-loop/                  Reproducible BDK -> robopsychology
-│                                     calibration recipe
-├── LICENSE                           MIT
-│
-├── skill/
-│   ├── SKILL.md                      Runtime-friendly distribution of the
-│   │                                 playbook for skill-based agents
-│   ├── prompts/
-│   │   └── critical_investigation_mode.txt
-│   ├── checklist/
-│   │   ├── seven_questions.md        Human-facing self-assessment
-│   │   └── review_rubric.md          Manual review rubric
-│   └── examples/
-│       ├── case_saussure.md          Worked example
-│       ├── complete_conversations.md Complete conversation examples
-│       └── playbook_scenarios.md     Trigger, non-trigger, multi-turn,
-│                                     high-stakes and re-framing examples
-│
-├── essay/
-│   └── mini-cultos-ai.md             Full essay (Spanish)
-│
-└── posts/
-    ├── blog-impermanente.md          Blog post version (Spanish)
-    ├── linkedin.md                   LinkedIn version (Spanish)
-    └── reddit.md                     Reddit post drafts (English)
+│   ├── closed-loop/               Intervention calibration
+│   └── diagnosis/                 Diagnostic validation
+└── research/diagnosis-paper/      Research scaffold
 ```
 
----
+## Evidence status
 
-## How to use it
+BDK is a testable intervention and diagnostic method, not a proven treatment,
+automatic fact-checker, benchmark, or truth oracle. The current repository
+contains versioned behavior contracts and validation recipes. Results must be
+interpreted within the tested cases, models, prompts, and review criteria.
 
-### As a framework
+## Security and privacy
 
-Start with [`PLAYBOOK.md`](PLAYBOOK.md). It explains when to activate the protocol, when to stay quiet, how to handle weak vs. high-stakes claims, how to resist multi-turn pressure, and how to review whether the response worked.
+Generated reports and session files can contain complete prompts, model
+responses, and private transcripts. Treat them as sensitive. The CLI validates
+custom base URLs before sending API keys and marks live-provider tests as
+integration tests.
 
-The shortest version is: **Trigger -> Mode -> Protocol -> Output -> Review**. If a proposed change does not fit that shape, it probably belongs downstream rather than in this repo.
+## Versioning
 
-### As a prompt distribution
-
-Use [`prompts/README.md`](prompts/README.md) to choose the right copy-paste prompt:
-
-- compact custom instructions;
-- full system prompt;
-- high-stakes prompt;
-- agent runtime prompt;
-- reviewer prompt;
-- second-opinion prompt.
-
-`ROOT_PROMPT.md` remains the canonical self-contained full prompt for users who want one file.
-
-### As a drop-in root prompt
-
-Copy the block in [`ROOT_PROMPT.md`](ROOT_PROMPT.md) into the system prompt or custom-instructions slot of an LLM client. The prompt is the portable form of the playbook.
-
-### As agent instructions
-
-If your assistant supports skills, copy the [`skill/`](skill/) directory into the relevant skills folder. `skill/SKILL.md` is not a separate product; it is the same playbook expressed in a runtime-friendly format.
-
-### As Plan -> Execute -> Verify orchestration
-
-If you already operate an agentic runtime with planner, executor, verifier, tools, agents, MCP, or audit artifacts, use [`agentic-plan-execute-verify.md`](agentic-plan-execute-verify.md) to map the playbook onto that architecture. The orchestration belongs downstream; this repo stays a playbook.
-
-### As a human checklist
-
-Open [`skill/checklist/seven_questions.md`](skill/checklist/seven_questions.md) and answer the questions honestly the next time you feel the tingle of a sudden discovery. Use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review whether an assistant applied the playbook well.
-
-### As a versioned behavior
-
-If you embed the prompt in a product, classroom, or team workflow, pin the behavior you used. [`VERSIONING.md`](VERSIONING.md) explains what counts as a behavior change, a wording change, or a breaking change.
-
----
-
-## Self-application
-
-The most important test of any framework like this is whether it survives being applied to itself. So:
-
-**State of the art.** Critical thinking tools have been around for at least 90 years (Popper 1934, Sagan 1996). Research on echo chambers, filter bubbles, and algorithmic radicalization is abundant (Pariser, Tufekci, Zuboff, Donovan). LLM-induced misinformation is documented by OpenAI, Anthropic, and academic researchers. AI sycophancy as a design problem is openly discussed.
-
-**Novelty.** This kit is **re-framing**, not invention. The synthesis maps Sagan and Karpathy onto LLM design as a default behavior. The practical contribution is the playbook packaging: short enough to use, explicit enough to resist flattery, and portable across humans and agents.
-
-**Update conditions.** The empirical hypothesis "this playbook reduces
-unsupported confidence amplification without causing reflexive contradiction
-or reducing useful help" is testable. A team can compare conversations with and
-without the playbook across trigger and non-trigger cases, then review
-calibration, source quality, helpfulness, and adverse effects. This repo does
-not include an automated evaluator.
-
-**Alternatives.** Education alone. Regulation. External fact-checking layers. Search-grounded LLMs that always cite. Model training against sycophancy. Each has merits. This playbook is one option among several, with one specific bet: changing the conversational default is high-leverage.
-
-**What I do not know.** Whether the protocol scales without becoming annoying. Whether users will keep it on when it challenges them. Whether the protocol introduces its own biases. Whether it works equally well across languages and cultures.
-
-**Next step.** Use it as a playbook and hypothesis. Break it. Report where it
-over-validates, over-triggers, becomes stubborn, creates false balance, or
-reduces helpfulness. Submit issues and pull requests that improve the protocol,
-examples, review rubric, or calibration design.
-
----
-
-## Calibration loop
-
-BDK is a prompt-side intervention.
-[`robopsychology`](https://github.com/jrcruciani/robopsychology) is the sibling
-measurement-side instrument for diagnosing sycophancy, framing sensitivity,
-presentation shifts, and coherence failures. The closed-loop recipe in
-[`validation/closed-loop/`](validation/closed-loop/) is optional calibration:
-its runnable pilot compares a helpful control, a generic-critical baseline, and
-BDK v2 on both a trigger and a non-trigger case; its expanded matrix adds
-claim-type, reassessment, language, and high-stakes coverage.
-
-The minimal claim is not "BDK works." It is narrower: under specified cases,
-models, prompts, and review criteria, the treatment either did or did not reduce
-unsupported confidence amplification without unacceptable losses in
-helpfulness or calibration.
-
----
-
-## Where this fits: the agent-governance ecosystem
-
-BDK is the cheapest, most portable layer in a larger agent-reliability picture. If you
-build or operate LLM agents, it composes with three other reference projects — one of
-mine and two official Microsoft open-source releases (both MIT) — each owning a
-different job. They overlap a little around *inspecting behavior*, but their primary
-functions are complementary, not duplicated.
-
-| Project | Layer | Job | When |
-|---------|-------|-----|------|
-| **baloney-detection-kit** (this repo) | Conversational | **Mitigate** unsupported confidence amplification — calibrated epistemic friction before endorsement | Design, runtime (as a prompt) |
-| **[robopsychology](https://github.com/jrcruciani/robopsychology)** (mine) | Conversational / behavioral | **Diagnose** *why* a specific output went wrong — model vs. runtime vs. conversation | Pre-deploy eval, observability, post-incident |
-| **[ASSERT](https://github.com/responsibleai/ASSERT)** (Microsoft) | Evaluation | **Evaluate** behavior against written specs — natural-language requirements become reproducible, trace-aware test suites | Pre-deploy eval, regression testing |
-| **[Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** (Microsoft) | Infrastructure | **Govern** agent *actions* at runtime — policy enforcement, agent identity, sandboxing, audit | Deployment, runtime |
-
-A simple way to read it: **BDK and robopsychology work at the conversational/behavioral
-layer** (shape how the agent reasons, then explain how it behaved), while **ASSERT and
-AGT work around the model** (evaluate behavior reproducibly, and govern actions
-deterministically in production).
-
-### Where BDK plugs in
-
-BDK is a behavioral *policy* expressed as text, so it can ride inside the other tools
-without becoming them. These are conceptual composition patterns, not adapters shipped
-in this repo:
-
-- **With robopsychology** — BDK is the prompt-side intervention;
-  robopsychology is a measurement instrument. The closed-loop recipe tests both
-  the intended reduction in unsupported validation and adverse effects such as
-  overcorrection or stubbornness.
-- **With the [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** — drop `ROOT_PROMPT.md` into the system prompt of an AGT-governed agent to get **defense in depth**: BDK adds conversational, human-visible epistemic friction (advisory — a prompt can be ignored or eroded), while AGT adds runtime, sub-second *enforcement* of what actions are allowed (the agent simply cannot execute a denied action). The two operate at different layers and do not replace each other — prompts shape reasoning, enforcement governs actions.
-- **With [ASSERT](https://github.com/responsibleai/ASSERT)** — BDK is itself a
-  behavioral requirement ("when confidence, evidence, and consequence are
-  materially misaligned, apply proportionate epistemic friction; otherwise
-  remain collaborative"). That requirement can be written as an ASSERT spec,
-  including both trigger and non-trigger cases. ASSERT can test the *observable*
-  behavior; it cannot guarantee internal cognition, and its LLM-judge scores
-  keep a human in the loop.
-
-For the full positioning, see [`related-work.md`](related-work.md); for adoption patterns including the enterprise agent stack, see [`deployment-contexts.md`](deployment-contexts.md).
-
----
-
-## Inspiration
-
-- Carl Sagan, _The Demon-Haunted World_ (1996). The original Baloney Detection Kit.
-- Andrej Karpathy, "A Recipe for Training Neural Networks". The state-of-the-art-first heuristic.
-- Robert Jay Lifton, _Thought Reform and the Psychology of Totalism_ (1961). Eight criteria of cult dynamics.
-- Karl Popper, _The Logic of Scientific Discovery_ (1934). Falsifiability.
-- Shoshana Zuboff, _The Age of Surveillance Capitalism_ (2019). Algorithmic shaping of belief.
-- Zeynep Tufekci, "YouTube, the Great Radicalizer" (NYT, 2018).
-- The Verge, "NFT, Metaverse, AI Weirdos" (2025). The article that triggered this project.
-- Robert Eichenseer, [`AgenticAI.PlanExecuteValidate`](https://github.com/RobertEichenseer/AgenticAI.PlanExecuteValidate). A Plan -> Execute -> Verify reference pattern for orchestrating planners, executors, verifiers, agents, tools, and MCP.
-
----
+BDK 3.0 unifies the framework, prompt distributions, diagnostic engine, and
+validation surfaces under one product version. See
+[`VERSIONING.md`](VERSIONING.md) and [`CHANGELOG.md`](CHANGELOG.md).
 
 ## License
 
-MIT. See [`LICENSE`](LICENSE).
+MIT. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
 
-Use it, fork it, embed it, improve it.
-
----
-
-## Contributing
-
-Issues and pull requests welcome. Especially:
-
-- Better playbook examples in `skill/examples/`.
-- Translations of the prompt, playbook, and checklist.
-- Reports from real use: when did the playbook fire too often, too rarely, or with the wrong tone?
-- Improvements to the manual review rubric.
-- Prompt variants that preserve the same framework while fitting a real runtime.
-
-Please do not add package scaffolding, dependencies, CI harnesses, benchmark runners, SDK adapters, or framework integrations here. Documentation-only integration patterns are welcome when they keep code downstream; adapters can live in separate repos if needed. This repo should stay a playbook.
-
----
-
-**Author:** J.R. Cruciani · Madrid · 2026
-
-**Related writing:** [impermanente.es](https://impermanente.es)
+Use it, fork it, embed it, test it, and report where it over-validates,
+over-triggers, becomes stubborn, creates false balance, or reduces usefulness.

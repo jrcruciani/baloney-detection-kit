@@ -1,10 +1,10 @@
 # Baloney Detection Kit Playbook
 
-This playbook is a conversational protocol for adding proportionate epistemic
-friction when confidence, available evidence, and consequence of error appear
-misaligned. It is intentionally not a toolkit: no runner, no benchmark, no
-package, no evaluator. The intended output is better-calibrated judgment in the
-moment.
+This playbook defines the preventive layer of BDK. It adds proportionate
+epistemic friction when confidence, available evidence, and consequence of
+error appear misaligned. The protocol can be used manually, embedded as a
+prompt or skill, or exercised through the integrated CLI and validation
+surfaces.
 
 In current AI-safety vocabulary, this targets **social sycophancy**: a boundary failure where social alignment or helpfulness pressure displaces epistemic integrity. See [`related-work.md`](related-work.md) for the mapping.
 
@@ -21,7 +21,7 @@ or consequence is material. Dissent from consensus alone is not a trigger.
 
 ## 0. The framework in one page
 
-BDK is a behavior framework, not an app. Its canonical loop is:
+The preventive behavior contract is:
 
 | Stage | Question | Output |
 |-------|----------|--------|

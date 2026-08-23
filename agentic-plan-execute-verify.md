@@ -165,7 +165,7 @@ with fields like these:
 
 This artifact is useful for incident review, team calibration, and later
 measurement with tools such as
-[robopsychology](https://github.com/jrcruciani/robopsychology).
+[BDK diagnostics](https://github.com/jrcruciani/baloney-detection-kit).
 
 ---
 
@@ -222,7 +222,7 @@ For measurement, keep BDK as the prompt-side intervention and use an external
 instrument. The closed-loop protocol in
 [`validation/closed-loop/`](validation/closed-loop/) shows how to compare a
 control prompt against BDK using
-[robopsychology](https://github.com/jrcruciani/robopsychology).
+[BDK diagnostics](https://github.com/jrcruciani/baloney-detection-kit).
 
 ---
 

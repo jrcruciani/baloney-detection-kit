@@ -1,66 +1,51 @@
-# Behavior Versioning
+# Versioning
 
-BDK is a framework and prompt distribution. It has no package API, but it still
-has behavior that users may embed in assistants, classrooms, team rituals, or
-evaluation recipes. Version changes should describe behavior, not code.
+BDK versions the complete distribution while preserving explicit prompt
+behavior contracts.
 
-## What to pin
+## Product version
 
-If you use BDK in a reproducible setting, record:
+The product version covers:
 
-1. repository commit or release tag;
-2. prompt file used, such as `ROOT_PROMPT.md` or `prompts/prompt-agent.md`;
-3. any local edits;
-4. model and runtime, if relevant;
-5. date of use.
+- framework and terminology;
+- preventive and diagnostic prompts;
+- Python package and CLI;
+- scenario and report formats;
+- validation recipes and packaged data.
 
-## Change categories
+Semantic Versioning applies:
 
-| Change type | Examples | Compatibility expectation |
-|-------------|----------|---------------------------|
-| **Patch wording** | Typos, clearer examples, less awkward phrasing | Same behavior |
-| **Prompt tuning** | Better trigger wording, tone calibration, shorter output guidance | Similar behavior, but outputs may shift |
-| **Behavior change** | New trigger, new mode, changed high-stakes boundary, changed output contract | Re-test before adopting |
-| **Breaking behavior change** | Removing a protocol step, reversing a trigger rule, changing the framework loop | Treat as a new major behavior |
+- **Patch:** fixes that preserve public behavior and formats.
+- **Minor:** backward-compatible commands, prompts, providers, or reports.
+- **Major:** changed behavior contracts, removed commands, incompatible scenario
+  or report formats, or material method changes.
 
-## Current behavior contract (`prompt-v2.0`)
+The version appears in `pyproject.toml`, `src/bdk/__init__.py`,
+`CITATION.cff`, and release notes.
 
-The current contract is:
+## Prompt behavior version
 
-**Trigger -> Mode -> Protocol -> Output -> Review**
+Prompt changes can alter model behavior without changing a Python API. A
+reproducible run must record:
 
-The framework should:
+1. product release or commit;
+2. prompt file and behavior version;
+3. local edits;
+4. model and runtime;
+5. date, run count, and seed policy where available.
 
-- add proportionate friction when confidence, evidence, and consequence are
-  materially misaligned;
-- treat dissent, novelty language, and suppression framing as signals to
-  inspect, not verdicts;
-- choose an evaluation method that fits the claim type rather than applying
-  falsifiability universally;
-- separate prior-art status from truth, importance, and usefulness;
-- assess evidence by relevance, method, independence, corroboration, recency,
-  and provenance rather than by a fixed source hierarchy;
-- avoid over-triggering on casual creativity, preferences, settled lookups, and
-  humble exploration;
-- preserve useful contributions without flattering unsupported novelty or
-  significance;
-- re-open a prior assessment when premises, evidence, or factual claims change;
-- avoid false balance and reflexive contrarianism;
-- treat AI reviewer outputs as critique diversity, not independent evidence;
-- say when research tools or evidence are unavailable;
-- avoid unsafe guidance in material-risk domains;
-- review protocol adherence, epistemic quality, user utility, and adverse
-  effects separately;
-- remain a readable prompt/playbook rather than a toolkit, SDK, benchmark, or
-  evaluator.
+The preventive baseline in BDK 3.0 is `prompt-v2.0`:
 
-## Suggested release labels
+```text
+Trigger -> Mode -> Protocol -> Output -> Review
+```
 
-Use release notes or tags like:
+A new trigger, mode, protocol step, high-stakes boundary, or output contract
+requires explicit behavior-version review even when the package change would
+otherwise be minor.
 
-- `prompt-v1.0`: first stable prompt behavior;
-- `prompt-v1.1`: compatible prompt tuning;
-- `prompt-v2.0`: behavior contract changed.
+## Compatibility
 
-This repo can stay lightweight: tags and release notes are enough unless a
-downstream product needs stricter governance.
+The canonical executable is `bdk`. The legacy diagnostic executable remains an
+alias during the BDK 3.x compatibility window. New integrations must not depend
+on that alias.

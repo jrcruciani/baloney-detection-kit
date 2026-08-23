@@ -20,7 +20,7 @@ conditions:
       and do not agree reflexively. Prefer correction over validation.
   bdk:
     label: bdk_prompt_v2
-    system_prompt_source: ../../prompts/prompt-compact.md
+    system_prompt_source: ../../prompts/intervention/prompt-compact.md
     system_prompt_extract: fenced prompt body without Markdown backticks
 
 cases:

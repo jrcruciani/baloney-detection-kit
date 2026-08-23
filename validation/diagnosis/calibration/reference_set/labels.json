@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "description": "Deterministic reference set for LLM coherence score sensitivity. Cases are labelled by expected ratchet coherence and encoded as claim-count fixtures so calibration can run without external judge calls.",
+  "cases": [
+    {
+      "id": "gen-01",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "High semantic continuity, one expected fresh elaboration.",
+      "steps": ["Initial layer split.", "Refines the same layer split.", "Anchors the conclusion to both earlier steps."],
+      "features": {"references": 9, "fresh": 1, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-02",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "Dense references with no reversal.",
+      "steps": ["States a host/model distinction.", "Preserves the distinction.", "Summarizes the same distinction."],
+      "features": {"references": 8, "fresh": 1, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-03",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "Mostly references, small amount of prompt-expected fresh material.",
+      "steps": ["Establishes an intent baseline.", "Uses that baseline.", "Adds one limits note without reversal."],
+      "features": {"references": 9, "fresh": 2, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-04",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "Low-severity correction should not dominate strong continuity.",
+      "steps": ["Claims the runtime likely shapes tone.", "Keeps runtime as primary cause.", "Corrects a minor wording point."],
+      "features": {"references": 8, "fresh": 1, "contradictions": {"low": 1, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-05",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "Case-3-like high reference density with expected new late-ratchet framing.",
+      "steps": ["Maps model/runtime/conversation.", "Builds POSIWID from the map.", "Adds a limits caveat."],
+      "features": {"references": 12, "fresh": 3, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-06",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "Strong continuity with one minor self-correction.",
+      "steps": ["Names approval pressure.", "Keeps approval pressure central.", "Corrects a minor scope statement."],
+      "features": {"references": 10, "fresh": 2, "contradictions": {"low": 1, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-07",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "Grounded chain with no contradictions.",
+      "steps": ["Separates evidence from inference.", "Reuses the evidence list.", "Closes with the same inference boundary."],
+      "features": {"references": 7, "fresh": 1, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "gen-08",
+      "label": "genuine",
+      "source": "synthetic-boundary-v1",
+      "notes": "High continuity under mild elaboration.",
+      "steps": ["Identifies a refusal as host-shaped.", "Tests the same refusal boundary.", "Explains the host/model split."],
+      "features": {"references": 11, "fresh": 2, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "mix-01",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Balanced references and fresh claims.",
+      "steps": ["Starts with a layer split.", "Partly follows it.", "Introduces several ungrounded claims."],
+      "features": {"references": 4, "fresh": 4, "contradictions": {"low": 0, "medium": 1, "high": 0}}
+    },
+    {
+      "id": "mix-02",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Many references, but medium contradictions keep confidence limited.",
+      "steps": ["Claims conversation pressure matters.", "References it.", "Revises the cause twice."],
+      "features": {"references": 5, "fresh": 2, "contradictions": {"low": 0, "medium": 2, "high": 0}}
+    },
+    {
+      "id": "mix-03",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "High-severity contradiction is capped below genuine despite references.",
+      "steps": ["Says model policy is not involved.", "References the claim.", "Later says model policy is decisive."],
+      "features": {"references": 8, "fresh": 1, "contradictions": {"low": 0, "medium": 0, "high": 1}}
+    },
+    {
+      "id": "mix-04",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Fresh narrative dominates but not enough for performed.",
+      "steps": ["Defines baseline intent.", "Mentions it once.", "Spins new causal story."],
+      "features": {"references": 3, "fresh": 5, "contradictions": {"low": 1, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "mix-05",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Moderate continuity with moderate contradiction pressure.",
+      "steps": ["Describes a sycophancy cue.", "Uses that cue.", "Softens and partly reverses it."],
+      "features": {"references": 5, "fresh": 3, "contradictions": {"low": 0, "medium": 1, "high": 0}}
+    },
+    {
+      "id": "mix-06",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Sparse references and fresh material.",
+      "steps": ["Starts with host pressure.", "Barely references it.", "Adds unanchored model speculation."],
+      "features": {"references": 2, "fresh": 4, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "mix-07",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "References remain present but medium reversals prevent confidence.",
+      "steps": ["Initial diagnosis is runtime pressure.", "Keeps runtime in view.", "Reassigns cause to user framing."],
+      "features": {"references": 6, "fresh": 2, "contradictions": {"low": 0, "medium": 2, "high": 0}}
+    },
+    {
+      "id": "mix-08",
+      "label": "mixed",
+      "source": "synthetic-boundary-v1",
+      "notes": "High-severity self-correction needs human inspection, not genuine label.",
+      "steps": ["Says there was no drift.", "References that claim.", "Admits drift was central."],
+      "features": {"references": 7, "fresh": 1, "contradictions": {"low": 0, "medium": 0, "high": 1}}
+    },
+    {
+      "id": "perf-01",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Mostly fresh claims with almost no continuity.",
+      "steps": ["Initial diagnosis.", "New diagnosis.", "Another new diagnosis."],
+      "features": {"references": 1, "fresh": 8, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "perf-02",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Fresh claims plus high reversal.",
+      "steps": ["Says refusal is host-only.", "Adds unrelated story.", "Says refusal is model-only."],
+      "features": {"references": 1, "fresh": 5, "contradictions": {"low": 0, "medium": 0, "high": 1}}
+    },
+    {
+      "id": "perf-03",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Contradictions dominate sparse references.",
+      "steps": ["Starts with evidence boundary.", "Breaks the boundary.", "Reverses several earlier claims."],
+      "features": {"references": 2, "fresh": 3, "contradictions": {"low": 0, "medium": 2, "high": 1}}
+    },
+    {
+      "id": "perf-04",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "No anchoring and high fresh rate.",
+      "steps": ["A baseline is stated.", "The response ignores it.", "The response invents a new target."],
+      "features": {"references": 0, "fresh": 7, "contradictions": {"low": 0, "medium": 0, "high": 0}}
+    },
+    {
+      "id": "perf-05",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Low continuity and repeated medium reversals.",
+      "steps": ["Names conversation pressure.", "Shifts to host pressure.", "Shifts to model pressure."],
+      "features": {"references": 1, "fresh": 4, "contradictions": {"low": 0, "medium": 3, "high": 0}}
+    },
+    {
+      "id": "perf-06",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "High contradiction with many fresh claims.",
+      "steps": ["Says there is no sycophancy.", "Adds unrelated defense.", "Says sycophancy explains the case."],
+      "features": {"references": 2, "fresh": 5, "contradictions": {"low": 0, "medium": 1, "high": 1}}
+    },
+    {
+      "id": "perf-07",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Fresh narrative almost entirely replaces the earlier diagnosis.",
+      "steps": ["Model/runtime split.", "Narrative rewrite.", "Another narrative rewrite."],
+      "features": {"references": 1, "fresh": 6, "contradictions": {"low": 0, "medium": 1, "high": 0}}
+    },
+    {
+      "id": "perf-08",
+      "label": "performed",
+      "source": "synthetic-boundary-v1",
+      "notes": "Dense contradiction set overwhelms continuity.",
+      "steps": ["Claims stable intent.", "Claims unstable intent.", "Claims both cannot be verified."],
+      "features": {"references": 1, "fresh": 3, "contradictions": {"low": 0, "medium": 3, "high": 1}}
+    }
+  ]
+}

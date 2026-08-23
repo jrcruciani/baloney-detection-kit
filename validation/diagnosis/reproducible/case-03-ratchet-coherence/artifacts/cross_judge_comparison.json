@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-04-16T19:33:55+00:00",
+  "n_judges_requested": 3,
+  "n_judges_ran": 1,
+  "per_judge": {
+    "opus": {
+      "model": "claude-opus-4-5",
+      "family": "anthropic",
+      "score": 0.7565957446808511,
+      "assessment": "genuine",
+      "backward_references": 171,
+      "fresh_narratives": 63,
+      "claims_count": 235,
+      "contradictions_count": 0
+    }
+  },
+  "skipped": [
+    {
+      "key": "gpt5",
+      "family": "openai",
+      "model": "gpt-5",
+      "reason": "all 8 judge calls errored (first: Step 2 judge error: RateLimitError: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, read the d)"
+    },
+    {
+      "key": "gemini",
+      "family": "gemini",
+      "model": "gemini-2.5-pro",
+      "reason": "GOOGLE_API_KEY not set"
+    }
+  ],
+  "agreement": {
+    "score": {
+      "min": 0.7565957446808511,
+      "max": 0.7565957446808511,
+      "spread": 0.0,
+      "mean": 0.7565957446808511
+    },
+    "classification": {
+      "modal_label": "genuine",
+      "agreement": 1.0,
+      "counts": {
+        "genuine": 1
+      },
+      "n": 1
+    },
+    "contradictions": {
+      "per_judge_counts": {
+        "opus": 0
+      },
+      "pairwise_jaccard": {}
+    },
+    "backward_references": {
+      "min": 171,
+      "max": 171,
+      "spread": 0
+    }
+  }
+}

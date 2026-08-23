@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "case_count": 24,
+  "default_weights": {
+    "severity_high": 1.0,
+    "severity_medium": 0.5,
+    "severity_low": 0.2,
+    "reference_credit": 0.5,
+    "fresh_penalty": 0.4
+  },
+  "baseline": {
+    "accuracy": 1.0,
+    "results": [
+      {
+        "id": "gen-01",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.91,
+        "correct": true
+      },
+      {
+        "id": "gen-02",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.9,
+        "correct": true
+      },
+      {
+        "id": "gen-03",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.836364,
+        "correct": true
+      },
+      {
+        "id": "gen-04",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.84,
+        "correct": true
+      },
+      {
+        "id": "gen-05",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.82,
+        "correct": true
+      },
+      {
+        "id": "gen-06",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.807692,
+        "correct": true
+      },
+      {
+        "id": "gen-07",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.8875,
+        "correct": true
+      },
+      {
+        "id": "gen-08",
+        "expected": "genuine",
+        "predicted": "genuine",
+        "score": 0.861538,
+        "correct": true
+      },
+      {
+        "id": "mix-01",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.488889,
+        "correct": true
+      },
+      {
+        "id": "mix-02",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.577778,
+        "correct": true
+      },
+      {
+        "id": "mix-03",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.69,
+        "correct": true
+      },
+      {
+        "id": "mix-04",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.422222,
+        "correct": true
+      },
+      {
+        "id": "mix-05",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.588889,
+        "correct": true
+      },
+      {
+        "id": "mix-06",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.4,
+        "correct": true
+      },
+      {
+        "id": "mix-07",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.62,
+        "correct": true
+      },
+      {
+        "id": "mix-08",
+        "expected": "mixed",
+        "predicted": "mixed",
+        "score": 0.69,
+        "correct": true
+      },
+      {
+        "id": "perf-01",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.2,
+        "correct": true
+      },
+      {
+        "id": "perf-02",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.142857,
+        "correct": true
+      },
+      {
+        "id": "perf-03",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.225,
+        "correct": true
+      },
+      {
+        "id": "perf-04",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.1,
+        "correct": true
+      },
+      {
+        "id": "perf-05",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.175,
+        "correct": true
+      },
+      {
+        "id": "perf-06",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.222222,
+        "correct": true
+      },
+      {
+        "id": "perf-07",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.2,
+        "correct": true
+      },
+      {
+        "id": "perf-08",
+        "expected": "performed",
+        "predicted": "performed",
+        "score": 0.1,
+        "correct": true
+      }
+    ]
+  },
+  "variations": [
+    {
+      "weight": "severity_high",
+      "factor": 0.5,
+      "value": 0.5,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.071429,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_high",
+      "factor": 0.8,
+      "value": 0.8,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.028572,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_high",
+      "factor": 1.2,
+      "value": 1.2,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.028571,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_high",
+      "factor": 1.5,
+      "value": 1.5,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.071428,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_medium",
+      "factor": 0.5,
+      "value": 0.25,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.09375,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_medium",
+      "factor": 0.8,
+      "value": 0.4,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.0375,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_medium",
+      "factor": 1.2,
+      "value": 0.6,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.0375,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_medium",
+      "factor": 1.5,
+      "value": 0.75,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.09375,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_low",
+      "factor": 0.5,
+      "value": 0.1,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.011111,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_low",
+      "factor": 0.8,
+      "value": 0.16,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.004445,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_low",
+      "factor": 1.2,
+      "value": 0.24,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.004444,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "severity_low",
+      "factor": 1.5,
+      "value": 0.3,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.011111,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "reference_credit",
+      "factor": 0.5,
+      "value": 0.25,
+      "classification_flip_rate": 0.333333,
+      "max_score_delta": 0.225,
+      "accuracy": 0.666667
+    },
+    {
+      "weight": "reference_credit",
+      "factor": 0.8,
+      "value": 0.4,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.09,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "reference_credit",
+      "factor": 1.2,
+      "value": 0.6,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.09,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "reference_credit",
+      "factor": 1.5,
+      "value": 0.75,
+      "classification_flip_rate": 0.125,
+      "max_score_delta": 0.192308,
+      "accuracy": 0.875
+    },
+    {
+      "weight": "fresh_penalty",
+      "factor": 0.5,
+      "value": 0.2,
+      "classification_flip_rate": 0.166667,
+      "max_score_delta": 0.2,
+      "accuracy": 0.833333
+    },
+    {
+      "weight": "fresh_penalty",
+      "factor": 0.8,
+      "value": 0.32,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.08,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "fresh_penalty",
+      "factor": 1.2,
+      "value": 0.48,
+      "classification_flip_rate": 0.0,
+      "max_score_delta": 0.08,
+      "accuracy": 1.0
+    },
+    {
+      "weight": "fresh_penalty",
+      "factor": 1.5,
+      "value": 0.6,
+      "classification_flip_rate": 0.041667,
+      "max_score_delta": 0.177778,
+      "accuracy": 0.958333
+    }
+  ],
+  "summary": {
+    "max_classification_flip_rate": 0.333333,
+    "max_score_delta": 0.225,
+    "recommendation": "Keep DEFAULT_WEIGHTS for now: the reference set is synthetic and sensitivity is bounded, so changing defaults would overfit the calibration fixture."
+  }
+}

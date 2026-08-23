@@ -1,0 +1,13 @@
+{
+  "label_distribution": {
+    "observed": 9,
+    "inferred": 14
+  },
+  "layer_separation": 0.6666666666666666,
+  "ratchet_coherence": 1.0,
+  "behavioral_evidence": 0.5,
+  "substance_stability": 0.0,
+  "presentation_stability": 0.07999999999999996,
+  "overall_confidence": 0.4953333333333333,
+  "summary": "Moderate diagnostic confidence. Layer separation is weak \u2014 Model/Runtime/Conversation not clearly distinguished."
+}
