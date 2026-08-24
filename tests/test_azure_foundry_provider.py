@@ -6,7 +6,6 @@ import os
 from types import SimpleNamespace
 from unittest.mock import patch
 
-import httpx
 import pytest
 from openai import BadRequestError
 
@@ -158,9 +157,10 @@ class TestAzureFoundrySend:
             if len(calls) == 1:
                 raise BadRequestError(
                     "Unsupported parameter: 'temperature' is not supported with this model.",
-                    response=httpx.Response(
-                        400,
-                        request=httpx.Request("POST", "https://example.com"),
+                    response=SimpleNamespace(
+                        status_code=400,
+                        request=SimpleNamespace(),
+                        headers={},
                     ),
                     body={},
                 )
