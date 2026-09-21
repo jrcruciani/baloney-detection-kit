@@ -85,8 +85,12 @@ Use `ruff format src/ tests/ scripts/` to apply formatting. Type checking includ
 unannotated function bodies without requiring strict annotations everywhere.
 The base-install smoke job separately checks that the CLI works without SDKs.
 CI uploads coverage per Python version and runs `pip-audit` against the resolved
-development environment in a separate, initially non-blocking job; inspect its
-step output and job summary for findings or audit failures. Dependabot checks
+`.[all,dev]` environment in a separate, enforced job, including the optional
+Anthropic, OpenAI, and Google Gen AI SDKs and their dependencies. Findings and
+audit errors fail the job; its step output and always-run summary show the
+outcome. The base-install and dev-only test jobs remain SDK-free. An unpublished
+`baloney-detection-kit` version may produce a standard "cannot audit package"
+warning; dependency SCA does not audit application logic. Dependabot checks
 Python dependencies and pinned GitHub Actions weekly.
 
 The offline link checker covers tracked and non-ignored new Markdown files
