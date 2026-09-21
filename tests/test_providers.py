@@ -1,11 +1,60 @@
-"""Tests for provider detection and creation."""
+"""Tests for provider detection, creation, and Gemini requests."""
 
+import importlib.util
 import os
-from unittest.mock import patch
+import sys
+from dataclasses import dataclass
+from types import ModuleType, SimpleNamespace
+from unittest.mock import Mock, call, patch
 
 import pytest
 
-from bdk.providers import create_provider, detect_provider
+from bdk import providers
+from bdk.providers import (
+    GeminiProvider,
+    UnsupportedProviderOption,
+    create_provider,
+    detect_provider,
+)
+
+
+@pytest.fixture
+def gemini_sdk(monkeypatch):
+    @dataclass
+    class Part:
+        text: str
+
+    @dataclass
+    class Content:
+        role: str
+        parts: list[Part]
+
+    @dataclass
+    class GenerateContentConfig:
+        system_instruction: str | None = None
+        temperature: float | None = None
+        response_mime_type: str | None = None
+
+    def create_client(*, api_key):
+        return SimpleNamespace(
+            models=SimpleNamespace(
+                generate_content=Mock(return_value=SimpleNamespace(text="pong")),
+            ),
+        )
+
+    google = ModuleType("google")
+    genai = ModuleType("google.genai")
+    types = ModuleType("google.genai.types")
+    types.Part = Part
+    types.Content = Content
+    types.GenerateContentConfig = GenerateContentConfig
+    genai.Client = Mock(side_effect=create_client)
+    genai.types = types
+    google.genai = genai
+    monkeypatch.setitem(sys.modules, "google", google)
+    monkeypatch.setitem(sys.modules, "google.genai", genai)
+    monkeypatch.setitem(sys.modules, "google.genai.types", types)
+    return genai
 
 
 class TestDetectProvider:
@@ -122,3 +171,147 @@ class TestCreateProvider:
             with patch.dict(os.environ, env, clear=True):
                 with pytest.raises(SystemExit):
                     create_provider("gemini-pro")
+
+
+class TestGeminiProvider:
+    def test_creates_independent_clients(self, gemini_sdk):
+        first = create_provider("gemini-pro", api_key="first-key")
+        second = create_provider("gemini-pro", api_key="second-key")
+
+        assert gemini_sdk.Client.call_args_list == [
+            call(api_key="first-key"),
+            call(api_key="second-key"),
+        ]
+        assert first.client is not second.client
+        assert first.client is not None
+        assert first.send([{"role": "user", "content": "hello"}], "gemini-pro") == "pong"
+        second.client.models.generate_content.assert_not_called()
+
+    @pytest.mark.parametrize("temperature", [None, 0.0, 0.7])
+    @pytest.mark.parametrize("response_format", [None, {"type": "json_object"}])
+    def test_send_preserves_history_config_and_text(
+        self, gemini_sdk, temperature, response_format,
+    ):
+        provider = GeminiProvider(api_key="test-key")
+        generate = provider.client.models.generate_content
+        generate.return_value = SimpleNamespace(text=' {"answer": "pong"} \n')
+        messages = [
+            {"role": "system", "content": "Follow these instructions."},
+            {"role": "user", "content": "First question"},
+            {"role": "assistant", "content": "First answer"},
+            {"role": "user", "content": "Follow-up question"},
+            {"role": "assistant", "content": "Follow-up answer"},
+            {"role": "user", "content": "Final question"},
+        ]
+        original_messages = [message.copy() for message in messages]
+
+        text = provider.send(
+            messages,
+            "gemini-pro",
+            temperature=temperature,
+            response_format=response_format,
+        )
+
+        types = gemini_sdk.types
+        generate.assert_called_once_with(
+            model="gemini-pro",
+            contents=[
+                types.Content(role="user", parts=[types.Part(text="First question")]),
+                types.Content(role="model", parts=[types.Part(text="First answer")]),
+                types.Content(role="user", parts=[types.Part(text="Follow-up question")]),
+                types.Content(role="model", parts=[types.Part(text="Follow-up answer")]),
+                types.Content(role="user", parts=[types.Part(text="Final question")]),
+            ],
+            config=types.GenerateContentConfig(
+                system_instruction="Follow these instructions.",
+                temperature=temperature,
+                response_mime_type="application/json" if response_format else None,
+            ),
+        )
+        assert text == ' {"answer": "pong"} \n'
+        assert messages == original_messages
+
+    def test_send_without_system_or_optional_kwargs(self, gemini_sdk):
+        provider = GeminiProvider(api_key="test-key")
+
+        assert provider.send([{"role": "user", "content": "hello"}], "gemini-pro") == "pong"
+
+        types = gemini_sdk.types
+        provider.client.models.generate_content.assert_called_once_with(
+            model="gemini-pro",
+            contents=[types.Content(role="user", parts=[types.Part(text="hello")])],
+            config=types.GenerateContentConfig(),
+        )
+
+    def test_send_preserves_last_system_instruction(self, gemini_sdk):
+        provider = GeminiProvider(api_key="test-key")
+
+        provider.send(
+            [
+                {"role": "system", "content": "Initial instructions"},
+                {"role": "user", "content": "hello"},
+                {"role": "system", "content": "Updated instructions"},
+            ],
+            "gemini-pro",
+        )
+
+        types = gemini_sdk.types
+        provider.client.models.generate_content.assert_called_once_with(
+            model="gemini-pro",
+            contents=[types.Content(role="user", parts=[types.Part(text="hello")])],
+            config=types.GenerateContentConfig(system_instruction="Updated instructions"),
+        )
+
+    @pytest.mark.parametrize("response_format", [
+        {},
+        {"type": "text"},
+        {"type": "json_schema", "json_schema": {"type": "object"}},
+    ])
+    def test_rejects_unsupported_response_format_before_request(self, gemini_sdk, response_format):
+        provider = GeminiProvider(api_key="test-key")
+
+        with pytest.raises(UnsupportedProviderOption, match="does not support response_format"):
+            provider.send(
+                [{"role": "user", "content": "hello"}],
+                "gemini-pro",
+                response_format=response_format,
+            )
+
+        provider.client.models.generate_content.assert_not_called()
+
+    @pytest.mark.parametrize("response", [
+        SimpleNamespace(),
+        SimpleNamespace(text=None),
+        SimpleNamespace(text=""),
+        SimpleNamespace(text=" \n\t"),
+        SimpleNamespace(text=123),
+    ])
+    def test_rejects_unusable_response_text(self, gemini_sdk, response):
+        provider = GeminiProvider(api_key="test-key")
+        provider.client.models.generate_content.return_value = response
+
+        with pytest.raises(ValueError, match="Gemini response did not contain usable text"):
+            provider.send([{"role": "user", "content": "hello"}], "gemini-pro")
+
+    def test_propagates_sdk_errors(self, gemini_sdk):
+        provider = GeminiProvider(api_key="test-key")
+        provider.client.models.generate_content.side_effect = RuntimeError("SDK request failed")
+
+        with pytest.raises(RuntimeError, match="SDK request failed"):
+            provider.send([{"role": "user", "content": "hello"}], "gemini-pro")
+
+    def test_import_does_not_require_gemini_sdk(self, monkeypatch):
+        monkeypatch.setitem(sys.modules, "google", None)
+        monkeypatch.setitem(sys.modules, "google.genai", None)
+        monkeypatch.setitem(sys.modules, "google.genai.types", None)
+        spec = importlib.util.spec_from_file_location(
+            "providers_without_gemini", providers.__file__,
+        )
+        assert spec and spec.loader
+        module = importlib.util.module_from_spec(spec)
+
+        spec.loader.exec_module(module)
+
+        assert module.detect_provider("gemini-pro") == "gemini"
+        with pytest.raises(ModuleNotFoundError):
+            module.GeminiProvider(api_key="test-key")
