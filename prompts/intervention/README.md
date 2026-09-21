@@ -26,8 +26,60 @@ Choose the smallest prompt that preserves rigor in your context:
 6. If you want external contrast, use `prompt-second-opinion.md`; treat it as
    critique diversity, not independent evidence.
 
+Choosing a high-stakes variant is not a trigger. Every live variant follows two
+gates: first require an actual claim signal, then select the lightest mode by
+mismatch and consequence. A high-stakes domain alone never forces Full.
+Ordinary no-claim questions and the listed exclusions need no intervention;
+Light is a 3-4-line response, not the full template.
+
+## Canonical contract and synchronization
+
+The fenced block between `<!-- bdk:prompt:start -->` and
+`<!-- bdk:prompt:end -->` in [`prompt-full.md`](prompt-full.md) is the canonical
+full behavior contract. It is concise and self-contained; root does not depend
+on external instructions or use a separately authored compact fallback.
+
+Run from the repository:
+
+```bash
+python scripts/sync_prompts.py
+python scripts/sync_prompts.py --check
+```
+
+The generator copies that **exact full block** into the marked regions of
+[`ROOT_PROMPT.md`](../../ROOT_PROMPT.md) and
+[`skill/SKILL.md`](../../skill/SKILL.md), and its inner text into
+[`critical_investigation_mode.txt`](../../skill/prompts/critical_investigation_mode.txt).
+It also mirrors all six `prompt-*.md` files byte-for-byte into
+`src/bdk/data/interventions/` for `bdk apply`. Specialized variants remain
+context-specific adaptations, not alternate canonical full contracts; review
+their gates and safeguards when editing the canonical behavior.
+
+Only marked regions are replaced in root and skill Markdown; headings, prose,
+YAML metadata, and resource paths outside them are preserved. Edit the canonical
+block, not these generated blocks. Missing/duplicate/reversed delimiters or
+invalid source/wrapper version markers fail explicitly before any writes.
+`--check` reports missing/stale generated outputs without writing, with exit
+status 1 for drift, 2 for invalid input, and 0 for synchronization. Diagnostic
+cards, historical examples, calibration, and preregistration are not generated.
+
+Size checks count Unicode characters and whitespace-delimited words, using
+characters / 4 as a rough English token estimate, **not a model tokenizer**.
+The copyable full block targets roughly 1,000-1,200 estimated tokens; file-level
+counts additionally include Markdown wrappers. Tests bound the block and root
+file separately, so wrapper overhead is not passed off as prompt size.
+
 ## Versioning
+
+Intervention Markdown, root, plain skill text, and packaged mirrors start with
+`<!-- bdk prompt-v2.0 -->`. **Exception:** `skill/SKILL.md` keeps YAML frontmatter
+as its first block, with the marker immediately after the closing `---`.
+Diagnostic cards have their own scope and are not assigned this marker.
 
 If you embed a prompt in a product, classroom, evaluation, or team workflow, pin
 the repository commit and note which prompt file you used. See
 [`../../VERSIONING.md`](../../VERSIONING.md).
+The two-gate/Light-output refinement retains `prompt-v2.0` by explicit request,
+but is a distributed behavior change requiring maintainer behavior/version
+sign-off before merge; see [`CHANGELOG.md`](../../CHANGELOG.md). Deterministic
+checks verify text and distribution integrity, not actual model firing.

@@ -65,10 +65,13 @@ jobs:
         run: ruff format --check src/ tests/ scripts/
 
       - name: Check types with mypy
-        run: mypy src/bdk scripts/check_markdown_links.py
+        run: mypy src/bdk scripts/check_markdown_links.py scripts/sync_prompts.py
 
       - name: Check repository Markdown links offline
         run: python scripts/check_markdown_links.py
+
+      - name: Check intervention prompt synchronization
+        run: python scripts/sync_prompts.py --check
 
       - name: Run tests with coverage
         run: >-

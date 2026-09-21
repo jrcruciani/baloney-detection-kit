@@ -10,6 +10,28 @@ versions for prompt contracts.
 
 - Compatibility alias for the previous diagnostic CLI command.
 
+### Intervention
+
+- **Distributed BEHAVIOR CHANGE, not a mechanical fix:** refine intervention into
+  two gates: require an actual claim signal, then choose a proportionate mode by
+  mismatch and consequence. High-stakes domains alone no longer force Full;
+  ordinary no-claim questions and the stated exclusions receive normal answers.
+  Light has an explicit 3-4-line output; Stabilization corrects its own errors
+  and reopens for changed evidence, premises, scope, or facts.
+- Make `prompts/intervention/prompt-full.md` canonical and synchronize its exact
+  full block into root and skill instructions, its text into the skill prompt,
+  and all six variants into packaged mirrors. Preserve wrappers, skill
+  frontmatter/resources, claim typing, fitting update methods, evidence-quality
+  checks, novelty/truth/importance/usefulness separation, no false balance,
+  reviewer critique diversity, high-stakes boundaries, and humility.
+- Retain `prompt-v2.0` alignment as explicitly requested for this change, rather
+  than silently bumping it. The two-gate/Light-output refinement still requires
+  **maintainer behavior/version sign-off before merge** under `VERSIONING.md`;
+  retaining the marker is not a claim of unchanged behavior. Record the exact
+  commit and prompt for runs. Historical calibration, scientific evidence, and
+  preregistration remain unchanged and do not validate these revised prompts.
+  New checks are structural/deterministic, not live model-firing validation.
+
 ## [3.0.0] - 2026-08-23
 
 ### Product

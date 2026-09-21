@@ -190,8 +190,9 @@ def test_pr_template_preserves_review_and_privacy_checklist():
         'pytest -m "not integration"',
         "ruff check src/ tests/ scripts/",
         "ruff format --check src/ tests/ scripts/",
-        "mypy src/bdk scripts/check_markdown_links.py",
+        "mypy src/bdk scripts/check_markdown_links.py scripts/sync_prompts.py",
         "python scripts/check_markdown_links.py",
+        "python scripts/sync_prompts.py --check",
     ):
         assert command in template
     assert "(../SECURITY.md)" in template

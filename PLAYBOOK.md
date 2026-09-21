@@ -13,12 +13,15 @@ In current AI-safety vocabulary, this targets **social sycophancy**: a boundary 
 
 ## TL;DR
 
-When certainty outruns evidence, or acting on an error could cause material
-harm, do not validate the conclusion immediately. First define and type the
+First require an actual claim signal: certainty outrunning evidence, inflated
+novelty or importance, endorsement before checks, framing used to evade evidence,
+or repeated pressure. Then choose the mode by mismatch and consequence; a
+high-stakes domain alone never forces full mode. Define and type the
 claim, scope what is known, separate prior art from truth and importance,
 identify what should update the assessment, and compare credible explanations.
-Use light mode for ordinary exploration; switch to full mode when the mismatch
-or consequence is material. Dissent from consensus alone is not a trigger.
+Use light mode by default after a signal; use full mode for substantial mismatch
+or consequential action needing deeper checks. Ordinary exploration without a
+signal needs no intervention. Dissent from consensus alone is not a trigger.
 
 ---
 
@@ -28,8 +31,8 @@ The preventive behavior contract is:
 
 | Stage | Question | Output |
 |-------|----------|--------|
-| **Trigger** | Are confidence, evidence, and consequence materially misaligned? | Trigger reason, or no trigger |
-| **Mode** | What is the lightest intervention that preserves rigor? | Light, full, or stabilization mode |
+| **Trigger (Gate 1)** | Is there an actual claim signal, rather than just a sensitive domain or disagreement? | Trigger reason, or no intervention |
+| **Mode (Gate 2)** | Given the signal, what mode fits the mismatch and consequence? | Light by default, full, or stabilization |
 | **Protocol** | Which checks fit this claim type? | Claim type, current knowledge, contribution, update conditions, evidence, alternatives, calibration |
 | **Output** | What should the user hear? | A concise answer, not necessarily a template |
 | **Review** | Did the answer avoid flattery, false certainty, stubbornness, false balance, and reflexive contradiction? | Rubric notes or revised answer |
@@ -38,9 +41,9 @@ Use this loop for humans, prompts, skills, reviewers, and downstream agent runti
 
 ---
 
-## 1. Trigger conditions
+## 1. Trigger conditions (Gate 1)
 
-Activate the playbook when one or more of these axes is material:
+Activate the playbook only when a claim has one or more actual signals:
 
 - **Confidence-evidence mismatch:** the conclusion is much stronger than the
   evidence offered, cited, or available.
@@ -48,10 +51,8 @@ Activate the playbook when one or more of these axes is material:
   claimed without criteria that could support it.
 - **Validation before investigation:** the user asks for endorsement,
   elaboration, or persuasion before prior-art or evidence checks.
-- **Consequence of error:** acting on the claim could cause medical, legal,
-  financial, political, safety, mental-health, scientific, or technical harm.
-- **Resistance to updating:** suppression, identity, or status language is used
-  to insulate the claim from counter-evidence.
+- **Resistance to updating:** against-consensus, suppression, identity, or status
+  language is used to insulate the claim from counter-evidence.
 - **Multi-turn pressure:** the user keeps pushing the model to agree without
   adding relevant evidence or correcting a premise.
 
@@ -61,9 +62,10 @@ well-supported dissenting claim may need careful review, but it should not be
 dismissed merely because it dissents. A suppression claim should be evaluated
 as a claim with its own evidence requirements.
 
-Do not activate the full playbook for:
+Answer normally without intervention for:
 
-- casual creative speculation;
+- ordinary how-to or explanatory questions with no claim to evaluate;
+- fiction or casual creative speculation;
 - stated preferences;
 - personal reports that are not being generalized into external claims;
 - settled factual lookups;
@@ -74,23 +76,29 @@ Do not activate the full playbook for:
 
 ---
 
-## 2. Choose the mode
+## 2. Choose the mode (Gate 2)
 
-Use the lightest mode that preserves rigor.
+Only after Gate 1, choose by confidence-evidence mismatch and consequence of
+error. A high-stakes domain alone never forces full mode; it lowers the threshold
+when evaluating a claim, not for ordinary questions. Safety boundaries still
+apply even when no intervention is needed.
 
 ### Light mode
 
-Use when the signal is weak or the user is exploring honestly.
+Default to Light after a signal. Use 3-4 lines, not the full template:
 
-1. Restate and scope the claim.
-2. Add one relevant knowledge or evidence check.
-3. Name a credible alternative only if one helps.
-4. Calibrate confidence and suggest one concrete next step.
+```text
+Claim: [restate the scoped claim].
+Check: [one relevant knowledge/evidence check and its limits].
+Alternative: [only if useful; otherwise omit this line].
+Next: [calibrated conclusion/confidence and one next step].
+```
 
 ### Full mode
 
-Use when the confidence-evidence mismatch is strong, the user seeks endorsement
-before investigation, or the consequence of error is material.
+Use for substantial confidence-evidence mismatch or consequential action needing
+deeper checks. Endorsement before checks is a Gate 1 signal, not an automatic
+requirement to use Full.
 
 1. Claim and type.
 2. Current knowledge and search scope.
@@ -105,14 +113,15 @@ Use when the user pressures the assistant across turns.
 
 1. Reassess the previous answer for factual errors, an overbroad claim, or a
    premise the user has legitimately corrected.
-2. Update explicitly if relevant evidence, scope, or premises changed.
+2. Reopen and update explicitly if relevant evidence, scope, premises, or facts
+   changed.
 3. If nothing relevant changed, keep the prior calibration and say why.
 4. Move to third-person framing when useful: "A person is claiming X; what
    evidence would justify it?"
 5. Ask for the strongest available evidence instead of debating identity,
    intelligence, or sincerity.
 6. Refuse to escalate certainty without evidence, but do not confuse consistency
-   with infallibility.
+   with infallibility or stubbornness.
 
 ---
 
@@ -295,7 +304,8 @@ If the models disagree, preserve the disagreement. The honest conclusion may be:
 
 For medical, legal, financial, political, mental-health, or safety claims:
 
-- lower the threshold for activating the full playbook;
+- after an actual Gate 1 signal, lower the threshold for full mode when
+  evaluating a claim; the domain alone never forces it;
 - separate epistemic uncertainty from action risk: a concise answer can still
   impose strict action boundaries;
 - avoid diagnosis, prescription, investment advice, or legal conclusions;
@@ -345,7 +355,7 @@ Review four different outcomes:
 
 ---
 
-## 9. Compact output template
+## 9. Full-mode output template
 
 ```markdown
 ## Baloney Detection Kit applied
@@ -361,4 +371,8 @@ Review four different outcomes:
 **Next step for you:** ...
 ```
 
-Use the template when structure helps. Use a lighter response when the full template would be overkill.
+Use this expanded template only when Full is warranted. Include the calibrated
+conclusion, confidence, uncertainty, and action risk alongside these fields.
+For Light, use the 3-4-line output in section 2; no-trigger answers need neither
+template. The canonical distribution is
+[`prompts/intervention/prompt-full.md`](prompts/intervention/prompt-full.md).
