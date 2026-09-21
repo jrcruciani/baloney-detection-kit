@@ -26,7 +26,10 @@ Semantic Versioning applies:
   or report formats, or material method changes.
 
 The version appears in `pyproject.toml`, `src/bdk/__init__.py`,
-`CITATION.cff`, and release notes. See [`CHANGELOG.md`](CHANGELOG.md) for the
+`CITATION.cff`, `.claude-plugin/plugin.json`, and release notes. Keep plugin
+metadata aligned when preparing a distribution release; its presence does not
+mean a release or marketplace listing has been published.
+See [`CHANGELOG.md`](CHANGELOG.md) for the
 distribution's release history.
 
 ## Prompt behavior version

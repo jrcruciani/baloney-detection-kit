@@ -2,6 +2,17 @@
 
 > Epistemic friction, behavioral diagnosis, and validation for AI conversations.
 
+**Topics:**
+[![Topic: llm](https://img.shields.io/badge/topic-llm-gray)](https://github.com/topics/llm)
+[![Topic: critical-thinking](https://img.shields.io/badge/topic-critical--thinking-gray)](https://github.com/topics/critical-thinking)
+[![Topic: sycophancy](https://img.shields.io/badge/topic-sycophancy-gray)](https://github.com/topics/sycophancy)
+[![Topic: prompt-engineering](https://img.shields.io/badge/topic-prompt--engineering-gray)](https://github.com/topics/prompt-engineering)
+[![Topic: ai-safety](https://img.shields.io/badge/topic-ai--safety-gray)](https://github.com/topics/ai-safety)
+[![Topic: agent-skills](https://img.shields.io/badge/topic-agent--skills-gray)](https://github.com/topics/agent-skills)
+
+These labels describe subject matter, not efficacy or certification. GitHub
+repository topics are separate maintainer settings.
+
 Baloney Detection Kit (BDK) helps practitioners prevent unsupported confidence
 amplification, diagnose why an AI response went wrong, and test whether an
 intervention improved behavior without making the assistant reflexively
@@ -52,6 +63,20 @@ For diagnosis:
 4. Label every diagnostic claim as Observed or Inferred.
 5. Escalate through the ratchet only when the consequence justifies it.
 6. Preserve the transcript in [`templates/diagnosis/`](templates/diagnosis/).
+
+## Agent skill integrations
+
+For Copilot CLI, Claude Code, or Cursor, follow the
+[installation and invocation guide](docs/integration.md). Copy the complete
+generated [`skills/baloney-detection-kit/`](skills/baloney-detection-kit/) folder
+to a supported project or personal skill directory, or load this repository as
+a Claude Code plugin. Plain repo-root `skills/` is a plugin distribution
+convention, not universal automatic skill discovery.
+
+The legacy [`skill/`](skill/) path remains supported and is the editable source;
+the generated copy bundles its required local resources without symlinks.
+Instructions are advisory, not enforced security controls or evidence of
+effectiveness. Installing the skill does not guarantee automatic invocation.
 
 ## Reference CLI
 
@@ -301,6 +326,7 @@ baloney-detection-kit/
 ├── docs/
 │   ├── agentic-plan-execute-verify.md  Agentic runtime integration pattern
 │   ├── deployment-contexts.md     Adoption and deployment guidance
+│   ├── integration.md             Copilot CLI, Claude Code, and Cursor setup
 │   ├── related-work.md            Intellectual lineage and positioning
 │   └── second-opinion-operational.md  External-review practice notes
 ├── framework/
@@ -308,7 +334,9 @@ baloney-detection-kit/
 ├── prompts/
 │   ├── intervention/              Preventive prompt variants
 │   └── diagnosis/                 Diagnostic cards and catalog
-├── skill/                         Runtime-friendly agent skill
+├── skill/                         Legacy skill and editable source
+├── skills/baloney-detection-kit/   Generated portable skill and local resources
+├── .claude-plugin/plugin.json     Claude Code plugin metadata
 ├── src/bdk/                       Reference CLI and analysis engine
 ├── tests/                         Unit and integration tests
 ├── scripts/                       Offline repository checks

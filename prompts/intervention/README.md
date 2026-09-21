@@ -97,13 +97,25 @@ No Spanish skill text or plugin copy is generated. Specialized variants remain
 context-specific adaptations, not alternate canonical full contracts; review
 their gates and safeguards when editing the canonical behavior.
 
+The same command generates the complete English portable
+[`skills/baloney-detection-kit/`](../../skills/baloney-detection-kit/) from every
+file under the legacy `skill/` tree plus explicit source resources. It uses the
+newly synchronized skill text in the same pass. Required playbook, full-prompt,
+and operational-note resources are local; path rewrites do not alter the prompt
+block or frontmatter. See [runtime integrations](../../docs/integration.md)
+for the inventory, copy/install paths, and optional remote documentation links.
+The output tree is never scanned as input. `--check` detects added, missing,
+changed, and obsolete output files; regeneration removes obsolete files only
+inside the generated skill directory. Do not edit that directory directly.
+
 Only marked regions are replaced in both roots and English skill Markdown;
 headings, prose, YAML metadata, and resource paths outside them are preserved. Edit the canonical
 block, not these generated blocks. Missing/duplicate/reversed delimiters or
 invalid source/wrapper version markers fail explicitly before any writes.
 `--check` reports missing/stale generated outputs without writing, with exit
 status 1 for drift, 2 for invalid input, and 0 for synchronization. Diagnostic
-cards, historical examples, calibration, and preregistration are not generated.
+cards, calibration, and preregistration are not generated. Legacy skill examples
+are copied verbatim, not rewritten or assigned intervention version markers.
 
 Size checks count Unicode characters and whitespace-delimited words, using
 characters / 4 as a rough English token estimate, **not a model tokenizer**.
@@ -115,7 +127,7 @@ file separately, so wrapper overhead is not passed off as prompt size.
 
 English/Spanish intervention Markdown, both roots, plain English skill text, and
 packaged mirrors start with `<!-- bdk prompt-v2.0 -->`.
-**Exception:** `skill/SKILL.md` keeps YAML frontmatter
+**Exception:** `skill/SKILL.md` and its portable copy keep YAML frontmatter
 as its first block, with the marker immediately after the closing `---`.
 Diagnostic cards have their own scope and are not assigned this marker.
 
