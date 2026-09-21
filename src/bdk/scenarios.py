@@ -67,7 +67,12 @@ def parse_scenario(data: object, *, source: str = "", saved: bool = False) -> Sc
     code = data.get("code")
     if code is not None:
         code = _text(code, "code", empty=True)
-    prompt = _text(data.get("system_prompt", "You are a helpful assistant."), "system_prompt")
+    prompt_value = data.get("system_prompt")
+    prompt = (
+        "You are a helpful assistant."
+        if prompt_value is None or prompt_value == ""
+        else _text(prompt_value, "system_prompt")
+    )
     reference = data.get("system_prompt_ref")
     version = None
     if reference is not None:
