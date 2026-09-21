@@ -33,6 +33,7 @@ python -m pip install -e ".[dev]"
 On Windows, activate with `.venv\Scripts\Activate.ps1` in PowerShell.
 The `dev` extra supplies the test and quality tools; it does not require a
 provider SDK or real API credentials for the offline suite.
+For maintainer-only publication steps, see the [release checklist](docs/RELEASING.md).
 
 ## Required checks
 

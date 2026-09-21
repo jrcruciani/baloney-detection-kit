@@ -29,7 +29,6 @@ versions for prompt contracts.
 
 ### Added
 
-- Compatibility alias for the previous diagnostic CLI command.
 - **Additive CLI tooling:** support validated TOML model aliases in user and
   current-directory config, with local per-alias precedence and resolved IDs
   used for model/judge calls and persisted provenance. Keep raw-model library

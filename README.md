@@ -80,8 +80,10 @@ effectiveness. Installing the skill does not guarantee automatic invocation.
 
 ## Reference CLI
 
-Requires Python 3.11 or newer. The base install supports prompts, templates,
-and `bdk apply` without any model-provider SDKs:
+Requires Python 3.11 or newer. The base install includes diagnostic and
+intervention prompts and supports `bdk apply` without model-provider SDKs.
+Manual worksheets in [`templates/diagnosis/`](templates/diagnosis/) are
+repository resources, not installed package data:
 
 ```bash
 pip install baloney-detection-kit
@@ -381,6 +383,8 @@ questions (Discussions are not enabled).
 BDK 3.0 unifies the framework, prompt distributions, diagnostic engine, and
 validation surfaces under one product version. See
 [`VERSIONING.md`](VERSIONING.md) and [`CHANGELOG.md`](CHANGELOG.md).
+Maintainers: use the [release checklist](docs/RELEASING.md); metadata alone
+does not establish a published package, GitHub release, or DOI.
 
 ## License
 

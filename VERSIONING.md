@@ -26,11 +26,13 @@ Semantic Versioning applies:
   or report formats, or material method changes.
 
 The version appears in `pyproject.toml`, `src/bdk/__init__.py`,
-`CITATION.cff`, `.claude-plugin/plugin.json`, and release notes. Keep plugin
-metadata aligned when preparing a distribution release; its presence does not
-mean a release or marketplace listing has been published.
-See [`CHANGELOG.md`](CHANGELOG.md) for the
-distribution's release history.
+`CITATION.cff`, `.claude-plugin/plugin.json`, `.zenodo.json`, and
+[`CHANGELOG.md`](CHANGELOG.md). Keep all six aligned when preparing a release,
+including the citation and changelog software-release date. Plugin and Zenodo
+metadata do not establish publication, marketplace listing, or a minted DOI.
+Follow the [release checklist](docs/RELEASING.md) to select a reviewed commit:
+the historical `3.0.0` / `2026-08-23` metadata does not authorize publishing
+current Unreleased changes as that release or date its first GitHub publication.
 
 ## Prompt behavior version
 
