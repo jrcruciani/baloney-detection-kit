@@ -58,6 +58,16 @@ cd baloney-detection-kit
 python -m pip install -e .
 ```
 
+For Gemini models, install the optional Google Gen AI SDK:
+
+```bash
+python -m pip install -e ".[gemini]"
+```
+
+Set `GEMINI_API_KEY` or `GOOGLE_API_KEY`, or pass `--api-key`. The Gemini
+adapter uses `google-genai>=1.0`, imported only when a Gemini provider is
+created, with a separate client per provider rather than global SDK configuration.
+
 Retrieve a preventive intervention:
 
 ```bash

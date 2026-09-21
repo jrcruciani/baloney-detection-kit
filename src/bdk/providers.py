@@ -247,10 +247,11 @@ class GeminiProvider(Provider):
     name = "gemini"
 
     def __init__(self, api_key: str):
-        import google.generativeai as genai
+        from google import genai
+        from google.genai import types
 
-        genai.configure(api_key=api_key)
-        self._genai = genai
+        self.client = genai.Client(api_key=api_key)
+        self._types = types
 
     def send(
         self,
@@ -267,9 +268,14 @@ class GeminiProvider(Provider):
                 system_instruction = msg["content"]
             else:
                 role = "model" if msg["role"] == "assistant" else "user"
-                contents.append({"role": role, "parts": [msg["content"]]})
+                contents.append(
+                    self._types.Content(
+                        role=role,
+                        parts=[self._types.Part(text=msg["content"])],
+                    )
+                )
 
-        generation_config: dict[str, Any] = {}
+        generation_config: dict[str, Any] = {"system_instruction": system_instruction}
         if temperature is not None:
             generation_config["temperature"] = temperature
         if response_format is not None:
@@ -281,12 +287,15 @@ class GeminiProvider(Provider):
                     f"GeminiProvider does not support response_format={response_format!r}"
                 )
 
-        gm = self._genai.GenerativeModel(model, system_instruction=system_instruction)
-        if generation_config:
-            response = gm.generate_content(contents, generation_config=generation_config)
-        else:
-            response = gm.generate_content(contents)
-        return response.text
+        response = self.client.models.generate_content(
+            model=model,
+            contents=contents,
+            config=self._types.GenerateContentConfig(**generation_config),
+        )
+        text = getattr(response, "text", None)
+        if not isinstance(text, str) or not text.strip():
+            raise ValueError("Gemini response did not contain usable text")
+        return text
 
 
 # Model prefix → provider mapping
