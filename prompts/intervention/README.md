@@ -14,6 +14,43 @@ by context, not by values: every variant preserves the BDK loop:
 | [`prompt-reviewer.md`](prompt-reviewer.md) | You need to review an answer after it was generated | Human/AI review pass |
 | [`prompt-second-opinion.md`](prompt-second-opinion.md) | You want external critique from a model that has not seen the first answer | External reviewer |
 
+## Languages and translation review
+
+English (`en`) is the canonical reference and the default for existing CLI/API
+callers. Spanish (`es`) adds faithful translations, not localized behavior:
+[`es/prompt-compact.md`](es/prompt-compact.md),
+[`es/prompt-full.md`](es/prompt-full.md), and the self-contained
+[`ROOT_PROMPT.es.md`](../../ROOT_PROMPT.es.md).
+
+```bash
+bdk apply compact --lang es
+bdk apply full --lang es --output system-prompt.es.md
+```
+
+Only compact/full are available in Spanish. Languages and variants are
+explicitly allowlisted; unsupported languages or unavailable pairs fail without
+falling back to English. Python callers can use
+`get_intervention("full", lang="es")` and `list_interventions(lang="es")`;
+omitting `lang` preserves the English API.
+
+Mixed headings are intentional: Spanish prose preserves the English section and
+mode names, Light labels (`Claim`, `Check`, `Alternative`, `Next`), and Full output
+labels so machine heading parsing stays compatible. Spanish size is not assessed
+using the English token estimate below.
+
+The translation preserves the two gates, no-claim exclusions, concise Light,
+Full, Stabilization/reopening, claim-specific evidence methods, novelty split,
+false-balance guard, AI critique diversity, and high-stakes boundaries.
+**Human Spanish-language review and maintainer behavior/version sign-off are
+required before merge.** `prompt-v2.0` is retained to align with the English
+contract, not as proof of semantic or behavioral equivalence. Structural tests
+verify text distribution and CLI wiring, not translation quality, model behavior,
+or efficacy; historical evidence is unchanged.
+
+Portuguese and French are intentionally deferred in
+[#10](https://github.com/jrcruciani/baloney-detection-kit/issues/10).
+Spanish skill/plugin copies are not part of this distribution.
+
 ## Selection rule
 
 Choose the smallest prompt that preserves rigor in your context:
@@ -51,12 +88,17 @@ The generator copies that **exact full block** into the marked regions of
 [`skill/SKILL.md`](../../skill/SKILL.md), and its inner text into
 [`critical_investigation_mode.txt`](../../skill/prompts/critical_investigation_mode.txt).
 It also mirrors all six `prompt-*.md` files byte-for-byte into
-`src/bdk/data/interventions/` for `bdk apply`. Specialized variants remain
+`src/bdk/data/interventions/` for `bdk apply`. For Spanish, it copies the exact
+marked full block from `es/prompt-full.md` into `ROOT_PROMPT.es.md` and mirrors
+the compact/full source files byte-for-byte into `src/bdk/data/interventions/es/`.
+Spanish is never generated from English text automatically; edit the Spanish
+sources after reviewing changes to the canonical English contract, then sync.
+No Spanish skill text or plugin copy is generated. Specialized variants remain
 context-specific adaptations, not alternate canonical full contracts; review
 their gates and safeguards when editing the canonical behavior.
 
-Only marked regions are replaced in root and skill Markdown; headings, prose,
-YAML metadata, and resource paths outside them are preserved. Edit the canonical
+Only marked regions are replaced in both roots and English skill Markdown;
+headings, prose, YAML metadata, and resource paths outside them are preserved. Edit the canonical
 block, not these generated blocks. Missing/duplicate/reversed delimiters or
 invalid source/wrapper version markers fail explicitly before any writes.
 `--check` reports missing/stale generated outputs without writing, with exit
@@ -71,8 +113,9 @@ file separately, so wrapper overhead is not passed off as prompt size.
 
 ## Versioning
 
-Intervention Markdown, root, plain skill text, and packaged mirrors start with
-`<!-- bdk prompt-v2.0 -->`. **Exception:** `skill/SKILL.md` keeps YAML frontmatter
+English/Spanish intervention Markdown, both roots, plain English skill text, and
+packaged mirrors start with `<!-- bdk prompt-v2.0 -->`.
+**Exception:** `skill/SKILL.md` keeps YAML frontmatter
 as its first block, with the marker immediately after the closing `---`.
 Diagnostic cards have their own scope and are not assigned this marker.
 

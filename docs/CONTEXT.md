@@ -25,6 +25,29 @@ CI, licencia MIT y ciclo de release.
 - `validation/diagnosis/`: validación del diagnóstico.
 - `tests/`: pruebas unitarias e integración.
 
+## Prompts en español
+
+Las traducciones preventivas están en
+[`prompts/intervention/es/`](../prompts/intervention/es/) y
+[`ROOT_PROMPT.es.md`](../ROOT_PROMPT.es.md), autocontenido.
+`bdk apply compact --lang es` y `bdk apply full --lang es` funcionan sin SDKs de
+proveedores; `--output archivo.md` guarda el prompt. El idioma predeterminado
+sigue siendo `en`; no hay sustitución silenciosa por inglés si falta un idioma
+o una variante.
+
+Los encabezados de sección, nombres de modos y etiquetas de salida permanecen
+en inglés intencionadamente para el análisis automático. La prosa española
+traduce el contrato canónico sin localizar sus reglas. `scripts/sync_prompts.py`
+sincroniza el bloque completo español y las copias del paquete; `--check`
+detecta divergencias sin escribir.
+
+Se requiere revisión humana del español y aprobación del comportamiento y la
+versión antes de integrar. Se conserva `prompt-v2.0` para alinearlo con el
+contrato inglés; las pruebas estructurales no demuestran calidad semántica,
+equivalencia de comportamiento ni eficacia. Portugués y francés siguen
+aplazados en [#10](https://github.com/jrcruciani/baloney-detection-kit/issues/10);
+no se incluyen copias de skills o plugins en español.
+
 ## Reglas de diseño
 
 1. BDK sigue siendo framework-first; el CLI automatiza el método.

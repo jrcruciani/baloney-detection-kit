@@ -12,6 +12,19 @@ versions for prompt contracts.
 
 ### Intervention
 
+- **Additive BEHAVIOR distribution:** add Spanish compact/full translations,
+  self-contained `ROOT_PROMPT.es.md`, synchronized package mirrors, and
+  `bdk apply <variant> --lang es`. English stays canonical and the default;
+  unsupported languages and unavailable variants fail explicitly without
+  fallback. Keep English section/output labels for machine parsing and retain
+  `prompt-v2.0` alignment. **Human Spanish-language review and maintainer
+  behavior/version sign-off are required before merge**; translation can change
+  model behavior even with an unchanged intended contract. New tests cover
+  structure, synchronization, and CLI wiring, not semantic quality or efficacy.
+  No live validation was performed, and historical evidence is unchanged.
+  Portuguese/French remain deferred in
+  [#10](https://github.com/jrcruciani/baloney-detection-kit/issues/10);
+  Spanish skill/plugin copies are out of scope.
 - **Distributed BEHAVIOR CHANGE, not a mechanical fix:** refine intervention into
   two gates: require an actual claim signal, then choose a proportionate mode by
   mismatch and consequence. High-stakes domains alone no longer force Full;
