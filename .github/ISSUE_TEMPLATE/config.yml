@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and proposals
+    url: https://github.com/jrcruciani/baloney-detection-kit/issues
+    about: Search existing issues, then open a blank issue for a non-sensitive question or proposal. Discussions are not enabled.
+  - name: Security reporting guidance
+    url: https://github.com/jrcruciani/baloney-detection-kit/blob/main/SECURITY.md
+    about: Read the private-reporting guidance before sharing suspected vulnerabilities. Never put security details in public issues.

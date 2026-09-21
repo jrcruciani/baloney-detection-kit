@@ -244,6 +244,18 @@ responses, and private transcripts. Treat them as sensitive. The CLI validates
 custom base URLs before sending API keys and marks live-provider tests as
 integration tests.
 
+For vulnerability scope and private reporting guidance, see
+[`SECURITY.md`](SECURITY.md). Do not publish vulnerabilities or private
+transcripts in ordinary issues.
+
+## Contributing and reporting
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development checks, behavior-version
+review, and AI-assisted contributions. Use
+[New issue](https://github.com/jrcruciani/baloney-detection-kit/issues/new/choose)
+for bug and adverse-effect reports; use existing issues or a blank issue for
+questions (Discussions are not enabled).
+
 ## Versioning
 
 BDK 3.0 unifies the framework, prompt distributions, diagnostic engine, and

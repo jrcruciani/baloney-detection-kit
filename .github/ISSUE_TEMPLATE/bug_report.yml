@@ -1,0 +1,55 @@
+name: Bug report
+description: Report a reproducible CLI, packaging, or documentation defect.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Never paste API keys, personal data, or private transcripts, including in attachments.
+        Use synthetic inputs and REDACTED output. For suspected vulnerabilities, stop and follow
+        [SECURITY.md](https://github.com/jrcruciani/baloney-detection-kit/blob/main/SECURITY.md)
+        instead of posting details publicly. Use the Adverse-effect report for unwanted
+        intervention behavior rather than an implementation defect.
+  - type: checkboxes
+    id: safe-report
+    attributes:
+      label: Safe public report
+      options:
+        - label: I have removed API keys, personal data, and private transcripts; this is not a vulnerability disclosure.
+          required: true
+  - type: input
+    id: bdk-version
+    attributes:
+      label: BDK version or commit
+      placeholder: "For example: 3.0.0 or a commit SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, install method, command, and model/runtime if relevant. No credentials or private endpoint URLs.
+      placeholder: "For example: Python 3.12, Linux, pip install, bdk apply compact, no model calls"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: List steps using synthetic inputs, dummy credentials, and REDACTED output only.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: Include only the minimal REDACTED error or output needed to show the defect.
+    validations:
+      required: true
