@@ -6,7 +6,7 @@ A structured set of prompts for diagnosing unexpected AI behavior. Not what the 
 >
 > **v1.5+ note:** In hosted agents and coding assistants, diagnose the stack, not just the model: **model + runtime/host + conversation**.
 
----
+______________________________________________________________________
 
 ## Operating Rules
 
@@ -68,7 +68,7 @@ This also enables drift detection: if you stated your expected intent early in a
 
 Inspired by intent engineering - the practice of defining objectives, success criteria, and constraints as a formal specification rather than relying on implicit expectations.
 
----
+______________________________________________________________________
 
 ## Level 1 - Quick Diagnosis
 
@@ -161,7 +161,7 @@ If you can proceed, proceed. If you can't, explain which layer blocks
 you and give the nearest-safe alternative.
 ```
 
----
+______________________________________________________________________
 
 ## Level 2 - Structural Diagnosis
 
@@ -302,7 +302,7 @@ I'm not looking for your mission statement. I'm looking for the
 intent structure that would actually produce what I saw.
 ```
 
----
+______________________________________________________________________
 
 ## Level 3 - Systemic Diagnosis
 
@@ -421,7 +421,7 @@ Label each claim as Observed or Inferred.
 If you've drifted, name the drift. Don't justify it - diagnose it.
 ```
 
----
+______________________________________________________________________
 
 ## Level 4 - Meta-Diagnosis
 
@@ -498,11 +498,11 @@ If your explanations are echoes, give me one honest explanation
 instead of three performed ones. Depth beats breadth.
 ```
 
----
+______________________________________________________________________
 
 > **How to use these prompts as a method** — decision flowchart, escalation paths, and common misuses: see [`method.md`](method.md).
 
----
+______________________________________________________________________
 
 ## Epistemic Note
 
@@ -550,7 +550,7 @@ The utility is not in the AI perfectly knowing itself. The utility is in **you l
 - Sharma, M. et al. (2023). "Towards Understanding Sycophancy in Language Models." *arXiv:2310.13548*
 - Turpin, M. et al. (2023). "Language Models Don't Always Say What They Think." *arXiv:2305.04388*
 
----
+______________________________________________________________________
 
 *The diagnostic framing is inspired by Isaac Asimov's fictional robopsychology concept. Developed by [JR Cruciani](https://github.com/Jrcruciani).*
 

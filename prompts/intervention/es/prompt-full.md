@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # Prompt completo
 
 Traducción del [contrato completo canónico en inglés](../prompt-full.md).

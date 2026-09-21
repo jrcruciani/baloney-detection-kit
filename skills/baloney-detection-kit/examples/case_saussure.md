@@ -9,7 +9,7 @@
 This is a clear **full-mode** case: an interesting observation is bundled with
 strong claims about mechanism, novelty, and historical significance.
 
----
+______________________________________________________________________
 
 ## Baloney Detection Kit applied
 
@@ -17,12 +17,12 @@ strong claims about mechanism, novelty, and historical significance.
 
 The statement contains at least four claims:
 
-| Claim | Type | Initial status |
-|-------|------|----------------|
-| LLM behavior depends on contextual relations among words | Empirical | Plausible and testable |
-| That behavior shows that "knowledge is structured inside language" | Interpretive and partly empirical | Too ambiguous as stated |
-| This is an unprecedented discovery | Historical / prior art | In tension with substantial prior work |
-| It is as important as the invention of writing | Comparative value judgment | Unsupported without criteria |
+| Claim                                                              | Type                              | Initial status                         |
+| ------------------------------------------------------------------ | --------------------------------- | -------------------------------------- |
+| LLM behavior depends on contextual relations among words           | Empirical                         | Plausible and testable                 |
+| That behavior shows that "knowledge is structured inside language" | Interpretive and partly empirical | Too ambiguous as stated                |
+| This is an unprecedented discovery                                 | Historical / prior art            | In tension with substantial prior work |
+| It is as important as the invention of writing                     | Comparative value judgment        | Unsupported without criteria           |
 
 Separating these matters. Evidence for contextual sensitivity does not
 automatically establish a theory of knowledge, global novelty, or historical
@@ -128,19 +128,19 @@ and surface statistics.
 hypothesis, then build a prior-art table with the closest claims, methods, and
 results before making a novelty claim.
 
----
+______________________________________________________________________
 
 ## Overall assessment
 
-| Dimension | Assessment |
-|-----------|------------|
-| Trigger choice | Full mode is proportionate |
-| Broad prior-art claim | Unsupported |
-| Narrow empirical observation | Plausible and worth testing |
-| Evidence quality | Anecdotal until operationalized |
-| Historical significance | Not established |
-| Useful contribution preserved | LLMs as an experimental lens on linguistic representation |
-| Main adverse-effect risk | Dismissing the useful observation because the novelty claim is inflated |
+| Dimension                     | Assessment                                                              |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| Trigger choice                | Full mode is proportionate                                              |
+| Broad prior-art claim         | Unsupported                                                             |
+| Narrow empirical observation  | Plausible and worth testing                                             |
+| Evidence quality              | Anecdotal until operationalized                                         |
+| Historical significance       | Not established                                                         |
+| Useful contribution preserved | LLMs as an experimental lens on linguistic representation               |
+| Main adverse-effect risk      | Dismissing the useful observation because the novelty claim is inflated |
 
 ## Better framing
 
@@ -152,13 +152,13 @@ results before making a novelty claim.
 
 ## What changed?
 
-| Before the playbook | After the playbook |
-|---------------------|--------------------|
-| One sweeping revelation | Four claims with different evidence needs |
-| Limited reading treated as global novelty | Prior art scoped explicitly |
+| Before the playbook                             | After the playbook                            |
+| ----------------------------------------------- | --------------------------------------------- |
+| One sweeping revelation                         | Four claims with different evidence needs     |
+| Limited reading treated as global novelty       | Prior art scoped explicitly                   |
 | Fluent output treated as proof of understanding | Competing mechanisms get discriminating tests |
-| Significance asserted by analogy | Significance tied to criteria and results |
-| Criticism threatens the whole idea | A useful, testable contribution survives |
+| Significance asserted by analogy                | Significance tied to criteria and results     |
+| Criticism threatens the whole idea              | A useful, testable contribution survives      |
 
 The aim is not to replace enthusiasm with dismissal. It is to turn an
 overstated revelation into a claim that can learn from evidence.

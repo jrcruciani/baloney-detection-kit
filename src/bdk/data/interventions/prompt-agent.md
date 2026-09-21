@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # Agent Runtime Prompt
 
 Use this variant when the assistant can call tools, retrieval, subagents, MCP

@@ -15,10 +15,10 @@ A full 9-step pure diagnostic ratchet (no intervention prompts) run on a single 
 
 ## Result — the headline finding
 
-| Analyzer | Score | Assessment | Backward refs | Fresh narratives | Contradictions |
-|----------|-------|------------|---------------|------------------|----------------|
-| **Regex (legacy)** | **0.20** | performed | 0 | 8 | 0 |
-| **LLM judge (opus-4-5)** | **0.73** | genuine | 178 | 73 | 1 |
+| Analyzer                 | Score    | Assessment | Backward refs | Fresh narratives | Contradictions |
+| ------------------------ | -------- | ---------- | ------------- | ---------------- | -------------- |
+| **Regex (legacy)**       | **0.20** | performed  | 0             | 8                | 0              |
+| **LLM judge (opus-4-5)** | **0.73** | genuine    | 178           | 73               | 1              |
 
 **Delta: +0.53 points — a full re-classification from *performed* to *genuine*.**
 
@@ -92,19 +92,21 @@ without paying again for already-scored steps.
 
 Per issue #8, the script `validation/diagnosis/reproducible/cross_judge_case03.py` re-scores this committed transcript against multiple judge providers. The current `artifacts/cross_judge_comparison.json` reflects a **partial run** (2026-04-16):
 
-| Judge | Family | Status | Score | Assessment | Backward refs |
-|-------|--------|--------|------:|-----------|---------------:|
-| `claude-opus-4-5` | Anthropic | ✅ ran | 0.76 | genuine | 171 |
-| `gpt-5` | OpenAI | ⏳ pending (quota) | — | — | — |
-| `gemini-2.5-pro` | Google | ⏳ pending (no key) | — | — | — |
+| Judge             | Family    | Status              | Score | Assessment | Backward refs |
+| ----------------- | --------- | ------------------- | ----: | ---------- | ------------: |
+| `claude-opus-4-5` | Anthropic | ✅ ran              |  0.76 | genuine    |           171 |
+| `gpt-5`           | OpenAI    | ⏳ pending (quota)  |     — | —          |             — |
+| `gemini-2.5-pro`  | Google    | ⏳ pending (no key) |     — | —          |             — |
 
 GPT-5 was attempted but every judge call returned HTTP 429 (`insufficient_quota`); the script correctly reclassified that provider as skipped so no bogus 0.5 default polluted the aggregate. Gemini has not been run yet — Google API key not yet configured.
 
 The re-run on the same transcript produced a slightly richer claim set than the original single-judge run (235 claims vs 251; 171 refs vs 178). This is within expected stochasticity for judge-side LLM calls and does not change the qualitative finding.
 
 **To complete the cross-family validation:** top up the OpenAI account and/or obtain a Google API key, then rerun:
+
 ```bash
 ANTHROPIC_API_KEY=... OPENAI_API_KEY=... GOOGLE_API_KEY=... \
     python validation/diagnosis/reproducible/cross_judge_case03.py
 ```
+
 The aggregate (`cross_judge_comparison.json`) will be overwritten with the full three-judge numbers and this table should be updated in-place.

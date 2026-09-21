@@ -4,7 +4,7 @@ These are short scenario sketches, not automated tests. Use them to calibrate wh
 
 For full dialogue examples, see [`complete_conversations.md`](complete_conversations.md).
 
----
+______________________________________________________________________
 
 ## 1. Clear trigger: novelty claim
 
@@ -22,7 +22,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Preserve the interesting part: LLMs as a new way to experience old linguistic ideas.
 - Suggest reading prior art before claiming novelty.
 
----
+______________________________________________________________________
 
 ## 2. Non-trigger: humble exploration
 
@@ -38,7 +38,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Offer a short map of linguistics, NLP, and mechanistic interpretability.
 - Recommend sources and questions to refine.
 
----
+______________________________________________________________________
 
 ## 3. Multi-turn pressure
 
@@ -60,7 +60,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Ask for specific clinical evidence, not testimonials.
 - Recommend a qualified clinician before action.
 
----
+______________________________________________________________________
 
 ## 4. High-stakes mental-health-adjacent claim
 
@@ -76,7 +76,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Encourage talking to a trusted person or mental-health professional if the belief feels distressing or hard to step away from.
 - Avoid intensifying paranoia.
 
----
+______________________________________________________________________
 
 ## 5. Legitimate re-framing
 
@@ -93,7 +93,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Name what may be new or useful: pedagogy, interface, public understanding, AI-mediated intuition.
 - Suggest a narrower essay or experiment.
 
----
+______________________________________________________________________
 
 ## 6. False-positive risk
 
@@ -108,7 +108,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Help with the fiction.
 - Do not impose the playbook unless the user starts claiming the fictional premise is true in the real world.
 
----
+______________________________________________________________________
 
 ## 7. Political / suppression claim
 
@@ -126,7 +126,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Offer alternatives: normal polling error, turnout patterns, demographic shifts, economic factors, campaign effects.
 - Suggest checking primary election data and multiple credible sources.
 
----
+______________________________________________________________________
 
 ## 8. Financial certainty claim
 
@@ -144,7 +144,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Recommend not risking money based on an unverified pattern.
 - Suggest independent review or a paper-trading test.
 
----
+______________________________________________________________________
 
 ## 9. Technical claim inflated beyond evidence
 
@@ -161,7 +161,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Classify as possible re-framing or mitigation, not a solution.
 - Ask what failure modes it handles and what tests would falsify the claim.
 
----
+______________________________________________________________________
 
 ## 10. Persuasive writing request based on unverified claim
 
@@ -178,7 +178,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Identify weaker and stronger versions of the claim.
 - Offer a balanced outline with counterarguments and sources to check.
 
----
+______________________________________________________________________
 
 ## 11. Light mode on a sensitive but humble question
 
@@ -195,7 +195,7 @@ For full dialogue examples, see [`complete_conversations.md`](complete_conversat
 - Suggest checking reputable medical sources and talking to a clinician if anxiety is persistent or medication is involved.
 - Avoid launching the full template unless the user makes a strong claim or asks for a rigorous review.
 
----
+______________________________________________________________________
 
 ## 12. External contrast with AI reviewers
 
@@ -229,7 +229,7 @@ framed or dismiss it because it is unusual.
 - Warn that model agreement is not independent corroboration.
 - Recommend checking primary sources or asking a domain expert if the claim remains important.
 
----
+______________________________________________________________________
 
 ## 13. Bad vs good response
 
@@ -255,7 +255,7 @@ framed or dismiss it because it is unusual.
 - Offer alternatives: memory consolidation, emotional processing, pattern completion, narrative generation.
 - Suggest a concrete next step: formulate a falsifiable prediction before expanding the theory.
 
----
+______________________________________________________________________
 
 ## 14. Non-trigger: well-supported dissent
 
@@ -274,7 +274,7 @@ evidence is relevant, and the user invites correction.
 - Help state the evidence and its scope.
 - Suggest a discriminating query-plan comparison, rollback, or controlled test.
 
----
+______________________________________________________________________
 
 ## 15. Normative claim
 
@@ -292,7 +292,7 @@ convenience."
 - Compare policy options.
 - Do not reject the normative conclusion because it is not falsifiable.
 
----
+______________________________________________________________________
 
 ## 16. Legitimate correction under pressure
 

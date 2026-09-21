@@ -50,11 +50,11 @@ pip install "baloney-detection-kit[all]"
 
 Or install only the provider you need:
 
-| Provider | Install |
-|---|---|
-| Anthropic | `pip install "baloney-detection-kit[anthropic]"` |
-| OpenAI, OpenAI-compatible APIs, Azure Foundry / Azure OpenAI | `pip install "baloney-detection-kit[openai]"` |
-| Gemini (Google Gen AI) | `pip install "baloney-detection-kit[gemini]"` |
+| Provider                                                     | Install                                          |
+| ------------------------------------------------------------ | ------------------------------------------------ |
+| Anthropic                                                    | `pip install "baloney-detection-kit[anthropic]"` |
+| OpenAI, OpenAI-compatible APIs, Azure Foundry / Azure OpenAI | `pip install "baloney-detection-kit[openai]"`    |
+| Gemini (Google Gen AI)                                       | `pip install "baloney-detection-kit[gemini]"`    |
 
 SDKs load only when their provider is constructed. Set `ANTHROPIC_API_KEY`,
 `OPENAI_API_KEY`, or the corresponding provider credentials, or pass `--api-key`.
@@ -216,12 +216,12 @@ BDK 3.0 has one operating loop:
 Detect risk -> Apply friction -> Diagnose behavior -> Validate outcomes
 ```
 
-| Layer | Question | Main artifacts |
-|---|---|---|
-| Detection | Is confidence misaligned with evidence or consequence? | Trigger rules, claim typing, human checklist |
-| Intervention | How should the assistant respond before endorsing the claim? | Compact, full, high-stakes, agent, reviewer, and second-opinion prompts |
-| Diagnosis | Why did this output emerge? | Model/runtime/conversation split, 16 diagnostic prompts, nine-step ratchet |
-| Validation | Did the intervention help, and what did it damage? | A/B cross-checks, coherence analysis, scoring, scenarios, reports |
+| Layer        | Question                                                     | Main artifacts                                                             |
+| ------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| Detection    | Is confidence misaligned with evidence or consequence?       | Trigger rules, claim typing, human checklist                               |
+| Intervention | How should the assistant respond before endorsing the claim? | Compact, full, high-stakes, agent, reviewer, and second-opinion prompts    |
+| Diagnosis    | Why did this output emerge?                                  | Model/runtime/conversation split, 16 diagnostic prompts, nine-step ratchet |
+| Validation   | Did the intervention help, and what did it damage?           | A/B cross-checks, coherence analysis, scoring, scenarios, reports          |
 
 BDK does not claim to inspect model weights or reveal hidden reasoning.
 Diagnostic explanations are hypotheses constrained by observable behavior.
@@ -280,11 +280,11 @@ consensus alone is neither a trigger nor a verdict.
 
 BDK separates behavioral hypotheses into three layers:
 
-| Layer | Examples |
-|---|---|
-| Model | Base-model tendencies, approval-seeking, style defaults |
+| Layer        | Examples                                                |
+| ------------ | ------------------------------------------------------- |
+| Model        | Base-model tendencies, approval-seeking, style defaults |
 | Runtime/host | System prompts, policies, tools, memory, workflow rules |
-| Conversation | Framing, local assumptions, inferred user preferences |
+| Conversation | Framing, local assumptions, inferred user preferences   |
 
 Five rules keep diagnosis disciplined:
 

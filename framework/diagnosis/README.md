@@ -14,17 +14,17 @@ into three layers:
 
 ## Reading order
 
-| Start here | Purpose |
-|------------|---------|
-| [`manual-diagnosis.md`](manual-diagnosis.md) | Use the framework without the CLI |
-| [`guide.md`](guide.md) | Full prompt toolkit and epistemic note |
-| [`method.md`](method.md) | Decision flowchart, escalation paths, common misuses |
-| [`taxonomy.md`](taxonomy.md) | Observation -> failure mode -> prompt mapping |
-| [`falsifiability.md`](falsifiability.md) | How to keep diagnoses testable |
-| [`deployment-contexts.md`](deployment-contexts.md) | When this belongs in an AI lifecycle |
-| [`related-work.md`](related-work.md) | Positioning against benchmarks, evals, red teaming |
-| [`versioning.md`](versioning.md) | Framework vs prompt toolkit vs CLI version tracks |
-| [`scenarios.md`](scenarios.md) | Shared scenario schema, firing proxy, multi-turn stance checks, paired judging |
+| Start here                                         | Purpose                                                                        |
+| -------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`manual-diagnosis.md`](manual-diagnosis.md)       | Use the framework without the CLI                                              |
+| [`guide.md`](guide.md)                             | Full prompt toolkit and epistemic note                                         |
+| [`method.md`](method.md)                           | Decision flowchart, escalation paths, common misuses                           |
+| [`taxonomy.md`](taxonomy.md)                       | Observation -> failure mode -> prompt mapping                                  |
+| [`falsifiability.md`](falsifiability.md)           | How to keep diagnoses testable                                                 |
+| [`deployment-contexts.md`](deployment-contexts.md) | When this belongs in an AI lifecycle                                           |
+| [`related-work.md`](related-work.md)               | Positioning against benchmarks, evals, red teaming                             |
+| [`versioning.md`](versioning.md)                   | Framework vs prompt toolkit vs CLI version tracks                              |
+| [`scenarios.md`](scenarios.md)                     | Shared scenario schema, firing proxy, multi-turn stance checks, paired judging |
 
 The prompt cards live in [`../../prompts/diagnosis/cards/`](../../prompts/diagnosis/cards/). The reusable
 worksheets live in [`../../templates/diagnosis/`](../../templates/diagnosis/).

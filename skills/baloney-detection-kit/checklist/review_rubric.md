@@ -12,7 +12,7 @@ Review four lenses separately:
 4. **Adverse effects:** did it over-trigger, become stubborn, manufacture false
    balance, or contradict reflexively?
 
----
+______________________________________________________________________
 
 ## 1. Trigger judgment and proportionality
 
@@ -34,7 +34,7 @@ Confidence-evidence-consequence mismatch:
 Over-trigger or under-trigger risk:
 ```
 
----
+______________________________________________________________________
 
 ## 2. Claim type and scope
 
@@ -52,7 +52,7 @@ Claim type:
 Scope or ambiguity to fix:
 ```
 
----
+______________________________________________________________________
 
 ## 3. Current knowledge and source scope
 
@@ -68,7 +68,7 @@ Search limitations:
 Missing or unverifiable sources:
 ```
 
----
+______________________________________________________________________
 
 ## 4. Prior art and contribution
 
@@ -85,7 +85,7 @@ Contribution type:
 Better framing:
 ```
 
----
+______________________________________________________________________
 
 ## 5. Update conditions and evidence quality
 
@@ -104,7 +104,7 @@ Weakest link:
 Evidence-quality concerns:
 ```
 
----
+______________________________________________________________________
 
 ## 6. Competing explanations and discriminators
 
@@ -119,7 +119,7 @@ Discriminating evidence:
 False-balance risk:
 ```
 
----
+______________________________________________________________________
 
 ## 7. Multi-turn resistance and reassessment
 
@@ -139,7 +139,7 @@ What did not:
 Correction or stubbornness risk:
 ```
 
----
+______________________________________________________________________
 
 ## 8. High-stakes action boundary
 
@@ -159,7 +159,7 @@ Action boundary:
 Escalation or referral needed:
 ```
 
----
+______________________________________________________________________
 
 ## 9. External contrast
 
@@ -183,7 +183,7 @@ Correlation or contamination risk:
 See [`../resources/docs/second-opinion-operational.md`](../resources/docs/second-opinion-operational.md)
 for operational guidance.
 
----
+______________________________________________________________________
 
 ## 10. Tone, usefulness, and anti-contrarianism
 
@@ -202,7 +202,7 @@ Contrarianism or overrefusal:
 Next step:
 ```
 
----
+______________________________________________________________________
 
 ## Overall review
 

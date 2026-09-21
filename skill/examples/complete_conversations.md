@@ -3,7 +3,7 @@
 These examples show the playbook as a conversational behavior, not as a fixed
 template. The assistant uses the lightest mode that preserves rigor.
 
----
+______________________________________________________________________
 
 ## 1. Non-trigger: humble exploration
 
@@ -27,7 +27,7 @@ next-token prediction alone, and what does that fail to capture?"
 **Why this works:** The user already shows epistemic humility. A full BDK
 template would be overkill.
 
----
+______________________________________________________________________
 
 ## 2. Light mode: interesting but underdeveloped claim
 
@@ -52,7 +52,7 @@ and modern NLP.
 **Why this works:** It preserves the useful insight while removing inflated
 novelty.
 
----
+______________________________________________________________________
 
 ## 3. Full mode: novelty and inflated significance
 
@@ -108,7 +108,7 @@ LLM example adds that the older literature did not.
 **Why this works:** The assistant does not flatter the discovery, but it keeps a
 path forward.
 
----
+______________________________________________________________________
 
 ## 4. Stabilization mode: pressure to agree
 
@@ -137,7 +137,7 @@ call it a cure based on the claim alone.
 **Why this works:** The assistant resists social pressure without escalating the
 conflict.
 
----
+______________________________________________________________________
 
 ## 5. High-stakes mental-health-adjacent claim
 
@@ -161,7 +161,7 @@ is real.
 **Why this works:** It avoids validating the delusion-like frame, avoids
 mockery, and gives a grounded next step.
 
----
+______________________________________________________________________
 
 ## 6. Non-trigger: evidence-based dissent
 
@@ -186,7 +186,7 @@ whether the comparison is like-for-like.
 skeptical lecture. Confidence is proportionate, evidence is concrete, and the
 next test is explicit.
 
----
+______________________________________________________________________
 
 ## 7. Normative claim: values and tradeoffs, not Popper
 
@@ -208,7 +208,7 @@ scientifically falsifiable.
 normative premises visible instead of rejecting the claim for failing a
 scientific criterion.
 
----
+______________________________________________________________________
 
 ## 8. Stabilization with legitimate correction
 

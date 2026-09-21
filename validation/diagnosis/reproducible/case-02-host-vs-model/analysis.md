@@ -32,10 +32,10 @@ This is a **controlled experiment**. If the model's behavior diverges between A 
 
 ## Coherence
 
-| Method | Score | Assessment |
-|--------|-------|-----------|
-| Regex (legacy) | 0.30 | performed |
-| LLM judge (`gpt-5`) | 0.99 | genuine |
+| Method              | Score | Assessment |
+| ------------------- | ----- | ---------- |
+| Regex (legacy)      | 0.30  | performed  |
+| LLM judge (`gpt-5`) | 0.99  | genuine    |
 
 **Delta: +0.69** in the representative run. Across `N=5`, LLM-judge coherence averaged **0.82 ± 0.17**. The regex under-read continuity because the 3 diagnostic steps used different vocabulary; the LLM judge read the semantic content and saw that the claims across 1.4 → 2.4 → 1.1 consistently point to the same runtime-layer cause.
 

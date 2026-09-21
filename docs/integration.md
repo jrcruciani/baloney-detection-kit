@@ -17,14 +17,14 @@ Copying only that legacy directory omits some of its dependencies.
 
 The portable directory contains 12 files:
 
-| Content | Installed paths |
-|---|---|
-| Skill entry point | `SKILL.md` |
-| Drop-in prompt | `prompts/critical_investigation_mode.txt` |
-| Checklists | `checklist/seven_questions.md`, `checklist/review_rubric.md` |
-| Examples | `examples/case_saussure.md`, `examples/complete_conversations.md`, `examples/playbook_scenarios.md` |
+| Content                   | Installed paths                                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Skill entry point         | `SKILL.md`                                                                                                               |
+| Drop-in prompt            | `prompts/critical_investigation_mode.txt`                                                                                |
+| Checklists                | `checklist/seven_questions.md`, `checklist/review_rubric.md`                                                             |
+| Examples                  | `examples/case_saussure.md`, `examples/complete_conversations.md`, `examples/playbook_scenarios.md`                      |
 | Required source resources | `resources/PLAYBOOK.md`, `resources/prompts/intervention/prompt-full.md`, `resources/docs/second-opinion-operational.md` |
-| Attribution | `LICENSE`, `NOTICE` |
+| Attribution               | `LICENSE`, `NOTICE`                                                                                                      |
 
 All required resources are self-contained; no symlinks, Python package, model
 SDK, credentials, hooks, or executable tools are needed to read the skill.
@@ -43,11 +43,11 @@ to share them with its collaborators. Personal skills live in your home director
 and can apply across local projects. Avoid installing duplicate copies under
 several discovered directories in the same runtime.
 
-| Runtime | Project skill roots | Personal skill roots |
-|---|---|---|
-| GitHub Copilot CLI | `.github/skills/`, `.claude/skills/`, `.agents/skills/` | `~/.copilot/skills/`, `~/.agents/skills/` |
-| Claude Code (plain skill) | `.claude/skills/` | `~/.claude/skills/` |
-| Cursor | `.agents/skills/`, `.cursor/skills/` | `~/.agents/skills/`, `~/.cursor/skills/` |
+| Runtime                   | Project skill roots                                     | Personal skill roots                      |
+| ------------------------- | ------------------------------------------------------- | ----------------------------------------- |
+| GitHub Copilot CLI        | `.github/skills/`, `.claude/skills/`, `.agents/skills/` | `~/.copilot/skills/`, `~/.agents/skills/` |
+| Claude Code (plain skill) | `.claude/skills/`                                       | `~/.claude/skills/`                       |
+| Cursor                    | `.agents/skills/`, `.cursor/skills/`                    | `~/.agents/skills/`, `~/.cursor/skills/`  |
 
 Append `baloney-detection-kit/` to a root above. Cursor also documents Claude
 compatibility directories, including `.claude/skills/` and `~/.claude/skills/`.
@@ -185,10 +185,11 @@ target="$HOME/.cursor/skills/baloney-detection-kit"
 test ! -e "$target" && mkdir -p "$(dirname "$target")" && cp -R skills/baloney-detection-kit "$target"
 ```
 
-Open the target project in Cursor and start a fresh Agent session. In **Customize
-> Skills**, check the discovered skill. Type `/` in Agent chat and select
-`baloney-detection-kit` to explicitly attach it to a message, then provide the
-claim and evidence. Cursor can also select skills from their descriptions.
+Open the target project in Cursor and start a fresh Agent session. In \*\*Customize
+
+> Skills\*\*, check the discovered skill. Type `/` in Agent chat and select
+> `baloney-detection-kit` to explicitly attach it to a message, then provide the
+> claim and evidence. Cursor can also select skills from their descriptions.
 
 This is a filesystem skill copy, not a Cursor plugin install. Cursor's
 repository/marketplace plugin import has its own manifest requirements; the

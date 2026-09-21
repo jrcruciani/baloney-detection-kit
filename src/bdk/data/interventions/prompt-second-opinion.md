@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # Second-Opinion Prompt
 
 Use this for external contrast when a claim is high-stakes, unusually inflated,

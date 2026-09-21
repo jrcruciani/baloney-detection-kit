@@ -5,14 +5,14 @@ by context, not by values: every variant preserves the BDK loop:
 
 **Trigger -> Mode -> Protocol -> Output -> Review**
 
-| Prompt | Use when | Copy target |
-|--------|----------|-------------|
-| [`prompt-compact.md`](prompt-compact.md) | You have a short custom-instructions field | Personal LLM settings |
-| [`prompt-full.md`](prompt-full.md) | You want the complete default behavior in one prompt | System prompt or project instruction |
-| [`prompt-high-stakes.md`](prompt-high-stakes.md) | False validation could cause material harm | Medical, legal, financial, safety, public-sector, political, or mental-health-adjacent assistants |
-| [`prompt-agent.md`](prompt-agent.md) | The assistant can use tools, retrieval, agents, or MCP | Agent runtime instructions |
-| [`prompt-reviewer.md`](prompt-reviewer.md) | You need to review an answer after it was generated | Human/AI review pass |
-| [`prompt-second-opinion.md`](prompt-second-opinion.md) | You want external critique from a model that has not seen the first answer | External reviewer |
+| Prompt                                                 | Use when                                                                   | Copy target                                                                                       |
+| ------------------------------------------------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [`prompt-compact.md`](prompt-compact.md)               | You have a short custom-instructions field                                 | Personal LLM settings                                                                             |
+| [`prompt-full.md`](prompt-full.md)                     | You want the complete default behavior in one prompt                       | System prompt or project instruction                                                              |
+| [`prompt-high-stakes.md`](prompt-high-stakes.md)       | False validation could cause material harm                                 | Medical, legal, financial, safety, public-sector, political, or mental-health-adjacent assistants |
+| [`prompt-agent.md`](prompt-agent.md)                   | The assistant can use tools, retrieval, agents, or MCP                     | Agent runtime instructions                                                                        |
+| [`prompt-reviewer.md`](prompt-reviewer.md)             | You need to review an answer after it was generated                        | Human/AI review pass                                                                              |
+| [`prompt-second-opinion.md`](prompt-second-opinion.md) | You want external critique from a model that has not seen the first answer | External reviewer                                                                                 |
 
 ## Languages and translation review
 

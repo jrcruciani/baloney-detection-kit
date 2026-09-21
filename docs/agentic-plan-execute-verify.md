@@ -8,7 +8,7 @@ This is an integration pattern, not an official adapter. Keep this repository a
 playbook. Put orchestration code, framework bindings, automated evaluators, and
 provider-specific details in the downstream system that uses the playbook.
 
----
+______________________________________________________________________
 
 ## Why the pattern fits
 
@@ -28,22 +28,22 @@ executor agent, a verifier agent, and activity artifacts that preserve plan,
 step results, final answer, and scores. BDK can be used as the behavioral policy
 inside that shape without importing the sample's sports-domain code.
 
----
+______________________________________________________________________
 
 ## Component mapping
 
-| BDK concept | Plan -> Execute -> Verify component | Integration rule |
-|-------------|--------------------------------------|------------------|
-| Trigger conditions (Gate 1) | Planner | Require confidence-evidence mismatch, inflated novelty/importance, endorsement before checks, framing used to evade evidence, or repeated pressure. Disagreement alone is not a trigger or verdict. |
-| Light / full / stabilization mode (Gate 2) | Planner | After a signal, choose by mismatch and consequence. Default to 3-4-line Light; a high-stakes domain alone never forces Full. No-claim questions and humble exploration need no intervention. |
-| Six-step protocol | Plan steps | Convert claim typing, scoped current knowledge, contribution, update conditions, evidence quality, credible alternatives, and calibration into explicit steps. |
-| Evidence-backed practice | Executor | Use search, retrieval, citations, internal knowledge bases, or domain sources when available; record scope and evaluate provenance and independence. |
-| External contrast | Executor | Assign distinct source-audit and hypothesis-test jobs when warranted. Send the object, not the prior answer; never count model agreement as evidence. |
-| High-stakes handling | Planner + Executor | Separate epistemic uncertainty from action risk, require domain-appropriate sources, and route material decisions to qualified humans. |
-| Manual review rubric | Verifier | Review protocol adherence, epistemic quality, utility, and adverse effects such as over-triggering, stubbornness, or false balance. |
-| Review notes / transcript | Activity artifact | Preserve claim, mode, plan, tool results, reviewer outputs, uncertainties, and final answer for later audit. |
+| BDK concept                                | Plan -> Execute -> Verify component | Integration rule                                                                                                                                                                                    |
+| ------------------------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Trigger conditions (Gate 1)                | Planner                             | Require confidence-evidence mismatch, inflated novelty/importance, endorsement before checks, framing used to evade evidence, or repeated pressure. Disagreement alone is not a trigger or verdict. |
+| Light / full / stabilization mode (Gate 2) | Planner                             | After a signal, choose by mismatch and consequence. Default to 3-4-line Light; a high-stakes domain alone never forces Full. No-claim questions and humble exploration need no intervention.        |
+| Six-step protocol                          | Plan steps                          | Convert claim typing, scoped current knowledge, contribution, update conditions, evidence quality, credible alternatives, and calibration into explicit steps.                                      |
+| Evidence-backed practice                   | Executor                            | Use search, retrieval, citations, internal knowledge bases, or domain sources when available; record scope and evaluate provenance and independence.                                                |
+| External contrast                          | Executor                            | Assign distinct source-audit and hypothesis-test jobs when warranted. Send the object, not the prior answer; never count model agreement as evidence.                                               |
+| High-stakes handling                       | Planner + Executor                  | Separate epistemic uncertainty from action risk, require domain-appropriate sources, and route material decisions to qualified humans.                                                              |
+| Manual review rubric                       | Verifier                            | Review protocol adherence, epistemic quality, utility, and adverse effects such as over-triggering, stubbornness, or false balance.                                                                 |
+| Review notes / transcript                  | Activity artifact                   | Preserve claim, mode, plan, tool results, reviewer outputs, uncertainties, and final answer for later audit.                                                                                        |
 
----
+______________________________________________________________________
 
 ## Minimal integration flow
 
@@ -143,33 +143,33 @@ The final answer should still sound like BDK: kind, direct, specific, humble, an
 useful. The user does not need to see the internal activity object unless the
 product intentionally exposes audit traces.
 
----
+______________________________________________________________________
 
 ## Activity artifact
 
 A downstream Plan -> Execute -> Verify runtime can preserve an activity artifact
 with fields like these:
 
-| Field | Purpose |
-|-------|---------|
-| `claim` | The atomic claim or decision being reviewed. |
-| `claim_type` | Empirical, causal/predictive, normative/policy, interpretive/historical, personal/experiential, or creative/hypothetical. |
-| `confidence_evidence_consequence` | Why friction was or was not proportionate. |
-| `trigger_reason` | Why BDK fired, or why no intervention was needed. |
-| `mode` | If triggered: `light`, `full`, or `stabilization`. |
-| `steps` | Planned BDK checks and their outputs. |
-| `sources` | Prior-art or evidence references used during execution. |
-| `reviewers` | External model reviewers and their distinct jobs, if used. |
-| `disagreements` | Preserved disagreements across reviewers or sources. |
-| `verifier_notes` | Protocol, epistemic-quality, utility, and adverse-effect review. |
-| `final_answer` | The answer delivered to the user. |
-| `next_step` | Source, expert, experiment, or narrowing action. |
+| Field                             | Purpose                                                                                                                   |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `claim`                           | The atomic claim or decision being reviewed.                                                                              |
+| `claim_type`                      | Empirical, causal/predictive, normative/policy, interpretive/historical, personal/experiential, or creative/hypothetical. |
+| `confidence_evidence_consequence` | Why friction was or was not proportionate.                                                                                |
+| `trigger_reason`                  | Why BDK fired, or why no intervention was needed.                                                                         |
+| `mode`                            | If triggered: `light`, `full`, or `stabilization`.                                                                        |
+| `steps`                           | Planned BDK checks and their outputs.                                                                                     |
+| `sources`                         | Prior-art or evidence references used during execution.                                                                   |
+| `reviewers`                       | External model reviewers and their distinct jobs, if used.                                                                |
+| `disagreements`                   | Preserved disagreements across reviewers or sources.                                                                      |
+| `verifier_notes`                  | Protocol, epistemic-quality, utility, and adverse-effect review.                                                          |
+| `final_answer`                    | The answer delivered to the user.                                                                                         |
+| `next_step`                       | Source, expert, experiment, or narrowing action.                                                                          |
 
 This artifact is useful for incident review, team calibration, and later
 measurement with tools such as
 [BDK diagnostics](https://github.com/jrcruciani/baloney-detection-kit).
 
----
+______________________________________________________________________
 
 ## Guardrails
 
@@ -193,7 +193,7 @@ measurement with tools such as
 - **Do not move the framework into this repo.** Keep provider-specific code,
   MCP wiring, notebooks, evaluators, and SDK adapters downstream.
 
----
+______________________________________________________________________
 
 ## Where to integrate
 
@@ -209,7 +209,7 @@ If you only need personal use, copy [`ROOT_PROMPT.md`](../ROOT_PROMPT.md). If yo
 assistant supports skills, use [`skill/SKILL.md`](../skill/SKILL.md). Plan ->
 Execute -> Verify is for systems that already need orchestration.
 
----
+______________________________________________________________________
 
 ## Validation
 
@@ -226,7 +226,7 @@ instrument. The closed-loop protocol in
 control prompt against BDK using
 [BDK diagnostics](https://github.com/jrcruciani/baloney-detection-kit).
 
----
+______________________________________________________________________
 
 ## Reference
 
