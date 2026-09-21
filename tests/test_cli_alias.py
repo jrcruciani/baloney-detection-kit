@@ -6,6 +6,7 @@ import tomllib
 from pathlib import Path
 
 import pytest
+from rich.text import Text
 from typer.testing import CliRunner
 
 from bdk.interventions import get_intervention, list_interventions
@@ -23,11 +24,18 @@ def entrypoint(request):
     return name, getattr(importlib.import_module(module), attribute)
 
 
-def test_help_deprecates_only_the_alias(entrypoint):
+@pytest.mark.parametrize("force_color", [False, True])
+def test_help_deprecates_only_the_alias(entrypoint, force_color, monkeypatch):
+    if force_color:
+        monkeypatch.setenv("FORCE_COLOR", "1")
+        monkeypatch.delenv("NO_COLOR", raising=False)
+    else:
+        monkeypatch.setenv("NO_COLOR", "1")
+        monkeypatch.delenv("FORCE_COLOR", raising=False)
     name, app = entrypoint
-    result = runner.invoke(app, ["--help"], prog_name=name, terminal_width=160)
+    result = runner.invoke(app, ["--help"], prog_name=name, terminal_width=160, color=True)
     assert result.exit_code == 0, result.output
-    help_text = " ".join(result.stdout.split())
+    help_text = " ".join(Text.from_ansi(result.stdout).plain.split())
     assert f"Usage: {name}" in help_text
     assert "bdk is the canonical executable." in help_text
     assert "Only the robopsych alias is deprecated:" in help_text
