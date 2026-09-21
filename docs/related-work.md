@@ -3,7 +3,7 @@
 BDK is a synthesis and packaging contribution, not a claim to have invented
 critical thinking, behavioral evaluation, or AI diagnosis.
 
-See the README's [Scope and boundaries](README.md#scope-and-boundaries) for
+See the README's [Scope and boundaries](../README.md#scope-and-boundaries) for
 BDK's project-wide remit.
 
 ## Intellectual lineage

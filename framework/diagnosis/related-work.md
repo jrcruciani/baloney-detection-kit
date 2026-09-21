@@ -12,5 +12,5 @@ Its distinctive commitments are:
 - accumulate diagnostic claims as a coherence ratchet;
 - compare behavior against explicit baseline intent.
 
-See [`../../related-work.md`](../../related-work.md) for the integrated
+See [`../../docs/related-work.md`](../../docs/related-work.md) for the integrated
 positioning and intellectual lineage.

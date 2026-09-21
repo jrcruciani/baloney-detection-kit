@@ -15,5 +15,5 @@ The typical BDK sequence is:
 Observe -> Diagnose -> Change the responsible layer -> Re-test
 ```
 
-See [`../../deployment-contexts.md`](../../deployment-contexts.md) for the
+See [`../../docs/deployment-contexts.md`](../../docs/deployment-contexts.md) for the
 complete prevention, diagnosis, validation, and governance lifecycle.

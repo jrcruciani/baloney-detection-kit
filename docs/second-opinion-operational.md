@@ -1,11 +1,11 @@
 # External Contrast — Operational Lessons
 
-Companion notes to [`PLAYBOOK.md`](PLAYBOOK.md) §5 ("External contrast with AI
+Companion notes to [`PLAYBOOK.md`](../PLAYBOOK.md) §5 ("External contrast with AI
 reviewers") and
-[`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) §9
+[`skill/checklist/review_rubric.md`](../skill/checklist/review_rubric.md) §9
 ("External contrast").
 
-The playbook says **what** the second-opinion practice is. These are the implementation lessons from actually running it in an agent runtime: things that look obvious on paper but fail silently in practice. These notes focus on rules of thumb for the human or agent driving the contrast. See the README's [Scope and boundaries](README.md#scope-and-boundaries) for the scope of the complete BDK distribution.
+The playbook says **what** the second-opinion practice is. These are the implementation lessons from actually running it in an agent runtime: things that look obvious on paper but fail silently in practice. These notes focus on rules of thumb for the human or agent driving the contrast. See the README's [Scope and boundaries](../README.md#scope-and-boundaries) for the scope of the complete BDK distribution.
 
 ---
 

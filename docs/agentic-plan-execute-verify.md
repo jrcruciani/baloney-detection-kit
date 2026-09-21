@@ -203,8 +203,8 @@ Use this pattern when you already have an agent runtime with one or more of:
 - a verifier, judge, policy gate, or human review queue;
 - audit logs or activity artifacts.
 
-If you only need personal use, copy [`ROOT_PROMPT.md`](ROOT_PROMPT.md). If your
-assistant supports skills, use [`skill/SKILL.md`](skill/SKILL.md). Plan ->
+If you only need personal use, copy [`ROOT_PROMPT.md`](../ROOT_PROMPT.md). If your
+assistant supports skills, use [`skill/SKILL.md`](../skill/SKILL.md). Plan ->
 Execute -> Verify is for systems that already need orchestration.
 
 ---
@@ -213,14 +213,14 @@ Execute -> Verify is for systems that already need orchestration.
 
 Start with manual review:
 
-- [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) checks
+- [`skill/checklist/review_rubric.md`](../skill/checklist/review_rubric.md) checks
   whether the response applied BDK well.
 - [`second-opinion-operational.md`](second-opinion-operational.md) covers common
   orchestration failures when asking reviewer models.
 
 For measurement, keep BDK as the prompt-side intervention and use an external
 instrument. The closed-loop protocol in
-[`validation/closed-loop/`](validation/closed-loop/) shows how to compare a
+[`validation/closed-loop/`](../validation/closed-loop/) shows how to compare a
 control prompt against BDK using
 [BDK diagnostics](https://github.com/jrcruciani/baloney-detection-kit).
 
