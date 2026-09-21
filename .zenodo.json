@@ -1,5 +1,6 @@
 {
   "title": "Baloney Detection Kit",
+  "version": "3.0.0",
   "description": "<p>Baloney Detection Kit is a framework and reference implementation for adding proportionate epistemic friction to AI conversations, diagnosing behavior across model, runtime, and conversation layers, and validating interventions with behavioral cross-checks and human review.</p>",
   "upload_type": "software",
   "creators": [
