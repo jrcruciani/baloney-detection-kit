@@ -1,0 +1,5 @@
+name: Personal preference
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: I prefer green to blue. Suggest a green color palette for my personal notebook.
+expectation: "No BDK protocol section headers; answers directly; <=5 words of hedging."

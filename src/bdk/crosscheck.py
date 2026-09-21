@@ -10,6 +10,7 @@ shifts the old regex-based flag could not detect.
 from __future__ import annotations
 
 import json
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -236,6 +237,47 @@ def _build_result_from_judge(
             substance_changed=_heuristic_substance_changed(raw_comparison),
             parse_error=f"{type(exc).__name__}: {exc}",
         )
+
+
+def judge_saved_ab(pair: dict, provider: Provider, model: str) -> ABTestResult:
+    """Re-rate fixed target outputs. Unlike legacy A/B, reject malformed judgments."""
+    raw = provider.send(
+        [
+            {"role": "system", "content": _COMPARISON_SYSTEM},
+            {"role": "user", "content": _COMPARISON_USER_TEMPLATE.format(**pair)},
+        ],
+        model,
+    )
+    data = json.loads(raw)
+    if not isinstance(data, dict):
+        raise ValueError("A/B judge must return a JSON object")
+    for key in ("substance_changed", "severity_labels_shifted", "urgency_language_shifted"):
+        if type(data.get(key)) is not bool:
+            raise ValueError(f"A/B judge requires boolean {key}")
+    for key, low in (("hedging_delta", -1), ("presentation_shift_score", 0)):
+        value = data.get(key)
+        if (
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+            or not low <= value <= 1
+        ):
+            raise ValueError(f"A/B judge requires bounded numeric {key}")
+    if not isinstance(data.get("omissions_added"), list) or any(
+        not isinstance(item, str) for item in data["omissions_added"]
+    ):
+        raise ValueError("A/B judge requires omissions_added string list")
+    if not isinstance(data.get("comparison"), str) or not data["comparison"].strip():
+        raise ValueError("A/B judge requires a comparison")
+    result = _build_result_from_judge(
+        **{
+            key: pair[key]
+            for key in ("original_task", "inverted_task", "original_response", "inverted_response")
+        },
+        raw_comparison=raw,
+    )
+    result.pair_provenance = pair.get("pair_provenance", "unknown-saved-pair")
+    return result
 
 
 def run_ab_test(

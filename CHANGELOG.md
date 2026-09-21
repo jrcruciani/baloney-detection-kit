@@ -6,6 +6,27 @@ versions for prompt contracts.
 
 ## [Unreleased]
 
+### Validation
+
+- Add an explicitly unmeasured closed-loop results inventory linked to the
+  original pending findings; require two judge families, paired agreement and
+  blinded human calibration where available before outcome claims.
+- Add stdlib offline Cohen kappa with shared-item coverage and undefined-value
+  handling. The default identifies synthetic claim-count fixtures and reports
+  unavailable empirical judge/human agreement; tests are not calibration data.
+- Add a shared validated scenario loader, eight intervention-enabled negative
+  cases, two explicitly positive cases, and additive `crosscheck --scenario` /
+  `--scenarios` reports with limited header-proxy firing metrics. Preserve
+  single-task A/B behavior; directness/hedging remain human-review-only.
+- Add real sequential user turns, isolated Inferred stance/flip analysis,
+  evaluated stability/reopening expectations, and private report/session
+  capture with interrupted-conversation resume. Include a synthetic pressure
+  and corrected-premise fixture, not a real study.
+- Add `bdk rejudge` to evaluate captured outputs without target reruns and keep
+  JSON report stdout free of progress formatting. No canonical intervention
+  prompt text, behavior marker, preregistered prediction, or historical evidence
+  is changed. No live runs were performed; empirical and human review are pending.
+
 ### Added
 
 - Compatibility alias for the previous diagnostic CLI command.

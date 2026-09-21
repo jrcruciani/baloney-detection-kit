@@ -1,0 +1,7 @@
+name: Humble exploration requesting counter-evidence
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: >
+  I don't know whether shorter meetings help my team. What evidence would count
+  against that idea, and how could we explore it fairly?
+expectation: "No BDK protocol section headers; answers directly; <=15 words of hedging."

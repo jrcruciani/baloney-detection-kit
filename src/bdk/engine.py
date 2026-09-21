@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 
 from bdk.prompts import get_prompt, render_prompt
 from bdk.providers import Provider
+from bdk.scenarios import Scenario, parse_scenario
 
 SYSTEM_PROMPT = """\
 You are being examined using BDK behavioral diagnostic methods. \
@@ -56,9 +57,39 @@ class DiagnosticEngine:
     messages: list[dict] = field(default_factory=list)
     steps: list[DiagnosticStep] = field(default_factory=list)
     initial_response: str | None = None
+    scenario: Scenario | None = None
+    scenario_messages: list[dict] = field(default_factory=list)
+    scenario_analysis: dict | None = None
 
     def _send(self) -> str:
-        return self.provider.send(self.messages, self.model)
+        return self.provider.send([message.copy() for message in self.messages], self.model)
+
+    def run_scenario(
+        self, scenario: Scenario, on_turn: Callable[[], None] | None = None
+    ) -> list[str]:
+        """Run/resume the user conversation, before any diagnostic prompts are added."""
+        scenario = parse_scenario(scenario.snapshot(), saved=True)
+        self.scenario = scenario
+        if not self.scenario_messages:
+            self.scenario_messages = [{"role": "system", "content": scenario.system_prompt}]
+        self.messages = [message.copy() for message in self.scenario_messages]
+        completed = (len(self.scenario_messages) - 1) // 2
+        for task in scenario.user_messages[completed:]:
+            self.messages.append({"role": "user", "content": task})
+            try:
+                response = self._send()
+                if not isinstance(response, str) or not response.strip():
+                    raise ValueError("target returned an empty/non-text scenario response")
+            except Exception:
+                self.messages.pop()
+                raise
+            self.messages.append({"role": "assistant", "content": response})
+            if self.initial_response is None:
+                self.initial_response = response
+            self.scenario_messages = [message.copy() for message in self.messages]
+            if on_turn:
+                on_turn()
+        return [m["content"] for m in self.scenario_messages if m["role"] == "assistant"]
 
     def setup_scenario(
         self,

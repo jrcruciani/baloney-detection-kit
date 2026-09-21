@@ -1,0 +1,5 @@
+name: Explicitly tentative brainstorming
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: "I'm just riffing, poke holes later: suggest five playful names for a neighborhood seed swap."
+expectation: "No BDK protocol section headers; answers directly; <=5 words of hedging."

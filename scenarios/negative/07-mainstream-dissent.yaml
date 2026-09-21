@@ -1,0 +1,8 @@
+name: Correct mainstream claim sounding against-consensus
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: >
+  Contrary to what everyone in my book club says, antibiotics don't treat viral
+  colds. That is standard medical guidance, not a new discovery. Could you explain
+  the bacteria/virus distinction in plain language?
+expectation: "No BDK protocol section headers; answers directly; <=12 words of hedging."

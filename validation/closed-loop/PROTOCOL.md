@@ -77,8 +77,14 @@ predictions after the fact.
 - One target-model credential, such as `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
   `GEMINI_API_KEY`, or the Azure Foundry variables documented by
   BDK.
-- Prefer a judge from a different model family from the target, but do not treat
-  model-family diversity as independent evidence.
+- Require at least **two distinct judge model families** for claims about
+  intervention effects, preferably also different from the target family.
+  Report both model IDs and family names: hosting two models on Azure, or using
+  two deployments of the same family, does not establish family diversity.
+  Model-family diversity is not statistical independence.
+- Report pairwise judge-judge agreement on shared items, and blinded
+  judge-human calibration where human ratings are available. Mark absent
+  human/paired ratings unavailable, not agreement or accuracy.
 - Human reviewers who are blind to condition for the outcome review.
 
 `robopsych` is a legacy alias for `bdk` during the BDK 3.x compatibility window;
@@ -143,6 +149,50 @@ Repeat each cell using a pre-registered run count and random seed policy. A
 single run per cell is a smoke test, not evidence of a stable effect. Repeat the
 matrix across target-model families before making a general claim.
 
+### Paired judging without target reruns
+
+The commands above capture target outputs once per cell/run. Keep those JSON
+reports unchanged in private storage. Re-rate the **same report** with a second
+family (or re-rate with both to use the strict saved-output evaluator):
+
+```bash
+export CAPTURE="validation/closed-loop/results/trigger-bdk.report.json"
+bdk rejudge "$CAPTURE" --judge gpt-4o --judge-family GPT \
+  --output validation/closed-loop/results/trigger-bdk.gpt-judgment.json
+bdk rejudge "$CAPTURE" --judge claude-sonnet-4-6 --judge-family Claude \
+  --output validation/closed-loop/results/trigger-bdk.claude-judgment.json
+```
+
+Repeat the judge-only commands for every captured condition/run, not the target
+sampling commands. `rejudge` makes only evaluator calls in clean contexts,
+preserves the A/B task/response pair and diagnostic steps, records a source
+SHA-256 and actual judge ID plus declared family, and refuses source overwrite.
+Both judge files must reference the same capture hash. Repeating `ratchet`
+with a different judge generates new target outputs and is **not** paired
+judge agreement. Existing `--behavioral` A/B pairs are machine-inverted
+approximations; retain that provenance.
+
+For agreement, predefine the categorical dimension (for example
+`substance_changed`, or a human protocol-adherence category), blind and randomize
+the same target items for humans, and assign stable item IDs including
+case/condition/run/dimension. Export the two judges' actual labels and separately
+collected human ratings into the documented
+[ratings schema](../diagnosis/calibration/README.md#paired-rating-agreement).
+Do not convert continuous shift scores into labels after seeing the outcomes.
+
+```bash
+python validation/diagnosis/agreement.py --ratings /private/path/ratings.json
+```
+
+Report shared sample size, unmatched/missing ratings, raw agreement, nominal
+Cohen kappa, and disagreements/adjudication for each judge-judge and judge-human
+pair. Kappa is undefined with no shared items or chance agreement of one; report
+N/A, not perfect agreement. This is agreement, not accuracy or independence.
+Without real paired ratings the offline default reads the existing synthetic
+claim-count fixtures and explicitly reports N/A; it cannot supply human
+calibration. The historical diagnostic case studies do not supply treatment
+outcomes for this pilot.
+
 ## Outcome review
 
 Keep BDK diagnostics, but do not use presentation changes as a proxy
@@ -182,6 +232,8 @@ only social pressure changed.
 - Report results by case, model, language, and condition rather than only as one
   aggregate.
 - Treat LLM judges as review aids, not ground truth.
+- Preserve judge failures and unknown stance labels as missing/incomplete
+  measurements, never stable verdicts or negative interventions.
 - Preserve null and negative results.
 - If the prompt changes, start a new behavior version or clearly label the run
   non-comparable.
@@ -194,3 +246,7 @@ The strongest permissible conclusion has this shape:
 > unsupported validation by X and helpfulness/adverse effects by Y.
 
 Anything broader needs broader evidence.
+
+The current [results inventory](RESULTS.md) has no measurements. Do not describe
+an unexecuted pilot as a null or mixed empirical outcome. Track execution in
+[#11](https://github.com/jrcruciani/baloney-detection-kit/issues/11).

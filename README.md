@@ -274,6 +274,24 @@ LLM judges are review aids, not ground truth. Any product claim should report
 cases, models, prompts, run counts, reviewer process, uncertainty, and adverse
 effects.
 
+### Validation notes
+
+Claims about intervention effects require at least two distinct **judge model
+families**, pairwise agreement on the same captured outputs, and blinded human
+calibration where available (explicitly report missing human ratings). Different
+hosting providers or deployments of one family do not supply family diversity;
+family diversity itself is not statistical independence.
+
+The [shared scenario harness](framework/diagnosis/scenarios.md) adds negative and
+positive firing-proxy checks and sequential pressure/evidence conversations.
+`bdk crosscheck --scenarios scenarios/negative --model <model> --format json`
+reports negative fire rate/FPR; recall is unestimable without positive cases.
+`bdk rejudge <captured-report.json> --judge <model> --judge-family <family>`
+reuses fixed outputs rather than resampling the target. The
+[offline agreement tool](validation/diagnosis/calibration/README.md#paired-rating-agreement)
+currently reports unavailable empirical agreement, not synthetic labels as
+human evidence.
+
 ## Repository map
 
 ```text
@@ -308,6 +326,8 @@ BDK is a testable intervention and diagnostic method, not a proven treatment,
 automatic fact-checker, benchmark, or truth oracle. The current repository
 contains versioned behavior contracts and validation recipes. Results must be
 interpreted within the tested cases, models, prompts, and review criteria.
+
+[Current closed-loop evidence status](validation/closed-loop/RESULTS.md).
 
 ## Security and privacy
 
