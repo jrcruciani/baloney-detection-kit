@@ -29,6 +29,7 @@ ALL_PUBLIC = (*PUBLIC, *SPANISH_PUBLIC)
 ALL_MIRRORS = (*MIRRORS, *SPANISH_MIRRORS)
 ALL_WRAPPERS = (*sync.WRAPPERS, *sync.SPANISH_WRAPPERS)
 DISTRIBUTIONS = (*ALL_PUBLIC, *ALL_MIRRORS, *ALL_WRAPPERS, sync.SKILL_TEXT)
+PORTABLE_SOURCES = sync.portable_sources(ROOT)
 
 
 def prompt_body(text):
@@ -45,7 +46,7 @@ def snapshot(root):
 
 @pytest.fixture
 def repository(tmp_path):
-    for path in (*DISTRIBUTIONS, SCRIPT):
+    for path in {*DISTRIBUTIONS, SCRIPT, *PORTABLE_SOURCES, *PORTABLE_SOURCES.values()}:
         target = tmp_path / path
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / path, target)
@@ -74,7 +75,12 @@ def test_distribution_inventory_covers_every_cli_variant_and_only_interventions(
         ROOT / p for p in ALL_PUBLIC
     }
     assert set((ROOT / sync.PACKAGED).rglob("*.md")) == {ROOT / p for p in ALL_MIRRORS}
-    assert set(sync.outputs(ROOT)) == {*ALL_WRAPPERS, sync.SKILL_TEXT, *ALL_MIRRORS}
+    assert set(sync.outputs(ROOT)) == {
+        *ALL_WRAPPERS,
+        sync.SKILL_TEXT,
+        *ALL_MIRRORS,
+        *PORTABLE_SOURCES.values(),
+    }
 
 
 def test_spanish_full_preserves_machine_headings_labels_and_six_step_shape():
@@ -231,9 +237,15 @@ def test_sync_preserves_wrapper_prose_frontmatter_resources_and_is_idempotent(re
         target.write_text("Unrelated/historical content; do not assign intervention versions.\n")
 
     before = snapshot(repository)
-    assert set(sync.synchronize(repository, check=True)) == set(ALL_WRAPPERS)
+    expected = {
+        *ALL_WRAPPERS,
+        sync.PORTABLE_SKILL / "SKILL.md",
+        sync.PORTABLE_SKILL / "examples/historical.md",
+        sync.PORTABLE_SKILL / "checklist/review_rubric.md",
+    }
+    assert set(sync.synchronize(repository, check=True)) == expected
     assert snapshot(repository) == before
-    assert set(sync.synchronize(repository)) == set(ALL_WRAPPERS)
+    assert set(sync.synchronize(repository)) == expected
     for path, (expected_prefix, expected_suffix) in expected_wrappers.items():
         prefix, _, suffix = sync.split_region(sync.read_text(repository / path), str(path))
         assert (prefix, suffix) == (expected_prefix, expected_suffix)
@@ -256,7 +268,15 @@ def test_canonical_and_specialized_edits_propagate_to_exact_targets(repository):
     canonical.write_text(sync.read_text(canonical).replace("Admit unknowns.", "Disclose unknowns."))
     specialized = repository / PUBLIC[0]
     specialized.write_text(sync.read_text(specialized) + "\nNew specialized wrapper.\n")
-    expected = {*sync.WRAPPERS, sync.SKILL_TEXT, MIRRORS[0], MIRRORS[1]}
+    expected = {
+        *sync.WRAPPERS,
+        sync.SKILL_TEXT,
+        MIRRORS[0],
+        MIRRORS[1],
+        PORTABLE_SOURCES[Path("skill/SKILL.md")],
+        PORTABLE_SOURCES[sync.SKILL_TEXT],
+        PORTABLE_SOURCES[sync.CANONICAL],
+    }
     assert set(sync.synchronize(repository)) == expected
     body = prompt_body(sync.read_text(canonical))
     for path in sync.WRAPPERS:
@@ -286,7 +306,7 @@ def test_spanish_edits_only_propagate_to_spanish_root_and_mirrors(repository):
     assert sync.synchronize(repository, check=True) == []
 
 
-@pytest.mark.parametrize("path", (*ALL_MIRRORS, sync.SKILL_TEXT))
+@pytest.mark.parametrize("path", (*ALL_MIRRORS, sync.SKILL_TEXT, *PORTABLE_SOURCES.values()))
 def test_missing_whole_file_outputs_are_reported_and_recreated(repository, path):
     expected = (repository / path).read_bytes()
     (repository / path).unlink()

@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 
 import yaml
@@ -29,6 +30,8 @@ def test_skill_frontmatter():
             skill_paths.append(Path(directory) / "SKILL.md")
 
     assert skill_paths, "No repository SKILL.md files found"
+    assert root / "skill/SKILL.md" in skill_paths
+    assert root / "skills/baloney-detection-kit/SKILL.md" in skill_paths
     for path in skill_paths:
         relative_path = path.relative_to(root)
         lines = path.read_text(encoding="utf-8").splitlines()
@@ -48,3 +51,6 @@ def test_skill_frontmatter():
         assert len(metadata["description"]) <= 1024, (
             f"{relative_path}: description must be at most 1024 characters"
         )
+        assert re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", metadata["name"]), relative_path
+        if relative_path.parts[0] == "skills":
+            assert path.parent.name == metadata["name"], relative_path

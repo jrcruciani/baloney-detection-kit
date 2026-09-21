@@ -26,8 +26,10 @@ no intervention, not merely a shorter skeptical template.
 
 ## Agent instructions
 
-Install [`skill/`](../skill/) in a compatible runtime or use
+Copy the complete [`skills/baloney-detection-kit/`](../skills/baloney-detection-kit/)
+distribution using the [runtime integration guide](integration.md), or use
 [`prompts/intervention/prompt-agent.md`](../prompts/intervention/prompt-agent.md).
+The legacy [`skill/`](../skill/) remains the editable compatibility source.
 The prompt is advisory: it shapes responses but cannot enforce tool or data
 access policy.
 

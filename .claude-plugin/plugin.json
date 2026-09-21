@@ -1,0 +1,7 @@
+{
+  "name": "baloney-detection-kit",
+  "version": "3.0.0",
+  "description": "Advisory epistemic-friction skill for reviewing claims, evidence, and confidence.",
+  "repository": "https://github.com/jrcruciani/baloney-detection-kit",
+  "license": "MIT"
+}
