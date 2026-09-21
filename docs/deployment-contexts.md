@@ -3,7 +3,7 @@
 BDK can be adopted one layer at a time. Prevention, diagnosis, and validation
 share one framework but solve different operational questions.
 
-See the README's [Scope and boundaries](README.md#scope-and-boundaries) for
+See the README's [Scope and boundaries](../README.md#scope-and-boundaries) for
 the project-wide scope.
 
 Robopsychology now ships in this repository as BDK's diagnostic layer, available
@@ -26,8 +26,8 @@ template.
 
 ## Agent instructions
 
-Install [`skill/`](skill/) in a compatible runtime or use
-[`prompts/intervention/prompt-agent.md`](prompts/intervention/prompt-agent.md).
+Install [`skill/`](../skill/) in a compatible runtime or use
+[`prompts/intervention/prompt-agent.md`](../prompts/intervention/prompt-agent.md).
 The prompt is advisory: it shapes responses but cannot enforce tool or data
 access policy.
 

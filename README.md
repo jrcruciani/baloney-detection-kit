@@ -93,19 +93,27 @@ CI checks pull requests against any branch, including stacked PRs, on Python
 3.11, 3.12, and 3.13. Run the same offline checks locally:
 
 ```bash
-ruff check src/ tests/
-ruff format --check src/ tests/
-mypy src/bdk
+ruff check src/ tests/ scripts/
+ruff format --check src/ tests/ scripts/
+mypy src/bdk scripts/check_markdown_links.py
+python scripts/check_markdown_links.py
 pytest -m "not integration" --cov=bdk --cov-report=xml --cov-report=term-missing --cov-fail-under=60
 ```
 
-Use `ruff format src/ tests/` to apply formatting. Type checking includes
+Use `ruff format src/ tests/ scripts/` to apply formatting. Type checking includes
 unannotated function bodies without requiring strict annotations everywhere.
 The base-install smoke job separately checks that the CLI works without SDKs.
 CI uploads coverage per Python version and runs `pip-audit` against the resolved
 development environment in a separate, initially non-blocking job; inspect its
 step output and job summary for findings or audit failures. Dependabot checks
 Python dependencies and pinned GitHub Actions weekly.
+
+The offline link checker covers tracked and non-ignored new Markdown files
+throughout the repository, including images and reference-link definitions.
+It checks file and directory paths, accepts URL-encoded paths, fragments and
+queries, and skips remote URLs and literal code examples. It does not validate
+heading anchors or fetch remote content. Untracked virtual environments and
+tool caches are excluded; tracked Markdown is never excluded as tooling.
 
 Retrieve a preventive intervention:
 
@@ -200,6 +208,11 @@ effects.
 baloney-detection-kit/
 ├── PLAYBOOK.md                    Preventive operating protocol
 ├── ROOT_PROMPT.md                 Self-contained intervention prompt
+├── docs/
+│   ├── agentic-plan-execute-verify.md  Agentic runtime integration pattern
+│   ├── deployment-contexts.md     Adoption and deployment guidance
+│   ├── related-work.md            Intellectual lineage and positioning
+│   └── second-opinion-operational.md  External-review practice notes
 ├── framework/
 │   └── diagnosis/                 Behavioral diagnostic method
 ├── prompts/
@@ -208,6 +221,7 @@ baloney-detection-kit/
 ├── skill/                         Runtime-friendly agent skill
 ├── src/bdk/                       Reference CLI and analysis engine
 ├── tests/                         Unit and integration tests
+├── scripts/                       Offline repository checks
 ├── scenarios/                     Runnable scenario examples
 ├── templates/diagnosis/           Human diagnostic worksheets
 ├── validation/

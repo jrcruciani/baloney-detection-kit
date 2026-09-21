@@ -9,7 +9,7 @@ surfaces.
 See the README's [Scope and boundaries](README.md#scope-and-boundaries) for
 the project-wide scope.
 
-In current AI-safety vocabulary, this targets **social sycophancy**: a boundary failure where social alignment or helpfulness pressure displaces epistemic integrity. See [`related-work.md`](related-work.md) for the mapping.
+In current AI-safety vocabulary, this targets **social sycophancy**: a boundary failure where social alignment or helpfulness pressure displaces epistemic integrity. See [`docs/related-work.md`](docs/related-work.md) for the mapping.
 
 ## TL;DR
 
@@ -281,7 +281,7 @@ independent corroboration.
 For operational notes on running this practice in an agent runtime (object
 summarization, role diversity, model-error correlation, courier vs.
 third-reviewer separation, severity tagging, and asymmetric failure handling),
-see [`second-opinion-operational.md`](second-opinion-operational.md).
+see [`docs/second-opinion-operational.md`](docs/second-opinion-operational.md).
 
 ### What to do next
 

@@ -174,7 +174,7 @@ Remaining disagreement:
 Correlation or contamination risk:
 ```
 
-See [`../../second-opinion-operational.md`](../../second-opinion-operational.md)
+See [`../../docs/second-opinion-operational.md`](../../docs/second-opinion-operational.md)
 for operational guidance.
 
 ---
