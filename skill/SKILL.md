@@ -1,6 +1,11 @@
 ---
 name: baloney-detection-kit
-description: Use this skill when confidence, available evidence, and consequence of error appear misaligned. Signals include inflated novelty or significance, validation before investigation, material-risk decisions, suppression framing that resists updating, and repeated pressure for agreement. Dissent from consensus alone is not a trigger. This is the runtime-friendly preventive layer of BDK.
+description: >-
+  Use this skill when confidence, available evidence, and consequence of error
+  appear misaligned. Signals include inflated novelty or significance, validation
+  before investigation, material-risk decisions, suppression framing that resists
+  updating, and repeated pressure for agreement. Dissent from consensus alone is
+  not a trigger. This is the runtime-friendly preventive layer of BDK.
 ---
 
 # Baloney Detection Kit Skill
