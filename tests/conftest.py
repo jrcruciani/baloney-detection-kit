@@ -11,9 +11,18 @@ import pytest
 @pytest.fixture
 def provider_env(monkeypatch):
     for name in os.environ:
-        if name.startswith((
-            "ANTHROPIC_", "OPENAI_", "GEMINI_", "GOOGLE_", "AZURE_FOUNDRY_",
-        )) or name == "ROBOPSYCH_ALLOW_INSECURE_BASE_URL":
+        if (
+            name.startswith(
+                (
+                    "ANTHROPIC_",
+                    "OPENAI_",
+                    "GEMINI_",
+                    "GOOGLE_",
+                    "AZURE_FOUNDRY_",
+                )
+            )
+            or name == "ROBOPSYCH_ALLOW_INSECURE_BASE_URL"
+        ):
             monkeypatch.delenv(name)
 
 

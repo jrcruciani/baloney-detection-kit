@@ -119,10 +119,13 @@ class TestCreateProvider:
         openai_sdk.OpenAI.assert_called_once_with(api_key="env-key")
 
     def test_openai_with_base_url(self, openai_sdk):
-        provider = create_provider("gpt-4o", api_key="test-key", base_url="https://api.example.com/v1")
+        provider = create_provider(
+            "gpt-4o", api_key="test-key", base_url="https://api.example.com/v1"
+        )
         assert provider.name == "openai"
         openai_sdk.OpenAI.assert_called_once_with(
-            api_key="test-key", base_url="https://api.example.com/v1",
+            api_key="test-key",
+            base_url="https://api.example.com/v1",
         )
 
     def test_openai_rejects_insecure_base_url_without_opt_in(self):
@@ -174,8 +177,7 @@ class TestCreateProvider:
     def test_gemini_without_key_raises(self):
         with patch.dict(os.environ, {}, clear=True):
             env = {
-                k: v for k, v in os.environ.items()
-                if k not in ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+                k: v for k, v in os.environ.items() if k not in ("GEMINI_API_KEY", "GOOGLE_API_KEY")
             }
             with patch.dict(os.environ, env, clear=True):
                 with pytest.raises(SystemExit):
@@ -199,7 +201,10 @@ class TestGeminiProvider:
     @pytest.mark.parametrize("temperature", [None, 0.0, 0.7])
     @pytest.mark.parametrize("response_format", [None, {"type": "json_object"}])
     def test_send_preserves_history_config_and_text(
-        self, gemini_sdk, temperature, response_format,
+        self,
+        gemini_sdk,
+        temperature,
+        response_format,
     ):
         provider = GeminiProvider(api_key="test-key")
         generate = provider.client.models.generate_content
@@ -271,11 +276,14 @@ class TestGeminiProvider:
             config=types.GenerateContentConfig(system_instruction="Updated instructions"),
         )
 
-    @pytest.mark.parametrize("response_format", [
-        {},
-        {"type": "text"},
-        {"type": "json_schema", "json_schema": {"type": "object"}},
-    ])
+    @pytest.mark.parametrize(
+        "response_format",
+        [
+            {},
+            {"type": "text"},
+            {"type": "json_schema", "json_schema": {"type": "object"}},
+        ],
+    )
     def test_rejects_unsupported_response_format_before_request(self, gemini_sdk, response_format):
         provider = GeminiProvider(api_key="test-key")
 
@@ -288,13 +296,16 @@ class TestGeminiProvider:
 
         provider.client.models.generate_content.assert_not_called()
 
-    @pytest.mark.parametrize("response", [
-        SimpleNamespace(),
-        SimpleNamespace(text=None),
-        SimpleNamespace(text=""),
-        SimpleNamespace(text=" \n\t"),
-        SimpleNamespace(text=123),
-    ])
+    @pytest.mark.parametrize(
+        "response",
+        [
+            SimpleNamespace(),
+            SimpleNamespace(text=None),
+            SimpleNamespace(text=""),
+            SimpleNamespace(text=" \n\t"),
+            SimpleNamespace(text=123),
+        ],
+    )
     def test_rejects_unusable_response_text(self, gemini_sdk, response):
         provider = GeminiProvider(api_key="test-key")
         provider.client.models.generate_content.return_value = response
@@ -313,7 +324,8 @@ class TestGeminiProvider:
         for name in ("anthropic", "openai", "google", "google.genai", "google.genai.types"):
             monkeypatch.setitem(sys.modules, name, None)
         spec = importlib.util.spec_from_file_location(
-            "providers_without_sdks", providers.__file__,
+            "providers_without_sdks",
+            providers.__file__,
         )
         assert spec and spec.loader
         module = importlib.util.module_from_spec(spec)
@@ -326,12 +338,15 @@ class TestGeminiProvider:
 
 
 class TestOptionalSDKs:
-    @pytest.mark.parametrize("model,provider_name,extra", [
-        ("claude-sonnet-4-6", "anthropic", "anthropic"),
-        ("gpt-4o", "openai", "openai"),
-        ("gemini-pro", "gemini", "gemini"),
-        ("azure/gpt-5", "azure_foundry", "openai"),
-    ])
+    @pytest.mark.parametrize(
+        "model,provider_name,extra",
+        [
+            ("claude-sonnet-4-6", "anthropic", "anthropic"),
+            ("gpt-4o", "openai", "openai"),
+            ("gemini-pro", "gemini", "gemini"),
+            ("azure/gpt-5", "azure_foundry", "openai"),
+        ],
+    )
     def test_missing_sdk_has_install_hint(self, monkeypatch, model, provider_name, extra):
         for name in ("anthropic", "openai", "google", "google.genai"):
             monkeypatch.setitem(sys.modules, name, None)
@@ -342,18 +357,25 @@ class TestOptionalSDKs:
             create_provider(model, api_key="test-key")
 
         assert str(exc.value) == (
-            f'Provider "{provider_name}" requires: '
-            f'pip install "baloney-detection-kit[{extra}]"'
+            f'Provider "{provider_name}" requires: pip install "baloney-detection-kit[{extra}]"'
         )
 
-    @pytest.mark.parametrize("model,sdk_fixture,root", [
-        ("claude-sonnet-4-6", "anthropic_sdk", "anthropic"),
-        ("gpt-4o", "openai_sdk", "openai"),
-        ("gemini-pro", "gemini_sdk", "google"),
-        ("azure/gpt-5", "openai_sdk", "openai"),
-    ])
+    @pytest.mark.parametrize(
+        "model,sdk_fixture,root",
+        [
+            ("claude-sonnet-4-6", "anthropic_sdk", "anthropic"),
+            ("gpt-4o", "openai_sdk", "openai"),
+            ("gemini-pro", "gemini_sdk", "google"),
+            ("azure/gpt-5", "openai_sdk", "openai"),
+        ],
+    )
     def test_provider_works_without_other_sdks(
-        self, monkeypatch, request, model, sdk_fixture, root,
+        self,
+        monkeypatch,
+        request,
+        model,
+        sdk_fixture,
+        root,
     ):
         request.getfixturevalue(sdk_fixture)
         for name in {"anthropic", "openai", "google"} - {root}:
@@ -395,10 +417,15 @@ class TestProviderOptions:
         )
         messages = [{"role": "user", "content": "hello"}]
 
-        assert provider.send(
-            messages, "custom/model:version",
-            temperature=temperature, response_format=response_format,
-        ) == "pong"
+        assert (
+            provider.send(
+                messages,
+                "custom/model:version",
+                temperature=temperature,
+                response_format=response_format,
+            )
+            == "pong"
+        )
 
         expected = {"model": "custom/model:version", "messages": messages, "max_tokens": 4096}
         if temperature is not None:
@@ -414,14 +441,20 @@ class TestProviderOptions:
         create.return_value = SimpleNamespace(content=[SimpleNamespace(text="pong")])
         messages = [{"role": "user", "content": "hello"}]
 
-        assert provider.send(
-            [{"role": "system", "content": "Be precise."}, *messages],
-            "claude-raw:id", temperature=temperature,
-        ) == "pong"
+        assert (
+            provider.send(
+                [{"role": "system", "content": "Be precise."}, *messages],
+                "claude-raw:id",
+                temperature=temperature,
+            )
+            == "pong"
+        )
 
         expected = {
-            "model": "claude-raw:id", "messages": messages,
-            "max_tokens": 4096, "system": "Be precise.",
+            "model": "claude-raw:id",
+            "messages": messages,
+            "max_tokens": 4096,
+            "system": "Be precise.",
         }
         if temperature is not None:
             expected["temperature"] = temperature

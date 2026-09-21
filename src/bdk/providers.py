@@ -96,8 +96,7 @@ class AnthropicProvider(Provider):
             # Anthropic does not support response_format. Surface as unsupported
             # so the caller can decide to retry without it.
             raise UnsupportedProviderOption(
-                "AnthropicProvider does not support response_format; "
-                "retry without it."
+                "AnthropicProvider does not support response_format; retry without it."
             )
 
         response = self.client.messages.create(**kwargs)
@@ -362,9 +361,7 @@ def _looks_like_azure_foundry_endpoint(base_url: str | None) -> bool:
 def _should_use_azure_foundry(model: str, base_url: str | None = None) -> bool:
     if _looks_like_azure_foundry_endpoint(base_url):
         return model.lower().startswith(AZURE_FOUNDRY_MODEL_PREFIXES)
-    return _azure_foundry_configured() and model.lower().startswith(
-        AZURE_FOUNDRY_MODEL_PREFIXES
-    )
+    return _azure_foundry_configured() and model.lower().startswith(AZURE_FOUNDRY_MODEL_PREFIXES)
 
 
 def detect_provider(model: str) -> str:

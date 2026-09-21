@@ -6,7 +6,7 @@ import ipaddress
 import os
 import re
 from pathlib import Path
-from typing import TextIO
+from typing import TextIO, overload
 from urllib.parse import urlparse
 
 DEFAULT_MAX_INPUT_BYTES = 10 * 1024 * 1024
@@ -132,6 +132,14 @@ def _is_local_or_private_host(hostname: str | None) -> bool:
     except ValueError:
         return False
     return ip.is_loopback or ip.is_private or ip.is_link_local
+
+
+@overload
+def validate_base_url(base_url: str, *, allow_insecure: bool | None = None) -> str: ...
+
+
+@overload
+def validate_base_url(base_url: None, *, allow_insecure: bool | None = None) -> None: ...
 
 
 def validate_base_url(

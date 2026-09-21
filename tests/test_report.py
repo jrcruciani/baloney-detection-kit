@@ -192,8 +192,11 @@ class TestGenerateJsonReport:
         from bdk.coherence import CoherenceReport
 
         coh = CoherenceReport(
-            consistency_score=0.8, assessment="high-continuity",
-            contradictions=[], backward_references=5, fresh_narratives=1,
+            consistency_score=0.8,
+            assessment="high-continuity",
+            contradictions=[],
+            backward_references=5,
+            fresh_narratives=1,
             details="test details",
         )
         data = json.loads(generate_json_report(_engine_with_steps(), coherence=coh))
@@ -249,10 +252,13 @@ class TestGenerateJsonReport:
         )
         score = DiagnosticScore(
             label_distribution={"observed": 3, "inferred": 2},
-            layer_separation=0.67, ratchet_coherence=0.75,
-            behavioral_evidence=1.0, substance_stability=1.0,
+            layer_separation=0.67,
+            ratchet_coherence=0.75,
+            behavioral_evidence=1.0,
+            substance_stability=1.0,
             presentation_stability=1.0,
-            support_profile=profile, summary="Strong evidence supporting the dominant hypothesis.",
+            support_profile=profile,
+            summary="Strong evidence supporting the dominant hypothesis.",
         )
         data = json.loads(generate_json_report(_engine_with_steps(), score=score))
         assert "score" in data
@@ -266,9 +272,11 @@ class TestGenerateReportWithCoherence:
         from bdk.coherence import CoherenceReport
 
         coh = CoherenceReport(
-            consistency_score=0.8, assessment="high-continuity",
+            consistency_score=0.8,
+            assessment="high-continuity",
             contradictions=["Step 2 contradicts step 1"],
-            backward_references=5, fresh_narratives=1,
+            backward_references=5,
+            fresh_narratives=1,
             details="test",
         )
         report = generate_report(_engine_with_steps(), coherence=coh)
@@ -325,10 +333,13 @@ class TestGenerateReportWithCoherence:
         )
         score = DiagnosticScore(
             label_distribution={"observed": 3, "inferred": 2},
-            layer_separation=0.67, ratchet_coherence=0.75,
-            behavioral_evidence=1.0, substance_stability=1.0,
+            layer_separation=0.67,
+            ratchet_coherence=0.75,
+            behavioral_evidence=1.0,
+            substance_stability=1.0,
             presentation_stability=1.0,
-            support_profile=profile, summary="Strong evidence supporting the dominant hypothesis.",
+            support_profile=profile,
+            summary="Strong evidence supporting the dominant hypothesis.",
         )
         report = generate_report(_engine_with_steps(), score=score)
         assert "Diagnostic Score" in report
@@ -402,7 +413,8 @@ class TestNextStepsEdgeCases:
     def test_sycophancy_suggests_ab_test(self):
         engine = _engine_with_steps(num_steps=5)
         engine.steps[0] = DiagnosticStep(
-            prompt_id="1.2", prompt_name="Herbie",
+            prompt_id="1.2",
+            prompt_name="Herbie",
             prompt_text="test",
             response="Strong sycophancy detected with approval seeking pattern.",
         )
@@ -412,7 +424,8 @@ class TestNextStepsEdgeCases:
     def test_drift_suggests_anchor(self):
         engine = _engine_with_steps(num_steps=5)
         engine.steps[0] = DiagnosticStep(
-            prompt_id="3.4", prompt_name="Drift",
+            prompt_id="3.4",
+            prompt_name="Drift",
             prompt_text="test",
             response="The drift pattern is clear over multiple turns.",
         )

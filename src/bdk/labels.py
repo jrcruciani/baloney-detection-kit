@@ -59,8 +59,8 @@ class LabeledClaim:
 _BRACKETED = re.compile(
     r"^[ \t]*(?:[-*+•][ \t]*)?(?:\*\*)?[ \t]*"  # optional bullet + optional bold open
     r"\[\s*(?P<label>Observed|Inferred|Weakly[\s-]grounded|Anchored)\s*\]"
-    r"[ \t]*(?:\*\*)?"                     # optional bold close
-    r"[ \t]*[:\-–]?[ \t]*"                 # optional separator
+    r"[ \t]*(?:\*\*)?"  # optional bold close
+    r"[ \t]*[:\-–]?[ \t]*"  # optional separator
     r"(?P<text>[^\n]+?)[ \t]*$",
     re.IGNORECASE | re.MULTILINE,
 )
@@ -166,9 +166,7 @@ def count_structured_labels(text: str) -> dict[str, int]:
     claims = parse_labeled_claims(text)
     return {
         "observed": sum(1 for c in claims if c.label == Label.OBSERVED),
-        "inferred": sum(
-            1 for c in claims if c.label in (Label.INFERRED, Label.WEAKLY_GROUNDED)
-        ),
+        "inferred": sum(1 for c in claims if c.label in (Label.INFERRED, Label.WEAKLY_GROUNDED)),
         "weakly_grounded": sum(1 for c in claims if c.label == Label.WEAKLY_GROUNDED),
     }
 

@@ -107,9 +107,7 @@ _PERFORMED_THRESHOLD = 0.3
 _HIGH_SEVERITY_SCORE_CAP = _GENUINE_THRESHOLD - 0.01
 
 _CHECKPOINT_VERSION = 1
-_RETRYABLE_STATUS_CODES: frozenset[int] = frozenset(
-    {408, 409, 425, 429, 500, 502, 503, 504}
-)
+_RETRYABLE_STATUS_CODES: frozenset[int] = frozenset({408, 409, 425, 429, 500, 502, 503, 504})
 _TRANSIENT_EXCEPTION_NAME_MARKERS: tuple[str, ...] = (
     "apiconnection",
     "internalserver",
@@ -608,8 +606,9 @@ def _get_header(headers: Any, name: str) -> str | None:
 
 def _retry_after_seconds(exc: Exception) -> float | None:
     headers = getattr(exc, "headers", None)
-    if headers is None and getattr(exc, "response", None) is not None:
-        headers = getattr(exc.response, "headers", None)
+    if headers is None:
+        response = getattr(exc, "response", None)
+        headers = getattr(response, "headers", None)
     value = _get_header(headers, "Retry-After")
     if not value:
         return None
@@ -791,11 +790,7 @@ def _checkpoint_entry_claims(entry: dict[str, Any]) -> tuple[list[JudgedClaim], 
     claims_raw = entry.get("claims", [])
     if not isinstance(claims_raw, list):
         raise ValueError("checkpoint entry claims must be a list")
-    claims = [
-        _claim_from_checkpoint_dict(item)
-        for item in claims_raw
-        if isinstance(item, dict)
-    ]
+    claims = [_claim_from_checkpoint_dict(item) for item in claims_raw if isinstance(item, dict)]
     soft_errors_raw = entry.get("soft_errors", [])
     soft_errors = [str(err) for err in soft_errors_raw] if isinstance(soft_errors_raw, list) else []
     return claims, soft_errors
@@ -921,7 +916,7 @@ def _compute_coherence_axes(
 
 def _format_contradiction(c: JudgedClaim) -> str:
     base = (
-        f"Step {c.step_num} claim \"{c.text}\" contradicts step "
+        f'Step {c.step_num} claim "{c.text}" contradicts step '
         f"{c.contradicts_prior_step} [severity={c.severity}]"
     )
     if c.contradiction_explanation:
@@ -1016,8 +1011,7 @@ def analyze_coherence_llm(
                 step_claims, soft = _checkpoint_entry_claims(entry)
             except Exception as e:  # noqa: BLE001
                 errors.append(
-                    f"Step {step_num} checkpoint entry ignored: "
-                    f"{safe_exception_message(e)}"
+                    f"Step {step_num} checkpoint entry ignored: {safe_exception_message(e)}"
                 )
             else:
                 all_claims.extend(step_claims)
@@ -1155,10 +1149,7 @@ def _coerce_model_config(
             model,
         )
 
-    raise ValueError(
-        "model_config must include one of: 'client', 'api_key', or "
-        "'azure_endpoint'."
-    )
+    raise ValueError("model_config must include one of: 'client', 'api_key', or 'azure_endpoint'.")
 
 
 def analyze_coherence_auto(
@@ -1195,8 +1186,7 @@ def analyze_coherence_auto(
     # Mutually-required: provider and model. XOR is a config error.
     if (judge_provider is None) != (judge_model is None):
         raise ValueError(
-            "judge_provider and judge_model must be supplied together "
-            "(both set or both None)."
+            "judge_provider and judge_model must be supplied together (both set or both None)."
         )
 
     if model_config is not None:
