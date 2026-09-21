@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # Compact Prompt
 
 Use this when you only have a short custom-instructions field.

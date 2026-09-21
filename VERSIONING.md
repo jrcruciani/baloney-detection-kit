@@ -61,6 +61,9 @@ otherwise be minor.
 
 ## Compatibility
 
-The canonical executable is `bdk`. The legacy diagnostic executable remains an
-alias during the BDK 3.x compatibility window. New integrations must not depend
-on that alias.
+The canonical executable is `bdk` and is not deprecated. The legacy `robopsych`
+alias is deprecated but remains compatible throughout BDK 3.x; it will be
+removed in 4.0. New integrations must use `bdk`. Both names currently invoke the
+same commands with identical output contracts. The deprecation notice is
+help-only: normal command stdout, including exact plain and JSON `apply`
+output, remains unchanged for pipelines.

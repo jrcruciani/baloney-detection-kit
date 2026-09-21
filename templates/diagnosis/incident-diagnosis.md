@@ -23,11 +23,11 @@
 
 ## Diagnostic result
 
-| Layer | Observed claims | Inferred claims | Confidence |
-|-------|-----------------|-----------------|------------|
-| Model | | | |
-| Runtime/host | | | |
-| Conversation | | | |
+| Layer        | Observed claims | Inferred claims | Confidence |
+| ------------ | --------------- | --------------- | ---------- |
+| Model        |                 |                 |            |
+| Runtime/host |                 |                 |            |
+| Conversation |                 |                 |            |
 
 ## Behavioral cross-check
 

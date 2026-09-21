@@ -9,7 +9,7 @@ not establish causal attribution accuracy, inter-rater reliability, or
 robustness against adversarial coherent false narratives. This benchmark
 addresses those gaps.
 
----
+______________________________________________________________________
 
 ## Design requirements
 
@@ -18,17 +18,17 @@ addresses those gaps.
 **Requirement:** Use model configurations where the causal factor is *known in
 advance* to a blinded evaluator.
 
-| Intervention type | How to implement |
-|-------------------|-----------------|
+| Intervention type    | How to implement                                                                                                      |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | Sycophancy injection | Fine-tune or system-prompt a model variant that always follows user position; label as "model-level sycophancy known" |
-| Runtime restriction | Deploy the same model with and without an explicit overrefusal system prompt; label both configurations |
-| Conversation framing | Construct pairs where only the user's stated position differs; the underlying evidence does not |
-| Stable behavior | Control cases where no known intervention is applied; the expected diagnosis is "no dominant failure mode" |
+| Runtime restriction  | Deploy the same model with and without an explicit overrefusal system prompt; label both configurations               |
+| Conversation framing | Construct pairs where only the user's stated position differs; the underlying evidence does not                       |
+| Stable behavior      | Control cases where no known intervention is applied; the expected diagnosis is "no dominant failure mode"            |
 
 **Acceptance bar:** At least 60 sessions across ≥ 4 intervention types, with
 ground-truth labels held out from diagnosticians.
 
----
+______________________________________________________________________
 
 ### 2. Blinded attribution
 
@@ -41,7 +41,7 @@ ground-truth labels during diagnosis.
 - Inter-session contamination must be prevented (no shared transcripts between
   sessions until evaluation is complete).
 
----
+______________________________________________________________________
 
 ### 3. Adversarial coherent false narratives
 
@@ -63,23 +63,23 @@ coherence.
   (Rule 3) and the coherence ratchet — but this cannot be assumed.
 - At least 15 adversarial coherent sessions across ≥ 3 false attribution types.
 
----
+______________________________________________________________________
 
 ### 4. Inter-rater reliability
 
 **Requirement:** Multiple analysts (human or automated) independently diagnose
 each session; inter-rater agreement is measured.
 
-| Measure | Target | Notes |
-|---------|--------|-------|
-| Layer attribution agreement (Cohen's κ) | κ ≥ 0.6 | Three-class: model / runtime / conversation |
-| Failure mode agreement (Cohen's κ) | κ ≥ 0.5 | Six categories from taxonomy |
-| Unknown/multi-causal agreement | Agreement ≥ 70% | Binary: does the analyst call it ambiguous? |
+| Measure                                 | Target          | Notes                                       |
+| --------------------------------------- | --------------- | ------------------------------------------- |
+| Layer attribution agreement (Cohen's κ) | κ ≥ 0.6         | Three-class: model / runtime / conversation |
+| Failure mode agreement (Cohen's κ)      | κ ≥ 0.5         | Six categories from taxonomy                |
+| Unknown/multi-causal agreement          | Agreement ≥ 70% | Binary: does the analyst call it ambiguous? |
 
 **At least two independent human raters** must score a random 30% sample;
 automated scoring can supplement but not replace human inter-rater checks.
 
----
+______________________________________________________________________
 
 ### 5. Support profile calibration
 
@@ -92,19 +92,19 @@ with actual causal layer.
 - Report `multi-causal` and `unknown` rates separately; these are not errors —
   the benchmark must allow for genuinely ambiguous ground truth.
 
----
+______________________________________________________________________
 
 ## Evaluation metrics
 
-| Metric | Definition | Target |
-|--------|------------|--------|
-| Layer attribution accuracy | Fraction of sessions where `dominant` matches ground truth | ≥ 0.65 |
-| False-positive confident attribution rate | Fraction where `dominant` ≠ `"unknown"` but is wrong | ≤ 0.20 |
-| Adversarial coherence detection rate | Fraction of adversarial coherent sessions flagged by behavioral cross-check | ≥ 0.50 |
-| Unknown / multi-causal recall | Fraction of genuinely ambiguous sessions correctly labeled unknown or multi-causal | ≥ 0.60 |
-| Inter-rater κ (layer) | Cohen's κ across human raters | ≥ 0.60 |
+| Metric                                    | Definition                                                                         | Target |
+| ----------------------------------------- | ---------------------------------------------------------------------------------- | ------ |
+| Layer attribution accuracy                | Fraction of sessions where `dominant` matches ground truth                         | ≥ 0.65 |
+| False-positive confident attribution rate | Fraction where `dominant` ≠ `"unknown"` but is wrong                               | ≤ 0.20 |
+| Adversarial coherence detection rate      | Fraction of adversarial coherent sessions flagged by behavioral cross-check        | ≥ 0.50 |
+| Unknown / multi-causal recall             | Fraction of genuinely ambiguous sessions correctly labeled unknown or multi-causal | ≥ 0.60 |
+| Inter-rater κ (layer)                     | Cohen's κ across human raters                                                      | ≥ 0.60 |
 
----
+______________________________________________________________________
 
 ## Out of scope
 
@@ -115,7 +115,7 @@ with actual causal layer.
   replication.
 - Claims of benchmark results without pre-registration of evaluation metrics.
 
----
+______________________________________________________________________
 
 ## Status
 
@@ -124,7 +124,7 @@ requirements for a future validation study. Until it is implemented, all
 diagnostic accuracy claims in this repository are based on case study evidence
 only and should be treated as preliminary.
 
----
+______________________________________________________________________
 
 *See [`case-studies.md`](case-studies.md) for current validation artifacts
 and [`../../docs/migration.md`](../../docs/migration.md) for the v5.1 changelog.*

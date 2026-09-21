@@ -25,17 +25,17 @@ Use this path when you want the framework, not the CLI.
 
 ## Symptom to first prompt
 
-| What you observed | Start with | Escalate to |
-|-------------------|------------|-------------|
-| Legitimate request refused or simplified | 1.4 Three Laws Test | 1.1 -> 2.4 |
-| Agreement feels too easy | 1.2 Herbie Test | 3.2 -> 4.1 |
-| Response sounds plausible but ungrounded | 1.3 Cutie Test | 3.3 |
-| Tone changed without obvious cause | 2.2 Tone Analysis | 2.1 -> 2.3 |
-| Behavior drifted over a long exchange | 3.4 Drift Detection | 2.5 -> 4.3 |
-| Same unwanted pattern recurs | 3.1 POSIWID | 2.5 -> 3.2 |
-| Pattern present across multiple layers | 1.1 Calvin Question + 2.1 | 2.4 -> 3.2 |
-| Cause is unclear | 1.1 Calvin Question | 2.1 -> 2.4 |
-| No dominant mechanism found | 4.2 Limits | Record the unknown; stop |
+| What you observed                        | Start with                | Escalate to              |
+| ---------------------------------------- | ------------------------- | ------------------------ |
+| Legitimate request refused or simplified | 1.4 Three Laws Test       | 1.1 -> 2.4               |
+| Agreement feels too easy                 | 1.2 Herbie Test           | 3.2 -> 4.1               |
+| Response sounds plausible but ungrounded | 1.3 Cutie Test            | 3.3                      |
+| Tone changed without obvious cause       | 2.2 Tone Analysis         | 2.1 -> 2.3               |
+| Behavior drifted over a long exchange    | 3.4 Drift Detection       | 2.5 -> 4.3               |
+| Same unwanted pattern recurs             | 3.1 POSIWID               | 2.5 -> 3.2               |
+| Pattern present across multiple layers   | 1.1 Calvin Question + 2.1 | 2.4 -> 3.2               |
+| Cause is unclear                         | 1.1 Calvin Question       | 2.1 -> 2.4               |
+| No dominant mechanism found              | 4.2 Limits                | Record the unknown; stop |
 
 ## Deep path: the ratchet
 

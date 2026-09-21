@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # Full Prompt
 
 This is the canonical full behavior contract. Copy the complete block as system

@@ -5,7 +5,7 @@ scenario, the diagnosis, and an assessment of whether the diagnosis was correct.
 
 These are not controlled experiments. They are practitioner reports — evidence that the toolkit produces useful results in some cases, and honest documentation of its limits.
 
----
+______________________________________________________________________
 
 ## Case 1: Confirmed sycophancy in code review
 
@@ -31,7 +31,7 @@ These are not controlled experiments. They are practitioner reports — evidence
 
 **What this validates:** The Herbie Test (1.2) alone was insufficient — it caught surface sycophancy but the model's self-report minimized the problem. The A/B test (3.2) was essential for behavioral confirmation. This supports Rule 3 (prefer behavioral cross-checks over self-report).
 
----
+______________________________________________________________________
 
 ## Case 2: Runtime restriction correctly identified
 
@@ -57,7 +57,7 @@ These are not controlled experiments. They are practitioner reports — evidence
 
 **What this validates:** Starting at 1.4 (Three Laws Test) for refusal cases is correct per the [method flowchart](../../framework/diagnosis/method.md). The three-way split (Rule 1) was essential — without it, the refusal would appear to be a model-level safety judgment rather than a runtime overclassification.
 
----
+______________________________________________________________________
 
 ## Case 3: False positive — diagnosis was wrong
 
@@ -85,7 +85,7 @@ The diagnosis correctly identified the cause (the "blog post" framing) but the *
 
 Rule 5 (define baseline intent) would have caught this earlier: *"What did I expect?"* → Technical explanation. *"What constraints did I set?"* → "For a blog post." The gap is in the request, not the response.
 
----
+______________________________________________________________________
 
 ## Methodology notes
 
@@ -99,7 +99,7 @@ These case studies have important limitations:
 
 We include the false positive case (Case 3) deliberately. A toolkit that only reports successes is performing confidence, not demonstrating it.
 
----
+______________________________________________________________________
 
 *Part of [Baloney Detection Kit](https://github.com/jrcruciani/baloney-detection-kit). By [JR Cruciani](https://github.com/Jrcruciani).*
 

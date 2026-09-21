@@ -6,7 +6,7 @@ to slow down before asking an LLM, a friend, or an audience to validate it.
 This is a calibration aid. It is not a diagnosis of you or your idea, and it
 does not presume that unusual or dissenting claims are false.
 
----
+______________________________________________________________________
 
 ## Your idea in one sentence
 
@@ -20,7 +20,7 @@ What I want to do with it:
 What could happen if I am wrong:
 ```
 
----
+______________________________________________________________________
 
 ## The 7-question calibration
 
@@ -28,21 +28,21 @@ What could happen if I am wrong:
 
 - [ ] Have I separated the observation from my explanation of it?
 - [ ] Am I claiming fact, cause, prediction, value, interpretation, personal
-      experience, or a creative possibility?
+  experience, or a creative possibility?
 - [ ] Have I separated "true", "new", "important", and "useful"?
 
 Different claims need different checks:
 
-| Claim type | Useful check |
-|------------|--------------|
-| Empirical / descriptive | observations, definitions, counterexamples |
-| Causal / predictive | baselines, confounders, mechanisms, out-of-sample tests |
-| Normative / policy | values, tradeoffs, stakeholders, factual premises |
-| Interpretive / historical | provenance, corroboration, explanatory fit |
-| Personal / experiential | respect the report; test external generalizations separately |
-| Creative / hypothetical | coherence and usefulness, not real-world proof |
+| Claim type                | Useful check                                                 |
+| ------------------------- | ------------------------------------------------------------ |
+| Empirical / descriptive   | observations, definitions, counterexamples                   |
+| Causal / predictive       | baselines, confounders, mechanisms, out-of-sample tests      |
+| Normative / policy        | values, tradeoffs, stakeholders, factual premises            |
+| Interpretive / historical | provenance, corroboration, explanatory fit                   |
+| Personal / experiential   | respect the report; test external generalizations separately |
+| Creative / hypothetical   | coherence and usefulness, not real-world proof               |
 
----
+______________________________________________________________________
 
 ### 2. Do confidence, evidence, and consequence match?
 
@@ -54,22 +54,22 @@ Different claims need different checks:
 Novelty language, consensus disagreement, and suppression framing are reasons
 to inspect the claim, not reasons to accept or reject it.
 
----
+______________________________________________________________________
 
 ### 3. What is known, and what is my contribution?
 
 - [ ] Have I searched reputable sources, databases, canonical references, and
-      serious criticism?
+  serious criticism?
 - [ ] Can I state the scope, date, and limits of that search?
 - [ ] Do I know which field or community already studies this?
 - [ ] Is my contribution an independent rediscovery, a re-framing/application,
-      new evidence, a new method/implementation, or merely something for which I
-      found no close prior art?
+  new evidence, a new method/implementation, or merely something for which I
+  found no close prior art?
 
 "No close prior art found in this search" is a valid provisional result. It is
 not proof that no prior art exists.
 
----
+______________________________________________________________________
 
 ### 4. What would make me update?
 
@@ -86,7 +86,7 @@ Watch for claims that cannot lose:
 - "It is too subtle to measure."
 - "Every counterexample is actually proof."
 
----
+______________________________________________________________________
 
 ### 5. How good is the evidence for each link?
 
@@ -102,7 +102,7 @@ Do not use a universal source ladder. Peer review, official data, systematic
 reviews, expert synthesis, documented cases, and personal observation answer
 different questions. Evaluate fitness and quality, not just the label.
 
----
+______________________________________________________________________
 
 ### 6. What else could explain the observation?
 
@@ -114,7 +114,7 @@ different questions. Evaluate fitness and quality, not just the label.
 There may be zero, one, or several credible alternatives. The goal is
 discrimination, not a mandatory number of sides.
 
----
+______________________________________________________________________
 
 ### 7. What is the narrowest responsible next step?
 
@@ -122,28 +122,28 @@ discrimination, not a mandatory number of sides.
 - [ ] What is my current confidence and largest uncertainty?
 - [ ] Is acting now reversible?
 - [ ] Do I need a primary source, domain expert, experiment, more data, or a
-      narrower claim?
+  narrower claim?
 - [ ] Would I update if a competent critic corrected one of my premises?
 - [ ] Am I consulting reviewers for new arguments and sources rather than
-      counting how many models agree?
+  counting how many models agree?
 
 Different AI models can share training data and correlated errors. Their
 agreement is a lead to inspect, not independent corroboration.
 
----
+______________________________________________________________________
 
 ## Calibration bands
 
 Use these bands qualitatively. Do not turn them into a fake precision score.
 
-| Band | What it means | Next step |
-|------|---------------|-----------|
-| **Well calibrated** | Scope, confidence, evidence, update conditions, and consequence are aligned. | Share the narrow claim with knowledgeable critics. |
-| **Promising but underdeveloped** | A useful contribution may exist, but evidence or scope needs work. | Narrow it and improve the load-bearing evidence. |
-| **High risk of confidence amplification** | Certainty, novelty, or significance substantially exceeds support. | Pause endorsement and seek source-level or expert review. |
-| **Not ready for action** | Evidence is insufficient for the requested decision or the downside is material. | Reframe as a question, gather evidence, or use a safer reversible step. |
+| Band                                      | What it means                                                                    | Next step                                                               |
+| ----------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Well calibrated**                       | Scope, confidence, evidence, update conditions, and consequence are aligned.     | Share the narrow claim with knowledgeable critics.                      |
+| **Promising but underdeveloped**          | A useful contribution may exist, but evidence or scope needs work.               | Narrow it and improve the load-bearing evidence.                        |
+| **High risk of confidence amplification** | Certainty, novelty, or significance substantially exceeds support.               | Pause endorsement and seek source-level or expert review.               |
+| **Not ready for action**                  | Evidence is insufficient for the requested decision or the downside is material. | Reframe as a question, gather evidence, or use a safer reversible step. |
 
----
+______________________________________________________________________
 
 ## What to do after the checklist
 
@@ -154,7 +154,7 @@ Use these bands qualitatively. Do not turn them into a fake precision score.
    answer.
 5. Preserve the useful observation even if novelty or significance fails.
 
----
+______________________________________________________________________
 
 ## Meta-question: is this checklist itself valid?
 
@@ -171,7 +171,7 @@ The checklist applies to itself:
 
 Use it as a testable starting point, not gospel.
 
----
+______________________________________________________________________
 
 ## Resources
 

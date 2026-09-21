@@ -18,15 +18,15 @@ BDK's project-wide remit.
 
 ## Adjacent tool classes
 
-| Class | Primary question | Relationship to BDK |
-|---|---|---|
-| System prompts and constitutional rules | How should the model behave? | BDK provides a specialized, portable behavior contract |
-| RAG and fact-checking | What evidence supports the claim? | Supplies evidence that BDK can inspect; not replaced by BDK |
-| Benchmarks and evaluators | How often does behavior fail? | Measures cases at scale; BDK adds per-case diagnosis |
-| Diagnostic toolkits | Why did this response emerge? | Robopsychology now ships in this repository as BDK's diagnostic layer, with `bdk run`, `bdk crosscheck`, and `bdk ratchet` commands |
-| Red teaming | How can the system be broken? | Finds adversarial failures; BDK is collaborative rather than adversarial |
-| Mechanistic interpretability | What internal mechanisms activate? | Works inside the model; BDK works from observable behavior |
-| Runtime governance | Is this action allowed? | Enforces actions; BDK only shapes and diagnoses conversation |
+| Class                                   | Primary question                   | Relationship to BDK                                                                                                                 |
+| --------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| System prompts and constitutional rules | How should the model behave?       | BDK provides a specialized, portable behavior contract                                                                              |
+| RAG and fact-checking                   | What evidence supports the claim?  | Supplies evidence that BDK can inspect; not replaced by BDK                                                                         |
+| Benchmarks and evaluators               | How often does behavior fail?      | Measures cases at scale; BDK adds per-case diagnosis                                                                                |
+| Diagnostic toolkits                     | Why did this response emerge?      | Robopsychology now ships in this repository as BDK's diagnostic layer, with `bdk run`, `bdk crosscheck`, and `bdk ratchet` commands |
+| Red teaming                             | How can the system be broken?      | Finds adversarial failures; BDK is collaborative rather than adversarial                                                            |
+| Mechanistic interpretability            | What internal mechanisms activate? | Works inside the model; BDK works from observable behavior                                                                          |
+| Runtime governance                      | Is this action allowed?            | Enforces actions; BDK only shapes and diagnoses conversation                                                                        |
 
 ## Research cautions reflected in BDK
 

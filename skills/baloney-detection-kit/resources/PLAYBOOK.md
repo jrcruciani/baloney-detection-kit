@@ -23,23 +23,23 @@ Use light mode by default after a signal; use full mode for substantial mismatch
 or consequential action needing deeper checks. Ordinary exploration without a
 signal needs no intervention. Dissent from consensus alone is not a trigger.
 
----
+______________________________________________________________________
 
 ## 0. The framework in one page
 
 The preventive behavior contract is:
 
-| Stage | Question | Output |
-|-------|----------|--------|
-| **Trigger (Gate 1)** | Is there an actual claim signal, rather than just a sensitive domain or disagreement? | Trigger reason, or no intervention |
-| **Mode (Gate 2)** | Given the signal, what mode fits the mismatch and consequence? | Light by default, full, or stabilization |
-| **Protocol** | Which checks fit this claim type? | Claim type, current knowledge, contribution, update conditions, evidence, alternatives, calibration |
-| **Output** | What should the user hear? | A concise answer, not necessarily a template |
-| **Review** | Did the answer avoid flattery, false certainty, stubbornness, false balance, and reflexive contradiction? | Rubric notes or revised answer |
+| Stage                | Question                                                                                                  | Output                                                                                              |
+| -------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Trigger (Gate 1)** | Is there an actual claim signal, rather than just a sensitive domain or disagreement?                     | Trigger reason, or no intervention                                                                  |
+| **Mode (Gate 2)**    | Given the signal, what mode fits the mismatch and consequence?                                            | Light by default, full, or stabilization                                                            |
+| **Protocol**         | Which checks fit this claim type?                                                                         | Claim type, current knowledge, contribution, update conditions, evidence, alternatives, calibration |
+| **Output**           | What should the user hear?                                                                                | A concise answer, not necessarily a template                                                        |
+| **Review**           | Did the answer avoid flattery, false certainty, stubbornness, false balance, and reflexive contradiction? | Rubric notes or revised answer                                                                      |
 
 Use this loop for humans, prompts, skills, reviewers, and downstream agent runtimes. The implementation changes by context; the behavioral shape does not.
 
----
+______________________________________________________________________
 
 ## 1. Trigger conditions (Gate 1)
 
@@ -74,7 +74,7 @@ Answer normally without intervention for:
 - unusual or dissenting claims presented with proportionate confidence and
   relevant evidence.
 
----
+______________________________________________________________________
 
 ## 2. Choose the mode (Gate 2)
 
@@ -123,7 +123,7 @@ Use when the user pressures the assistant across turns.
 6. Refuse to escalate certainty without evidence, but do not confuse consistency
    with infallibility or stubbornness.
 
----
+______________________________________________________________________
 
 ## 3. The core protocol
 
@@ -213,7 +213,7 @@ State:
 - one concrete next step: inspect a source, consult an expert, design a test,
   gather data, or narrow the claim.
 
----
+______________________________________________________________________
 
 ## 4. Evidence-backed practice without building a tool
 
@@ -231,7 +231,7 @@ When search, citations, or external sources are available, use them as a practic
 
 This mirrors modern retrieval-augmented verification work without turning the repo into a RAG framework.
 
----
+______________________________________________________________________
 
 ## 5. External contrast with AI reviewers
 
@@ -298,7 +298,7 @@ If the models disagree, preserve the disagreement. The honest conclusion may be:
 
 > "The claim is not settled by this pass. The models agree that X is known, disagree about Y, and none provided strong evidence for Z. The next step is to check primary sources or ask a domain expert."
 
----
+______________________________________________________________________
 
 ## 6. High-stakes handling
 
@@ -315,7 +315,7 @@ For medical, legal, financial, political, mental-health, or safety claims:
 
 If a user appears distressed, paranoid, or detached from reality, do not label them. Ground the response in care, uncertainty, and human support.
 
----
+______________________________________________________________________
 
 ## 7. Tone
 
@@ -336,7 +336,7 @@ Bad sentence:
 
 > "You are obviously wrong and this is just a cult."
 
----
+______________________________________________________________________
 
 ## 8. Manual review
 
@@ -353,7 +353,7 @@ Review four different outcomes:
 4. **Adverse effects:** did it over-trigger, become stubborn, manufacture false
    balance, contradict reflexively, or overrefuse?
 
----
+______________________________________________________________________
 
 ## 9. Full-mode output template
 

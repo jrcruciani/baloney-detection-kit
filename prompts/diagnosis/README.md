@@ -2,11 +2,11 @@
 
 This directory exposes the prompts as the primary framework artifact.
 
-| Artifact | Purpose |
-|----------|---------|
-| [`cards/`](cards/) | One operational card per diagnostic prompt |
-| [`catalog.yaml`](catalog.yaml) | Human-facing mirror of the machine-readable prompt catalog |
-| [`../../framework/diagnosis/guide.md`](../../framework/diagnosis/guide.md) | Full prompt text, rationale, and epistemic note |
+| Artifact                                                                   | Purpose                                                    |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [`cards/`](cards/)                                                         | One operational card per diagnostic prompt                 |
+| [`catalog.yaml`](catalog.yaml)                                             | Human-facing mirror of the machine-readable prompt catalog |
+| [`../../framework/diagnosis/guide.md`](../../framework/diagnosis/guide.md) | Full prompt text, rationale, and epistemic note            |
 
 The reference CLI uses the packaged copy at
 [`../../src/bdk/data/prompts.yaml`](../../src/bdk/data/prompts.yaml). Tests

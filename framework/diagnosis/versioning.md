@@ -2,11 +2,11 @@
 
 BDK separates three diagnostic tracks that used to be easy to conflate.
 
-| Track | What changes it | Example artifact |
-|-------|-----------------|------------------|
-| Framework spec | Changes to the diagnostic method, rules, taxonomy, ratchet, or epistemic limits | `framework/*.md` |
-| Prompt toolkit | Changes to prompt semantics, prompt cards, or the machine-readable catalog | `prompts/`, `src/bdk/data/prompts.yaml` |
-| Reference CLI | Changes to automation, providers, output formats, packaging, or API integrations | `src/bdk/`, `pyproject.toml` |
+| Track          | What changes it                                                                  | Example artifact                        |
+| -------------- | -------------------------------------------------------------------------------- | --------------------------------------- |
+| Framework spec | Changes to the diagnostic method, rules, taxonomy, ratchet, or epistemic limits  | `framework/*.md`                        |
+| Prompt toolkit | Changes to prompt semantics, prompt cards, or the machine-readable catalog       | `prompts/`, `src/bdk/data/prompts.yaml` |
+| Reference CLI  | Changes to automation, providers, output formats, packaging, or API integrations | `src/bdk/`, `pyproject.toml`            |
 
 ## Practical rule
 

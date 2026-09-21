@@ -44,7 +44,11 @@ from bdk.security import (
 
 app = typer.Typer(
     name="bdk",
-    help="Epistemic friction, behavioral diagnosis, and validation for AI conversations.",
+    help=(
+        "Epistemic friction, behavioral diagnosis, and validation for AI conversations.\n\n"
+        "bdk is the canonical executable. Only the robopsych alias is deprecated: "
+        "it remains compatible throughout BDK 3.x and will be removed in 4.0. Use bdk instead."
+    ),
     invoke_without_command=True,
 )
 console = Console()

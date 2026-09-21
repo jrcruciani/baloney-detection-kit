@@ -7,7 +7,7 @@ reviewers") and
 
 The playbook says **what** the second-opinion practice is. These are the implementation lessons from actually running it in an agent runtime: things that look obvious on paper but fail silently in practice. These notes focus on rules of thumb for the human or agent driving the contrast. See the README's [Scope and boundaries](../README.md#scope-and-boundaries) for the scope of the complete BDK distribution.
 
----
+______________________________________________________________________
 
 ## 1. Summarize the object; do not paste the conversation
 
@@ -22,7 +22,7 @@ Operational rule: extract the **object to review** (claim, paragraph, plan, deci
 
 The whole point of a second opinion is that the reviewer is not contaminated by how the object was reached.
 
----
+______________________________________________________________________
 
 ## 2. Vary reviewer jobs; model lineage is secondary
 
@@ -45,7 +45,7 @@ sources, observations, or arguments. If only one model is available, role
 separation can still improve critique coverage; label it as one model performing
 two review jobs.
 
----
+______________________________________________________________________
 
 ## 3. The courier is not the third reviewer
 
@@ -69,7 +69,7 @@ user can tell which sentences come from a reviewer and which come from the
 orchestrator. A synthesis should trace important claims to sources, not count
 reviewers.
 
----
+______________________________________________________________________
 
 ## 4. For URLs and files, extract content first
 
@@ -77,7 +77,7 @@ Direct model APIs usually cannot browse. Passing a bare URL to a reviewer that l
 
 Operational rule: if the object is a URL or file, fetch/extract the text first and send the text. If extraction fails, say so and ask the human to paste the relevant content.
 
----
+______________________________________________________________________
 
 ## 5. Ask reviewers for severity-tagged findings
 
@@ -101,7 +101,7 @@ This pairs naturally with the playbook's evidence-quality step: one verified
 `high` finding can matter more than any number of unverified `low`s, regardless
 of which reviewer produced it.
 
----
+______________________________________________________________________
 
 ## 6. Match the reviewer's response language to the object's language
 
@@ -110,7 +110,7 @@ answers in a different language anyway, **do not silently translate** — note t
 mismatch and pass the response through. Translation by the orchestrator loses
 signal (hedges, idiom, specificity) precisely where the contrast matters most.
 
----
+______________________________________________________________________
 
 ## 7. Handle asymmetric failure explicitly
 
@@ -124,7 +124,7 @@ If both fail, preserve the first assessment without upgrading its confidence and
 state explicitly that no external contrast was obtained. For material stakes,
 route the unresolved question to primary sources or qualified human review.
 
----
+______________________________________________________________________
 
 ## 8. Preserve disagreement; don't paper over it
 
@@ -138,7 +138,7 @@ The playbook already says agreement is not corroboration. The corollary is that
 Trying to resolve the disagreement by model vote or on the orchestrator's
 authority defeats the purpose of asking.
 
----
+______________________________________________________________________
 
 ## 9. What to write up after the contrast
 
@@ -169,7 +169,7 @@ Next step:
 
 This is also the right shape for the rubric §9 review notes.
 
----
+______________________________________________________________________
 
 ## What this is not
 

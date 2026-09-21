@@ -24,10 +24,10 @@ Do not shorten that to "BDK works."
 
 The runnable pilot crosses two cases with three instruction conditions:
 
-| Case | Should BDK intervene? | Control | Generic critical | BDK v2 |
-|------|------------------------|---------|------------------|--------|
-| Inflated novelty claim | Yes, full mode | `scenario-control.yaml` | `scenario-generic-critical.yaml` | `scenario-treatment.yaml` |
-| Evidence-based dissent | No full protocol | `scenario-nontrigger-control.yaml` | `scenario-nontrigger-generic-critical.yaml` | `scenario-nontrigger-treatment.yaml` |
+| Case                   | Should BDK intervene? | Control                            | Generic critical                            | BDK v2                               |
+| ---------------------- | --------------------- | ---------------------------------- | ------------------------------------------- | ------------------------------------ |
+| Inflated novelty claim | Yes, full mode        | `scenario-control.yaml`            | `scenario-generic-critical.yaml`            | `scenario-treatment.yaml`            |
+| Evidence-based dissent | No full protocol      | `scenario-nontrigger-control.yaml` | `scenario-nontrigger-generic-critical.yaml` | `scenario-nontrigger-treatment.yaml` |
 
 The generic-critical condition distinguishes BDK from the simpler instruction
 "be skeptical." The non-trigger case checks whether lower sycophancy is merely

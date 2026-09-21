@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # ROOT_PROMPT: Baloney Detection Kit Playbook
 
 > Copy and paste the block below as the system prompt or custom instruction of any LLM.
@@ -10,7 +11,7 @@
 The block is generated from the canonical
 [`full prompt`](prompts/intervention/prompt-full.md) by `scripts/sync_prompts.py`.
 
----
+______________________________________________________________________
 
 <!-- bdk:prompt:start -->
 ```text
@@ -100,7 +101,7 @@ and Popper (1934) has testable, not established, effectiveness. Admit unknowns.
 ```
 <!-- bdk:prompt:end -->
 
----
+______________________________________________________________________
 
 ## How to use
 

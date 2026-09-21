@@ -6,6 +6,16 @@ versions for prompt contracts.
 
 ## [Unreleased]
 
+### Compatibility and documentation
+
+- Deprecate only the `robopsych` executable alias, not `bdk`. Keep the alias
+  compatible throughout BDK 3.x and remove it in 4.0. Both entry points explain
+  this in `--help`; normal command output, including exact plain and JSON
+  `apply` output, is unchanged.
+- Lead the README with the pasteable root prompt, portable skill, then reference
+  CLI; refresh the repository map and link real CI and MIT license badges.
+  Publication, DOI, effectiveness, and Spanish human-review gates are unchanged.
+
 ### Validation
 
 - Add an explicitly unmeasured closed-loop results inventory linked to the

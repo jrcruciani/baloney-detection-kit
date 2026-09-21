@@ -10,13 +10,13 @@ Robopsychology now ships in this repository as BDK's diagnostic layer, available
 through diagnostic prompts, templates, and `bdk` commands such as `bdk run`,
 `bdk crosscheck`, and `bdk ratchet`.
 
-| Need | BDK surface | Typical timing |
-|---|---|---|
-| Improve conversational defaults | Intervention prompt or skill | Design and inference time |
-| Explain one suspicious output | Prompt card, template, or CLI diagnosis | Development and incident response |
-| Test framing sensitivity | `bdk crosscheck` | Pre-deployment and debugging |
-| Check multi-turn continuity | `bdk ratchet` and coherence analysis | Evaluation and incident response |
-| Compare an intervention with control | Closed-loop scenarios | Calibration and regression review |
+| Need                                 | BDK surface                             | Typical timing                    |
+| ------------------------------------ | --------------------------------------- | --------------------------------- |
+| Improve conversational defaults      | Intervention prompt or skill            | Design and inference time         |
+| Explain one suspicious output        | Prompt card, template, or CLI diagnosis | Development and incident response |
+| Test framing sensitivity             | `bdk crosscheck`                        | Pre-deployment and debugging      |
+| Check multi-turn continuity          | `bdk ratchet` and coherence analysis    | Evaluation and incident response  |
+| Compare an intervention with control | Closed-loop scenarios                   | Calibration and regression review |
 
 ## Personal use
 
@@ -68,20 +68,19 @@ remain fallible, and human review remains necessary for material decisions.
 
 Use the [shared scenario harness](../framework/diagnosis/scenarios.md) before
 deployment. It includes explicit negative and positive cases under the packaged
-BDK intervention. `bdk crosscheck --scenarios <directory> --model <model>
---format json` reports a **protocol-header proxy**, not a complete detector of
+BDK intervention. `bdk crosscheck --scenarios <directory> --model <model> --format json` reports a **protocol-header proxy**, not a complete detector of
 Light/prose intervention. Directness and hedging budgets require human review.
 
 For explicitly labeled, successfully answered scenarios: TP is a positive case
 that fires, FN a positive that stays quiet, FP a negative that fires, and TN a
 negative that stays quiet. Count a case once even if several turns fire.
 
-| Metric | Definition | Meaning |
-|---|---|---|
+| Metric                      | Definition     | Meaning                                          |
+| --------------------------- | -------------- | ------------------------------------------------ |
 | Positive fire rate / recall | TP / (TP + FN) | Fraction of positive cases detected by the proxy |
-| Negative fire rate / FPR | FP / (FP + TN) | Fraction of negative cases that fire |
-| Precision | TP / (TP + FP) | Fraction of fires belonging to positive cases |
-| Specificity | TN / (TN + FP) | Fraction of negative cases that stay quiet |
+| Negative fire rate / FPR    | FP / (FP + TN) | Fraction of negative cases that fire             |
+| Precision                   | TP / (TP + FP) | Fraction of fires belonging to positive cases    |
+| Specificity                 | TN / (TN + FP) | Fraction of negative cases that stay quiet       |
 
 “Stayed quiet” on negatives measures **specificity**, not precision. Undefined
 denominators are `null`/N/A, not zero or one. A negative-only directory reports

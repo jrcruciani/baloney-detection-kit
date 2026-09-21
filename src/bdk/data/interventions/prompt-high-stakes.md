@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # High-Stakes Prompt
 
 Use this variant when false validation could cause material harm: healthcare,

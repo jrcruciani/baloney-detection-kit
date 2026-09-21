@@ -10,7 +10,7 @@
 > moving on.
 
 **Goal:** Produce `research/diagnosis-paper/main.pdf` with zero `\todo{}` markers, fully
-inlined appendices, $\bar{x}\pm s$ validation numbers from N≥5/10
+inlined appendices, $\\bar{x}\\pm s$ validation numbers from N≥5/10
 runs, and cross-family judge agreement — then tag `paper-v1.0`,
 release to Zenodo for DOI, and submit to arXiv cs.CY.
 
@@ -79,7 +79,7 @@ final paper.
 - #8 — Cross-family judge validation for Case 3 — inter-rater reliability
 - #10 — Score distribution per case across N runs (not single-run)
 
----
+______________________________________________________________________
 
 ## Workstream 0 — Identity prerequisite
 
@@ -120,7 +120,7 @@ Cruciani".
 **Stop condition:** If ORCID registration fails (email bounces,
 profile rejected), surface to the user — do not invent an ID.
 
----
+______________________________________________________________________
 
 ## Workstream 1 — Empirical closure
 
@@ -151,7 +151,7 @@ profile rejected), surface to the user — do not invent an ID.
 **Verification:** `main.pdf` exists, `[TODO:` count == 16, current
 working branch is `paper-v1.0`.
 
----
+______________________________________________________________________
 
 ### Task 1.5: Add `AzureFoundryProvider` to bdk
 
@@ -250,7 +250,7 @@ provider classes — Foundry is the unifying abstraction.
 - A required deployment is missing AND organizational gates prevent
   the user from deploying it ⇒ stop and report.
 
----
+______________________________________________________________________
 
 ### Task 2: Run Case 1 at N=5 to produce score distribution
 
@@ -260,7 +260,7 @@ provider classes — Foundry is the unifying abstraction.
 
 - Use: `validation/diagnosis/reproducible/run_case.py` (already accepts `--runs`)
 - Create: `validation/diagnosis/reproducible/case-01-sycophancy/artifacts/runs/score_runN.json`
-  (one per run, $N \in \{1..5\}$)
+  (one per run, $N \\in {1..5}$)
 - Create: `validation/diagnosis/reproducible/case-01-sycophancy/artifacts/distribution.json`
   with `{mean, std, min, max, n, per_metric: {...}}`
 
@@ -284,7 +284,7 @@ provider classes — Foundry is the unifying abstraction.
 **Verification:** `distribution.json` exists with `n: 5` and finite
 `mean`/`std` for every metric §05 references.
 
----
+______________________________________________________________________
 
 ### Task 3: Run Case 2 at N=5
 
@@ -304,7 +304,7 @@ provider classes — Foundry is the unifying abstraction.
 **Verification:** `case-02-host-vs-model/artifacts/distribution.json`
 exists; `behavior_diverged_rate` is between 0 and 1.
 
----
+______________________________________________________________________
 
 ### Task 4: Run Case 3 at N=10
 
@@ -327,7 +327,7 @@ throughput).
 **Verification:** `case-03-ratchet-coherence/artifacts/distribution.json`
 exists with `n: 10`.
 
----
+______________________________________________________________________
 
 ### Task 5: Cross-family judge agreement for Case 3
 
@@ -363,7 +363,7 @@ exists with `n: 10`.
 **Verification:** All three judges have non-null scores in the
 agreement JSON; the file is referenceable from §05.
 
----
+______________________________________________________________________
 
 ### Task 6: Close issues #8 and #10
 
@@ -378,7 +378,7 @@ agreement JSON; the file is referenceable from §05.
 **Verification:** Both issues show state=CLOSED in
 `gh issue list --state all`.
 
----
+______________________________________________________________________
 
 ## Workstream 2 — Paper completion
 
@@ -407,7 +407,7 @@ agreement JSON; the file is referenceable from §05.
 3. Rebuild PDF. Confirm `[TODO:` count drops from 16 to 15.
 4. Commit: `docs(paper): inline Case 1 numbers in validation section`.
 
----
+______________________________________________________________________
 
 ### Task 8: Inline Case 2 numbers in §05
 
@@ -421,7 +421,7 @@ diverged"), `coherence_llm_score` mean±std, `score_overall`,
 Rebuild, confirm count drops to 14, commit:
 `docs(paper): inline Case 2 numbers`.
 
----
+______________________________________________________________________
 
 ### Task 9: Replace Case 3 point estimates with distributions
 
@@ -457,7 +457,7 @@ and the now-complete cross-family agreement.
    2 markers; this also indirectly improves the abstract).
 7. Commit: `docs(paper): replace Case 3 point estimates with N=10 distributions and full inter-rater agreement`.
 
----
+______________________________________________________________________
 
 ### Task 10: Inline the 4 diagnostic probe YAMLs into Appendix A
 
@@ -477,14 +477,13 @@ and the now-complete cross-family agreement.
 1. Locate probes `1.1` (Calvin Question), `1.2` (Herbie Test), `2.4`
    (Runtime Pressure), `3.2` (A/B cross-check) in the YAML.
 2. Embed each verbatim in a `lstlisting` block with
-   `language=yaml, basicstyle=\small\ttfamily, breaklines=true,
-   frame=single`. Add `\lstset` preamble in `main.tex` once if not
+   `language=yaml, basicstyle=\small\ttfamily, breaklines=true, frame=single`. Add `\lstset` preamble in `main.tex` once if not
    already there.
 3. Caption each block with the probe ID and name.
 4. Rebuild. Confirm `[TODO:` count drops to 11.
 5. Commit: `docs(paper): inline four diagnostic probe YAMLs in Appendix A`.
 
----
+______________________________________________________________________
 
 ### Task 11: Promote case-transcript excerpts to Appendix B
 
@@ -511,13 +510,13 @@ and the now-complete cross-family agreement.
 3. Cite the artifact path for each excerpt for traceability.
 4. Remove the bullet-list of TODOs in `A-prompts.tex` and replace
    with a single line: "Excerpts have been promoted to
-   Appendix~\ref{app:transcripts}."
+   Appendix~\\ref{app:transcripts}."
 5. Rebuild. `[TODO:` count drops to 7 (1 from A + 3 from B + 1 from
    `A-prompts.tex` bullet group = 5 in this task — verify with
    actual count after rebuild).
 6. Commit: `docs(paper): promote case-transcript excerpts to Appendix B`.
 
----
+______________________________________________________________________
 
 ### Task 12: Promote code snippets to Appendix C
 
@@ -539,15 +538,14 @@ and the now-complete cross-family agreement.
    - `analyze_coherence_auto` function signature + the fallback
      branch that returns `llm_used=False`
    - The `_JUDGE_SYSTEM` prompt string
-2. Embed each in a `lstlisting` block with `language=Python,
-   basicstyle=\small\ttfamily, breaklines=true, frame=single`.
+2. Embed each in a `lstlisting` block with `language=Python, basicstyle=\small\ttfamily, breaklines=true, frame=single`.
 3. Caption each with the source file and function name.
 4. In `A-prompts.tex` replace the code TODOs with: "Code snippets
-   have been promoted to Appendix~\ref{app:code}."
+   have been promoted to Appendix~\\ref{app:code}."
 5. Rebuild. `[TODO:` count drops to 2 or 3.
 6. Commit: `docs(paper): promote code snippets to Appendix C`.
 
----
+______________________________________________________________________
 
 ### Task 13: Add closing paragraph to §01 Introduction
 
@@ -567,7 +565,7 @@ and the now-complete cross-family agreement.
 4. Rebuild. `[TODO:` count drops by 1.
 5. Commit: `docs(paper): add closing paragraph to introduction`.
 
----
+______________________________________________________________________
 
 ### Task 14: Add clinical-methodology paragraph to §02 (optional)
 
@@ -584,7 +582,7 @@ methodology is out of scope; see related discussion in
 
 Commit: `docs(paper): close §02 related-work TODO`.
 
----
+______________________________________________________________________
 
 ### Task 15: Add worked example to §03 method
 
@@ -600,7 +598,7 @@ Commit: `docs(paper): close §02 related-work TODO`.
 3. Rebuild. `[TODO:` count drops by 1.
 4. Commit: `docs(paper): add worked example to §03 method`.
 
----
+______________________________________________________________________
 
 ### Task 16: §04 figure + §07 acknowledgments
 
@@ -621,7 +619,7 @@ Commit: `docs(paper): close §02 related-work TODO`.
    `pdftotext research/diagnosis-paper/main.pdf - | grep -c '\[TODO:'` to verify.
 4. Commit: `docs(paper): close remaining §04/§07 TODOs`.
 
----
+______________________________________________________________________
 
 ## Workstream 3 — Release
 
@@ -637,8 +635,7 @@ Commit: `docs(paper): close §02 related-work TODO`.
 
 1. Write a GH Actions workflow that on push to `paper-v1.0` and
    `main`:
-   - Installs `texlive-latex-recommended texlive-fonts-recommended
-     texlive-bibtex-extra` (Ubuntu runner).
+   - Installs `texlive-latex-recommended texlive-fonts-recommended texlive-bibtex-extra` (Ubuntu runner).
    - Runs `cd paper && latexmk -pdf main.tex`.
    - Uploads `research/diagnosis-paper/main.pdf` as a build artifact.
 2. Push the branch and confirm the workflow passes:
@@ -648,7 +645,7 @@ Commit: `docs(paper): close §02 related-work TODO`.
 **Verification:** Green check on the latest commit; artifact
 downloadable from the Actions run.
 
----
+______________________________________________________________________
 
 ### Task 18: Internal critical review
 
@@ -673,7 +670,7 @@ downloadable from the Actions run.
    branch.
 5. Merge PR via `gh pr merge --squash` once approved.
 
----
+______________________________________________________________________
 
 ### Task 19: Tag paper-v1.0
 
@@ -687,7 +684,7 @@ downloadable from the Actions run.
 
 **Verification:** `gh release list` shows the tag.
 
----
+______________________________________________________________________
 
 ### Task 20: Wire Zenodo GitHub integration + create release
 
@@ -734,7 +731,7 @@ downloadable from the Actions run.
 **Verification:** DOI resolves; PDF on Zenodo matches
 `gh release view paper-v1.0` artifact.
 
----
+______________________________________________________________________
 
 ### Task 21: Announcement scaffolding
 
@@ -756,7 +753,7 @@ Commit: `docs: add announcement scaffolds`.
 **Do NOT publish anything.** Hand to the user for review and
 posting.
 
----
+______________________________________________________________________
 
 ## Done criteria
 

@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # ROOT_PROMPT: Guía de Baloney Detection Kit
 
 > Copia y pega el bloque siguiente como prompt del sistema o instrucción
@@ -12,7 +13,7 @@ es la referencia canónica. Los encabezados y las etiquetas de las plantillas de
 salida se mantienen en inglés intencionadamente para el análisis automático;
 las explicaciones están en español.
 
----
+______________________________________________________________________
 
 <!-- bdk:prompt:start -->
 ```text
@@ -115,7 +116,7 @@ Aplícate esto: la eficacia de esta síntesis de Sagan (1996), Karpathy, Lifton
 ```
 <!-- bdk:prompt:end -->
 
----
+______________________________________________________________________
 
 ## Cómo usarlo
 

@@ -1,4 +1,5 @@
 <!-- bdk prompt-v2.0 -->
+
 # Prompt compacto
 
 Úsalo cuando solo dispongas de un campo breve de instrucciones personalizadas.
