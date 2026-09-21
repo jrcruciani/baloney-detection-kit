@@ -3,6 +3,13 @@
 BDK can be adopted one layer at a time. Prevention, diagnosis, and validation
 share one framework but solve different operational questions.
 
+See the README's [Scope and boundaries](README.md#scope-and-boundaries) for
+the project-wide scope.
+
+Robopsychology now ships in this repository as BDK's diagnostic layer, available
+through diagnostic prompts, templates, and `bdk` commands such as `bdk run`,
+`bdk crosscheck`, and `bdk ratchet`.
+
 | Need | BDK surface | Typical timing |
 |---|---|---|
 | Improve conversational defaults | Intervention prompt or skill | Design and inference time |

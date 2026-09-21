@@ -5,7 +5,7 @@ reviewers") and
 [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) §9
 ("External contrast").
 
-The playbook says **what** the second-opinion practice is. These are the implementation lessons from actually running it in an agent runtime: things that look obvious on paper but fail silently in practice. They are intentionally narrow — no infrastructure, no evaluator, no tool. Just rules of thumb for the human or agent driving the contrast.
+The playbook says **what** the second-opinion practice is. These are the implementation lessons from actually running it in an agent runtime: things that look obvious on paper but fail silently in practice. These notes focus on rules of thumb for the human or agent driving the contrast. See the README's [Scope and boundaries](README.md#scope-and-boundaries) for the scope of the complete BDK distribution.
 
 ---
 
@@ -181,4 +181,4 @@ These notes do not propose:
 - a claim that provider diversity creates independent evidence;
 - a replacement for the playbook itself.
 
-They are practice notes for anyone implementing §5 of the playbook in a real agent runtime, in the same spirit as the rest of the repo: a habit, not infrastructure.
+They are practice notes for anyone implementing §5 of the playbook in a real agent runtime, focused on the review habits that make external contrast useful.

@@ -5,10 +5,10 @@ without creating unacceptable adverse effects. The intervention prompts change
 the target behavior; BDK diagnostics measure framing sensitivity, coherence,
 and other observable effects.
 
-It is not part of the core framework and it is not a benchmark. The framework
-remains the prompt/playbook behavior. This directory provides a small,
-pre-registered pilot and a broader case matrix that downstream evaluators can
-expand.
+This directory provides a small, pre-registered pilot and a broader case matrix
+that downstream evaluators can expand. See the README's
+[Scope and boundaries](../../README.md#scope-and-boundaries) for the
+project-wide scope.
 
 ## Evidence status
 
@@ -80,6 +80,9 @@ predictions after the fact.
 - Prefer a judge from a different model family from the target, but do not treat
   model-family diversity as independent evidence.
 - Human reviewers who are blind to condition for the outcome review.
+
+`robopsych` is a legacy alias for `bdk` during the BDK 3.x compatibility window;
+use `bdk` for new runs and integrations.
 
 ## Run the pilot
 
