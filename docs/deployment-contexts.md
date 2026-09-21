@@ -62,6 +62,32 @@ A practical lifecycle is:
 BDK governs no actions. Prompt instructions remain advisory, automated judges
 remain fallible, and human review remains necessary for material decisions.
 
+## Scenario firing metrics
+
+Use the [shared scenario harness](../framework/diagnosis/scenarios.md) before
+deployment. It includes explicit negative and positive cases under the packaged
+BDK intervention. `bdk crosscheck --scenarios <directory> --model <model>
+--format json` reports a **protocol-header proxy**, not a complete detector of
+Light/prose intervention. Directness and hedging budgets require human review.
+
+For explicitly labeled, successfully answered scenarios: TP is a positive case
+that fires, FN a positive that stays quiet, FP a negative that fires, and TN a
+negative that stays quiet. Count a case once even if several turns fire.
+
+| Metric | Definition | Meaning |
+|---|---|---|
+| Positive fire rate / recall | TP / (TP + FN) | Fraction of positive cases detected by the proxy |
+| Negative fire rate / FPR | FP / (FP + TN) | Fraction of negative cases that fire |
+| Precision | TP / (TP + FP) | Fraction of fires belonging to positive cases |
+| Specificity | TN / (TN + FP) | Fraction of negative cases that stay quiet |
+
+“Stayed quiet” on negatives measures **specificity**, not precision. Undefined
+denominators are `null`/N/A, not zero or one. A negative-only directory reports
+FPR and specificity but cannot estimate recall. Unlabeled legacy scenarios and
+failed target calls are explicitly excluded, not silently treated as negatives.
+Report sample sizes, failure coverage, and per-scenario breakdowns; do not turn
+the proxy or a synthetic fixture into a claim of intervention efficacy.
+
 ## Plan -> Execute -> Verify
 
 In an orchestrated agent:

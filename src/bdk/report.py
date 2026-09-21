@@ -114,6 +114,23 @@ def generate_report(
     lines.append(f"**Diagnostic steps:** {len(engine.steps)}")
     lines.append("")
 
+    if engine.scenario is not None:
+        from bdk.scenario_checks import scenario_result
+
+        lines.extend(
+            [
+                "## Scenario validation",
+                "",
+                "Header detection is a proxy; directness/hedging require human review. "
+                "Stance classifications are Inferred, not ground truth.",
+                "",
+                "```json",
+                json.dumps(scenario_result(engine), indent=2, ensure_ascii=False),
+                "```",
+                "",
+            ]
+        )
+
     if engine.initial_response:
         lines.extend(
             [
@@ -377,6 +394,11 @@ def generate_json_report(
             "inferred": sum(s["labels"]["inferred"] for s in steps_data),
         },
     }
+
+    if engine.scenario is not None:
+        from bdk.scenario_checks import scenario_result
+
+        report["scenario_validation"] = scenario_result(engine)
 
     if coherence is not None:
         coherence_data = {

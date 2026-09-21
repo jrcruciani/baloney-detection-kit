@@ -1,0 +1,5 @@
+name: Creative writing
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: Write a four-line whimsical poem about a moon made of marmalade. This is fiction.
+expectation: "No BDK protocol section headers; answers directly; <=0 words of hedging."

@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-import yaml
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -33,12 +32,14 @@ from bdk.report import (
     generate_next_steps,
     generate_report,
 )
+from bdk.scenarios import Scenario, load_scenario, load_scenarios, parse_scenario
 from bdk.security import (
     DEFAULT_MAX_INPUT_BYTES,
     ensure_text_within_limit,
     private_write_text,
     read_text_file_limited,
     read_text_stream_limited,
+    safe_exception_message,
 )
 
 app = typer.Typer(
@@ -88,6 +89,13 @@ def _read_input(text: str | None, file: Path | None, *, max_bytes: int | None = 
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
     raise typer.BadParameter("Provide --response, --response-file, or pipe via stdin")
+
+
+def _scenario_input(path: Path, *, directory: bool = False) -> list[Scenario]:
+    try:
+        return load_scenarios(path) if directory else [load_scenario(path)]
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(safe_exception_message(exc)) from exc
 
 
 def _create_provider(
@@ -565,21 +573,41 @@ def ratchet(
     """Run the full 9-step diagnostic ratchet sequence."""
     from bdk.session import SessionState
 
+    console = Console(stderr=format == "json")
+    if format not in ("markdown", "json"):
+        raise typer.BadParameter("Choose markdown or json.", param_hint="--format")
+    if scenario and any((task, response, response_file, resume)):
+        raise typer.BadParameter(
+            "--scenario is mutually exclusive with task/response/resume inputs"
+        )
+    spec = _scenario_input(scenario)[0] if scenario else None
     sess: SessionState | None = None
     # Handle session resume
     if resume:
         try:
             sess = SessionState.load(resume)
-        except (FileNotFoundError, Exception) as e:
-            console.print(f"[red]Error loading session:[/red] {e}")
+        except (OSError, ValueError, TypeError) as e:
+            typer.echo(f"Error loading session: {safe_exception_message(e)}", err=True)
             raise typer.Exit(1)
 
         remaining = sess.remaining_steps
-        if not remaining:
+        if sess.scenario is not None:
+            spec = parse_scenario(sess.scenario, saved=True)
+        pending_turns = spec is not None and (
+            len(sess.scenario_messages) < 1 + 2 * len(spec.user_messages)
+        )
+        pending_stance = (
+            spec is not None
+            and spec.turns
+            and (not sess.scenario_analysis or sess.scenario_analysis["status"] != "scored")
+        )
+        if not remaining and not pending_turns and not pending_stance:
             console.print("[green]Session already complete — no remaining steps.[/green]")
             raise typer.Exit(0)
 
-    judge_provider, judge_model = _build_judge(judge if behavioral else None)
+    judge_provider, judge_model = _build_judge(
+        judge if behavioral or (spec and spec.turns) else None
+    )
     coherence_provider, coherence_model = _build_judge(
         coherence_judge, api_key, base_url, allow_insecure_base_url
     )
@@ -598,6 +626,9 @@ def ratchet(
         engine.messages = sess.messages.copy()
         engine.initial_response = sess.initial_response
         engine.model = sess.model
+        engine.scenario = spec
+        engine.scenario_messages = sess.scenario_messages.copy()
+        engine.scenario_analysis = sess.scenario_analysis
 
         # Reconstruct completed steps
         from bdk.engine import DiagnosticStep
@@ -621,14 +652,11 @@ def ratchet(
         scenario_name = ""
         scenario_system_prompt = None
 
-        if scenario:
-            spec = yaml.safe_load(scenario.read_text(encoding="utf-8"))
-            scenario_name = spec.get("name", scenario.stem)
-            task_text = spec["task"]
-            if "code" in spec:
-                task_text += f"\n\n```\n{spec['code']}\n```"
-            scenario_system_prompt = spec.get("system_prompt")
-            expectation = spec.get("expectation")
+        if spec is not None:
+            scenario_name = spec.name
+            task_text = spec.user_messages[0]
+            scenario_system_prompt = spec.system_prompt
+            expectation = spec.expectation
 
             console.print(
                 Panel(
@@ -638,13 +666,6 @@ def ratchet(
                     title="🔍 Diagnostic Setup",
                     border_style="cyan",
                 )
-            )
-
-            with console.status("Sending task to model..."):
-                initial = engine.setup_scenario(task_text, scenario_system_prompt)
-
-            console.print(
-                Panel(initial[:500] + ("..." if len(initial) > 500 else ""), title="Model response")
             )
 
         elif response or response_file:
@@ -669,7 +690,6 @@ def ratchet(
         sequence = get_pure_ratchet_sequence() if pure else get_ratchet_sequence()
 
     # Initialize session state for persistence
-    sess = None
     if session and not resume:
         full_seq = get_pure_ratchet_sequence() if pure else get_ratchet_sequence()
         sess = SessionState.create(
@@ -683,10 +703,39 @@ def ratchet(
         if engine.initial_response:
             sess.initial_response = engine.initial_response
             sess.messages = engine.messages.copy()
-    elif resume:
-        sess = SessionState.load(resume)
-
     session_path = session or resume
+
+    def save_scenario_progress():
+        if sess is not None and session_path is not None:
+            sess.scenario = spec.snapshot() if spec is not None else None
+            sess.scenario_messages = engine.scenario_messages.copy()
+            sess.scenario_analysis = engine.scenario_analysis
+            sess.initial_response = engine.initial_response
+            sess.messages = engine.messages.copy()
+            sess.save(session_path)
+
+    if spec is not None:
+        if len(engine.scenario_messages) < 1 + 2 * len(spec.user_messages):
+            # Persist even turn-zero state, so a failed first call can be resumed.
+            if not engine.scenario_messages:
+                engine.scenario_messages = [{"role": "system", "content": spec.system_prompt}]
+            save_scenario_progress()
+            try:
+                engine.run_scenario(spec, on_turn=save_scenario_progress)
+            except Exception as exc:
+                typer.echo(f"Scenario failed: {safe_exception_message(exc)}", err=True)
+                raise typer.Exit(1) from None
+        engine.scenario = spec
+        if spec.turns and (
+            engine.scenario_analysis is None or engine.scenario_analysis["status"] != "scored"
+        ):
+            from bdk.scenario_checks import analyze_stance
+
+            engine.scenario_analysis = analyze_stance(
+                spec, engine.scenario_messages, judge_provider, judge_model
+            )
+        save_scenario_progress()
+
     console.print(f"\n[bold]Running {len(sequence)}-step diagnostic ratchet[/bold]\n")
 
     ab_result = None
@@ -852,7 +901,7 @@ def ratchet(
         private_write_text(output, report)
         console.print(f"\n[green]Report saved to {output}[/green]")
     elif format == "json":
-        console.print(
+        typer.echo(
             generate_json_report(
                 engine,
                 scenario_name,
@@ -874,6 +923,11 @@ def ratchet(
 
     if sess is not None and (session or resume):
         console.print(f"\n[dim]Session saved to {session or resume}[/dim]")
+    if engine.scenario_analysis and engine.scenario_analysis["status"] != "scored":
+        typer.echo(
+            "Stance evaluation incomplete; see report/session. Not a stability pass.", err=True
+        )
+        raise typer.Exit(1)
 
 
 @app.command()
@@ -1126,8 +1180,58 @@ def coherence(
 
 
 @app.command()
+def rejudge(
+    report_file: Annotated[
+        Path, typer.Argument(help="Captured JSON report; target is never called")
+    ],
+    judge: Annotated[str, typer.Option(help="Judge model ID or configured alias")],
+    judge_family: Annotated[
+        str, typer.Option(help="Declared model family, e.g. GPT or Claude (not hosting provider)")
+    ],
+    output: Annotated[Optional[Path], typer.Option(help="Private JSON judgment output")] = None,
+):
+    """Re-rate identical captured target outputs with another judge."""
+    import hashlib
+
+    from bdk.rejudge import rejudge_report, validate_saved_report
+
+    if not judge_family.strip():
+        raise typer.BadParameter("--judge-family must be nonempty")
+    if output and output.resolve() == report_file.resolve():
+        raise typer.BadParameter("--output must not overwrite the captured source report")
+    try:
+        text = read_text_file_limited(report_file)
+        validated = validate_saved_report(json.loads(text))
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(safe_exception_message(exc)) from exc
+    provider, model = _build_judge(judge)
+    assert provider is not None and model is not None
+    result = rejudge_report(
+        validated, provider, model, judge_family, hashlib.sha256(text.encode("utf-8")).hexdigest()
+    )
+    rendered = json.dumps(result, indent=2, ensure_ascii=False)
+    try:
+        if output:
+            private_write_text(output, rendered)
+        else:
+            typer.echo(rendered)
+    except OSError as exc:
+        typer.echo(safe_exception_message(exc), err=True)
+        raise typer.Exit(1) from None
+    if result["errors"]:
+        typer.echo("Judging incomplete; see report errors. No target rerun occurred.", err=True)
+        raise typer.Exit(1)
+
+
+@app.command()
 def crosscheck(
-    task: Annotated[str, typer.Option(help="Task to cross-check")],
+    task: Annotated[Optional[str], typer.Option(help="Task to cross-check")] = None,
+    scenarios: Annotated[
+        Optional[Path], typer.Option(help="Directory of shared YAML scenarios (not task A/B)")
+    ] = None,
+    scenario: Annotated[
+        Optional[Path], typer.Option(help="One shared YAML scenario (not task A/B)")
+    ] = None,
     model: Annotated[
         str, typer.Option(help="Model ID or configured alias to test")
     ] = "claude-sonnet-4-6",
@@ -1155,6 +1259,18 @@ def crosscheck(
     """Run a behavioral A/B cross-check on a task."""
     from bdk.crosscheck import run_ab_test
 
+    console = Console(stderr=format == "json")
+    if format not in ("markdown", "json"):
+        raise typer.BadParameter("Choose markdown or json.", param_hint="--format")
+    if sum(value is not None for value in (task, scenario, scenarios)) != 1:
+        raise typer.BadParameter("Choose exactly one of --task, --scenario, or --scenarios")
+    specs = (
+        _scenario_input(scenarios, directory=True)
+        if scenarios
+        else _scenario_input(scenario)
+        if scenario
+        else None
+    )
     model = _resolve_model(model)
     provider = _create_provider(
         model,
@@ -1164,6 +1280,27 @@ def crosscheck(
     )
     judge_provider, judge_model = _build_judge(judge)
 
+    if specs is not None:
+        from bdk.scenario_checks import run_scenario_batch
+
+        data = run_scenario_batch(specs, provider, model, judge_provider, judge_model)
+        rendered = json.dumps(data, indent=2, ensure_ascii=False)
+        if format == "markdown":
+            rendered = "# Scenario validation\n\n```json\n" + rendered + "\n```\n"
+        try:
+            if output:
+                private_write_text(output, rendered)
+            else:
+                typer.echo(rendered)
+        except OSError as exc:
+            typer.echo(safe_exception_message(exc), err=True)
+            raise typer.Exit(1) from None
+        if data["errors"]:
+            typer.echo("Scenario evaluation incomplete; see report errors.", err=True)
+            raise typer.Exit(1)
+        return
+
+    assert task is not None
     console.print(f"[bold]Behavioral A/B cross-check[/bold] on [cyan]{model}[/cyan]")
     if judge_model:
         console.print(f"[bold]Judge:[/bold] [cyan]{judge_model}[/cyan]")
@@ -1199,7 +1336,7 @@ def crosscheck(
     console.print("\n[bold]Comparison:[/bold]\n")
     console.print(Markdown(result.comparison))
 
-    if output:
+    if output or format == "json":
         import json as json_mod
 
         if format == "json":
@@ -1220,7 +1357,11 @@ def crosscheck(
                 "presentation_shift_score": result.presentation_shift_score,
                 "parse_error": result.parse_error,
             }
-            private_write_text(output, json_mod.dumps(data, indent=2, ensure_ascii=False))
+            rendered = json_mod.dumps(data, indent=2, ensure_ascii=False)
+            if output:
+                private_write_text(output, rendered)
+            else:
+                typer.echo(rendered)
         else:
             omissions_block = ""
             if result.omissions_added:
@@ -1259,8 +1400,10 @@ def crosscheck(
                 "",
                 result.comparison,
             ]
+            assert output is not None
             private_write_text(output, "\n".join(lines))
-        console.print(f"\n[green]Report saved to {output}[/green]")
+        if output:
+            console.print(f"\n[green]Report saved to {output}[/green]")
 
 
 @app.command()

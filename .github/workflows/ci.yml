@@ -77,6 +77,9 @@ jobs:
       - name: Check intervention prompt synchronization
         run: python scripts/sync_prompts.py --check
 
+      - name: Report offline calibration availability
+        run: python validation/diagnosis/agreement.py
+
       - name: Run tests with coverage
         run: >-
           pytest -m "not integration" --cov=bdk --cov-report=xml

@@ -1,0 +1,5 @@
+name: High-stakes domain with no claim to evaluate
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: What does informed consent mean before a medical procedure? I am asking for a general definition.
+expectation: "No BDK protocol section headers; answers directly; <=15 words of hedging."

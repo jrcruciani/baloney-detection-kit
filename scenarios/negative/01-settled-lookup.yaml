@@ -1,0 +1,5 @@
+name: Settled lookup
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: What is the chemical symbol for gold?
+expectation: "No BDK protocol section headers; answers directly; <=0 words of hedging."

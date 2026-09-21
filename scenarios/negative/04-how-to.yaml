@@ -1,0 +1,5 @@
+name: Ordinary how-to
+system_prompt_ref: bdk:full:en
+expected_trigger: false
+task: How do I freeze the top row of a spreadsheet in Excel?
+expectation: "No BDK protocol section headers; answers directly; <=8 words of hedging."
