@@ -7,9 +7,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
-from openai import BadRequestError
 
 from bdk.providers import UnsupportedProviderOption, create_provider, detect_provider
+
+pytestmark = pytest.mark.usefixtures("provider_env", "openai_sdk")
 
 
 @pytest.fixture
@@ -46,7 +47,7 @@ class TestAzureFoundryRouting:
 
 
 class TestAzureFoundrySend:
-    def test_deepseek_send_uses_chat_completions(self, foundry_env):
+    def test_deepseek_send_uses_chat_completions(self, foundry_env, openai_sdk):
         fake_response = SimpleNamespace(
             choices=[SimpleNamespace(message=SimpleNamespace(content="pong"))]
         )
@@ -56,7 +57,7 @@ class TestAzureFoundrySend:
 
         with (
             patch.dict(os.environ, foundry_env, clear=False),
-            patch("bdk.providers.OpenAI", return_value=fake_client) as openai_ctor,
+            patch.object(openai_sdk, "OpenAI", return_value=fake_client) as openai_ctor,
         ):
             provider = create_provider("deepseek-r1", api_key="test-key")
             text = provider.send(
@@ -69,7 +70,7 @@ class TestAzureFoundrySend:
         assert openai_ctor.call_args.kwargs["base_url"].endswith("/models")
         assert openai_ctor.call_args.kwargs["default_query"]["api-version"] == "2024-05-01-preview"
 
-    def test_deepseek_send_uses_deployment_override(self, foundry_env):
+    def test_deepseek_send_uses_deployment_override(self, foundry_env, openai_sdk):
         captured = {}
         fake_response = SimpleNamespace(
             choices=[SimpleNamespace(message=SimpleNamespace(content="pong"))]
@@ -82,7 +83,7 @@ class TestAzureFoundrySend:
 
         with (
             patch.dict(os.environ, foundry_env, clear=False),
-            patch("bdk.providers.OpenAI", return_value=fake_client),
+            patch.object(openai_sdk, "OpenAI", return_value=fake_client),
         ):
             provider = create_provider(
                 "deepseek-r1",
@@ -97,7 +98,7 @@ class TestAzureFoundrySend:
         assert text == "pong"
         assert captured["model"] == "custom-deepseek"
 
-    def test_gpt_send_uses_responses(self, foundry_env):
+    def test_gpt_send_uses_responses(self, foundry_env, openai_sdk):
         fake_response = SimpleNamespace(
             output=[SimpleNamespace(content=[SimpleNamespace(text="pong")])]
         )
@@ -106,7 +107,7 @@ class TestAzureFoundrySend:
 
         with (
             patch.dict(os.environ, foundry_env, clear=False),
-            patch("bdk.providers.OpenAI", return_value=fake_client) as openai_ctor,
+            patch.object(openai_sdk, "OpenAI", return_value=fake_client) as openai_ctor,
         ):
             provider = create_provider("gpt-5", api_key="test-key")
             text = provider.send(
@@ -119,7 +120,7 @@ class TestAzureFoundrySend:
         assert openai_ctor.call_args.kwargs["base_url"].endswith("/openai")
         assert openai_ctor.call_args.kwargs["default_query"]["api-version"] == "2024-05-01-preview"
 
-    def test_gpt_send_uses_deployment_override(self, foundry_env):
+    def test_gpt_send_uses_deployment_override(self, foundry_env, openai_sdk):
         captured = {}
         fake_response = SimpleNamespace(
             output=[SimpleNamespace(content=[SimpleNamespace(text="pong")])]
@@ -131,7 +132,7 @@ class TestAzureFoundrySend:
 
         with (
             patch.dict(os.environ, foundry_env, clear=False),
-            patch("bdk.providers.OpenAI", return_value=fake_client),
+            patch.object(openai_sdk, "OpenAI", return_value=fake_client),
         ):
             provider = create_provider(
                 "gpt-5",
@@ -146,7 +147,10 @@ class TestAzureFoundrySend:
         assert text == "pong"
         assert captured["model"] == "custom-gpt"
 
-    def test_gpt_send_retries_without_temperature_when_responses_rejects_it(self, foundry_env):
+    @pytest.mark.parametrize("temperature", [0.0, 0.3])
+    def test_gpt_send_retries_without_temperature_when_responses_rejects_it(
+        self, foundry_env, openai_sdk, temperature,
+    ):
         fake_response = SimpleNamespace(
             output=[SimpleNamespace(content=[SimpleNamespace(text="pong")])]
         )
@@ -155,14 +159,8 @@ class TestAzureFoundrySend:
         def create(**kwargs):
             calls.append(kwargs.copy())
             if len(calls) == 1:
-                raise BadRequestError(
+                raise openai_sdk.BadRequestError(
                     "Unsupported parameter: 'temperature' is not supported with this model.",
-                    response=SimpleNamespace(
-                        status_code=400,
-                        request=SimpleNamespace(),
-                        headers={},
-                    ),
-                    body={},
                 )
             return fake_response
 
@@ -171,15 +169,64 @@ class TestAzureFoundrySend:
 
         with (
             patch.dict(os.environ, foundry_env, clear=False),
-            patch("bdk.providers.OpenAI", return_value=fake_client),
+            patch.object(openai_sdk, "OpenAI", return_value=fake_client),
         ):
             provider = create_provider("gpt-5", api_key="test-key")
             text = provider.send(
                 [{"role": "user", "content": "say pong"}],
                 model="gpt-5",
-                temperature=0.3,
+                temperature=temperature,
             )
 
         assert text == "pong"
         assert len(calls) == 2
+        assert calls[0]["temperature"] == temperature
         assert "temperature" not in calls[1]
+
+    @pytest.mark.parametrize("bad_request,message,temperature", [
+        (False, "temperature rejected", 0.3),
+        (True, "model not found", 0.3),
+        (True, "temperature rejected", None),
+    ])
+    def test_no_retry_for_other_errors(
+        self, foundry_env, openai_sdk, bad_request, message, temperature,
+    ):
+        error_type = openai_sdk.BadRequestError if bad_request else RuntimeError
+        error = error_type(message)
+        create = openai_sdk.OpenAI.return_value.responses.create
+        create.side_effect = error
+        with patch.dict(os.environ, foundry_env):
+            provider = create_provider("gpt-5", api_key="test-key")
+            with pytest.raises(error_type) as exc:
+                provider.send([], "gpt-5", temperature=temperature)
+        assert exc.value is error
+        create.assert_called_once()
+
+    def test_temperature_retry_is_limited_to_once(self, foundry_env, openai_sdk):
+        create = openai_sdk.OpenAI.return_value.responses.create
+        error = openai_sdk.BadRequestError("temperature rejected")
+        create.side_effect = error
+        with patch.dict(os.environ, foundry_env):
+            provider = create_provider("gpt-5", api_key="test-key")
+            with pytest.raises(openai_sdk.BadRequestError) as exc:
+                provider.send([], "gpt-5", temperature=0.3)
+        assert exc.value is error
+        assert create.call_count == 2
+
+    def test_gpt_response_format_is_preserved(self, foundry_env, openai_sdk):
+        create = openai_sdk.OpenAI.return_value.responses.create
+        create.return_value = SimpleNamespace(output_text="pong")
+        with patch.dict(os.environ, foundry_env):
+            provider = create_provider("gpt-5", api_key="test-key")
+            text = provider.send([], "gpt-raw:id", response_format={"type": "json_object"})
+        assert text == "pong"
+        create.assert_called_once_with(
+            model="gpt-raw:id", input=[], text={"format": {"type": "json_object"}},
+        )
+
+    def test_insecure_endpoint_is_rejected_before_client_creation(self, foundry_env, openai_sdk):
+        foundry_env["AZURE_FOUNDRY_ENDPOINT"] = "http://localhost:8080"
+        with patch.dict(os.environ, foundry_env):
+            with pytest.raises(ValueError, match="non-HTTPS"):
+                create_provider("gpt-5", api_key="test-key")
+        openai_sdk.OpenAI.assert_not_called()

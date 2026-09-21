@@ -1,5 +1,10 @@
 """Smoke tests for CLI commands."""
 
+import os
+import subprocess
+import sys
+import textwrap
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -9,6 +14,80 @@ from bdk import __version__
 from bdk.cli import app
 
 runner = CliRunner()
+
+
+@pytest.mark.usefixtures("provider_env")
+class TestOptionalSDKs:
+    def test_clean_import_and_apply_without_any_sdk(self):
+        result = subprocess.run(
+            [sys.executable, "-c", textwrap.dedent("""
+                import sys
+
+                assert "bdk.cli" not in sys.modules
+                assert "bdk.providers" not in sys.modules
+                for name in ("anthropic", "openai", "google", "google.genai"):
+                    sys.modules[name] = None
+
+                import bdk.cli
+                from typer.testing import CliRunner
+
+                result = CliRunner().invoke(bdk.cli.app, ["apply", "compact"])
+                assert result.exit_code == 0, result.output
+                assert "Compact Prompt" in result.output
+                assert "proportionate epistemic friction" in result.output
+                for name in ("anthropic", "openai", "google", "google.genai"):
+                    assert sys.modules[name] is None
+            """)],
+            env={"PATH": os.environ.get("PATH", ""), "PYTHONPATH": os.pathsep.join(sys.path)},
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+
+    @pytest.mark.parametrize("command", [
+        ["run", "1.1", "--response", "test response"],
+        ["crosscheck", "--task", "test task"],
+    ])
+    @pytest.mark.parametrize("model,provider,extra", [
+        ("claude-sonnet-4-6", "anthropic", "anthropic"),
+        ("gpt-4o", "openai", "openai"),
+        ("gemini-pro", "gemini", "gemini"),
+        ("azure/gpt-5", "azure_foundry", "openai"),
+    ])
+    def test_missing_sdk_has_clean_install_hint(self, monkeypatch, command, model, provider, extra):
+        for name in ("anthropic", "openai", "google", "google.genai"):
+            monkeypatch.setitem(sys.modules, name, None)
+        if provider == "azure_foundry":
+            monkeypatch.setenv("AZURE_FOUNDRY_ENDPOINT", "https://example.services.ai.azure.com")
+
+        result = runner.invoke(app, [*command, "--model", model, "--api-key", "test-key"])
+
+        assert result.exit_code == 1
+        assert isinstance(result.exception, SystemExit)
+        assert result.output.strip() == (
+            f'Provider "{provider}" requires: pip install "baloney-detection-kit[{extra}]"'
+        )
+
+    @pytest.mark.parametrize("command", [
+        ["crosscheck", "--task", "test task", "--judge", "claude-sonnet-4-6"],
+        ["ratchet", "--response", "test response", "--coherence-judge", "claude-sonnet-4-6"],
+    ])
+    def test_missing_judge_sdk_has_clean_install_hint(self, monkeypatch, openai_sdk, command):
+        monkeypatch.setitem(sys.modules, "anthropic", None)
+        monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+        openai_sdk.OpenAI.return_value.chat.completions.create.return_value = SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content="diagnostic response"))],
+        )
+
+        result = runner.invoke(app, [*command, "--model", "gpt-4o", "--api-key", "test-key"])
+
+        assert result.exit_code == 1
+        assert isinstance(result.exception, SystemExit)
+        assert (
+            'Provider "anthropic" requires: pip install "baloney-detection-kit[anthropic]"'
+        ) in result.output
+        assert "Traceback" not in result.output
 
 
 class TestListCommand:
