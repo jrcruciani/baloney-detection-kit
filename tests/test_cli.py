@@ -15,6 +15,7 @@ from bdk.cli import app
 from bdk.interventions import get_intervention, list_interventions
 
 runner = CliRunner()
+pytestmark = pytest.mark.usefixtures("isolated_model_config")
 
 
 @pytest.mark.usefixtures("provider_env")
@@ -32,7 +33,9 @@ class TestOptionalSDKs:
                 for name in ("anthropic", "openai", "google", "google.genai"):
                     sys.modules[name] = None
 
+                import json
                 import bdk.cli
+                from bdk.interventions import get_intervention
                 from typer.testing import CliRunner
 
                 result = CliRunner().invoke(bdk.cli.app, ["apply", "compact"])
@@ -46,11 +49,28 @@ class TestOptionalSDKs:
                     assert result.exit_code == 0, result.output
                     assert "fricción epistémica proporcionada" in result.output
                     assert "<!-- bdk prompt-v2.0 -->" in result.output
+                for lang in ("en", "es"):
+                    result = CliRunner().invoke(
+                        bdk.cli.app, ["apply", "compact", "--lang", lang, "--format", "json"]
+                    )
+                    assert result.exit_code == 0, result.output
+                    assert json.loads(result.stdout)["content"] == get_intervention(
+                        "compact", lang=lang
+                    )
+                    result = CliRunner().invoke(
+                        bdk.cli.app, ["apply", "--list", "--lang", lang, "--format", "json"]
+                    )
+                    assert result.exit_code == 0, result.output
+                    assert json.loads(result.stdout)[0]["variant"] == "compact"
                 for name in ("anthropic", "openai", "google", "google.genai"):
                     assert sys.modules[name] is None
             """),
             ],
-            env={"PATH": os.environ.get("PATH", ""), "PYTHONPATH": os.pathsep.join(sys.path)},
+            env={
+                "PATH": os.environ.get("PATH", ""),
+                "PYTHONPATH": os.pathsep.join(sys.path),
+                "HOME": os.environ["HOME"],
+            },
             capture_output=True,
             text=True,
             timeout=30,

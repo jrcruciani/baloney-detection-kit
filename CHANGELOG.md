@@ -9,6 +9,15 @@ versions for prompt contracts.
 ### Added
 
 - Compatibility alias for the previous diagnostic CLI command.
+- **Additive CLI tooling:** support validated TOML model aliases in user and
+  current-directory config, with local per-alias precedence and resolved IDs
+  used for model/judge calls and persisted provenance. Keep raw-model library
+  APIs, existing defaults, and saved-session model identity unchanged.
+- Add exact `bdk apply --format json` output and language-aware `bdk apply --list`
+  (plain or JSON), deriving behavior versions from packaged prompt markers.
+  Plain retrieval preserves literal Markdown; file output uses the same
+  representation and private permissions. Prompt content and behavior markers
+  are unchanged by this CLI addition; no live model validation is implied.
 
 ### Intervention
 

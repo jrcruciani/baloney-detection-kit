@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from importlib.resources import files
 
 _INTERVENTIONS = {
@@ -48,3 +49,13 @@ def get_intervention(variant: str, *, lang: str = "en") -> str:
 
     path = files("bdk") / "data" / "interventions" / filename
     return path.read_text(encoding="utf-8")
+
+
+def get_intervention_version(prompt: str) -> str:
+    """Read the unique first-line behavior marker, not the package version."""
+    marker = re.match(r"<!-- bdk (prompt-v[0-9]+\.[0-9]+(?:\.[0-9]+)?) -->(?:\r?\n|$)", prompt)
+    if marker is None or prompt.count("<!-- bdk prompt-") != 1:
+        raise ValueError(
+            "Intervention must have exactly one prompt version marker on its first line"
+        )
+    return marker[1]

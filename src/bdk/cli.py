@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from typing import Annotated, Optional
@@ -14,8 +15,9 @@ from rich.panel import Panel
 from rich.table import Table
 
 from bdk import __version__
+from bdk.config import ModelConfigError, resolve_model
 from bdk.engine import DiagnosticEngine
-from bdk.interventions import get_intervention
+from bdk.interventions import get_intervention, get_intervention_version, list_interventions
 from bdk.prompts import (
     get_diagnostic_variant,
     get_flowchart,
@@ -107,12 +109,24 @@ def _create_provider(
         raise typer.Exit(1) from None
 
 
+def _resolve_model(model: str) -> str:
+    try:
+        return resolve_model(model)
+    except ModelConfigError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+
+
 def _build_engine(
     model: str,
     api_key: str | None,
     base_url: str | None,
     allow_insecure_base_url: bool = False,
+    *,
+    resolve_aliases: bool = True,
 ) -> DiagnosticEngine:
+    # Persisted sessions already contain raw IDs and must not be retargeted by aliases.
+    if resolve_aliases:
+        model = _resolve_model(model)
     provider = _create_provider(
         model,
         api_key=api_key,
@@ -122,14 +136,25 @@ def _build_engine(
     return DiagnosticEngine(provider=provider, model=model)
 
 
-def _build_judge(judge: str | None) -> tuple:
+def _build_judge(
+    judge: str | None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    allow_insecure_base_url: bool = False,
+) -> tuple[Provider | None, str | None]:
     """Build judge provider/model from a judge model name.
 
     Returns (provider, model) or (None, None).
     """
     if not judge:
         return None, None
-    judge_provider = _create_provider(judge)
+    judge = _resolve_model(judge)
+    judge_provider = _create_provider(
+        judge,
+        api_key=api_key,
+        base_url=base_url,
+        allow_insecure_base_url=allow_insecure_base_url,
+    )
     return judge_provider, judge
 
 
@@ -219,34 +244,76 @@ def main(ctx: typer.Context):
 @app.command(name="apply")
 def apply_prompt(
     variant: Annotated[
-        str,
+        Optional[str],
         typer.Argument(
             help=(
                 "Intervention variant: compact, full, high-stakes, agent, "
                 "reviewer, or second-opinion"
             )
         ),
-    ] = "compact",
+    ] = None,
     output: Annotated[
         Optional[Path], typer.Option(help="Save the intervention prompt to a file")
     ] = None,
     lang: Annotated[
         str, typer.Option("--lang", help="Prompt language: en (all variants), es (compact/full)")
     ] = "en",
+    format: Annotated[str, typer.Option("--format", help="Output format: plain or json")] = "plain",
+    list_variants: Annotated[
+        bool, typer.Option("--list", help="List available variants and versions for --lang")
+    ] = False,
 ):
     """Print or save a preventive BDK intervention prompt."""
+    if format not in ("plain", "json"):
+        raise typer.BadParameter("Choose plain or json.", param_hint="--format")
+    if list_variants and variant is not None:
+        raise typer.BadParameter("Use --list without a variant.")
     try:
-        prompt = get_intervention(variant, lang=lang)
-    except (KeyError, ValueError) as exc:
-        console.print(str(exc.args[0]), style="red", markup=False)
+        if list_variants:
+            entries = [
+                {
+                    "variant": name,
+                    "prompt_version": get_intervention_version(get_intervention(name, lang=lang)),
+                    "lang": lang,
+                }
+                for name in list_interventions(lang=lang)
+            ]
+            rendered = (
+                json.dumps(entries, ensure_ascii=False) + "\n"
+                if format == "json"
+                else "".join(
+                    f"{entry['variant']}\t{entry['prompt_version']}\t{entry['lang']}\n"
+                    for entry in entries
+                )
+            )
+        else:
+            variant = "compact" if variant is None else variant
+            prompt = get_intervention(variant, lang=lang)
+            version = get_intervention_version(prompt)
+            rendered = (
+                json.dumps(
+                    {
+                        "variant": variant,
+                        "prompt_version": version,
+                        "lang": lang,
+                        "content": prompt,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+                if format == "json"
+                else prompt
+            )
+        if output:
+            private_write_text(output, rendered)
+    except (KeyError, ValueError, OSError) as exc:
+        typer.echo(str(exc.args[0]) if isinstance(exc, KeyError) else str(exc), err=True)
         raise typer.Exit(1)
 
     if output:
-        private_write_text(output, prompt)
-        console.print(f"[green]Intervention saved to {output}[/green]")
-        return
-
-    console.print(prompt)
+        typer.echo(f"Intervention saved to {output}", err=True)
+    else:
+        typer.echo(rendered, nl=False)
 
 
 @app.command(name="list")
@@ -352,7 +419,9 @@ def show(prompt_id: Annotated[str, typer.Argument(help="Prompt ID (e.g. 1.1, 2.5
 @app.command()
 def run(
     prompt_id: Annotated[str, typer.Argument(help="Prompt ID to run (e.g. 1.1)")],
-    model: Annotated[str, typer.Option(help="Model to diagnose")] = "claude-sonnet-4-6",
+    model: Annotated[
+        str, typer.Option(help="Model ID or configured alias to diagnose")
+    ] = "claude-sonnet-4-6",
     response: Annotated[Optional[str], typer.Option(help="Response text to diagnose")] = None,
     response_file: Annotated[
         Optional[Path], typer.Option(help="File containing the response")
@@ -381,6 +450,7 @@ def run(
     """Run a single diagnostic prompt against a model response."""
     text = _read_input(response, response_file)
     engine = _build_engine(model, api_key, base_url, allow_insecure_base_url)
+    model = engine.model
 
     # Parse variables from --var flags
     variables = {}
@@ -420,7 +490,9 @@ def run(
 
 @app.command()
 def ratchet(
-    model: Annotated[str, typer.Option(help="Model to diagnose")] = "claude-sonnet-4-6",
+    model: Annotated[
+        str, typer.Option(help="Model ID or configured alias to diagnose")
+    ] = "claude-sonnet-4-6",
     scenario: Annotated[Optional[Path], typer.Option(help="Scenario YAML file")] = None,
     task: Annotated[Optional[str], typer.Option(help="Task to send (if no scenario file)")] = None,
     response: Annotated[
@@ -452,13 +524,14 @@ def ratchet(
         bool, typer.Option("--behavioral", help="Run A/B cross-check after step 2.5")
     ] = False,
     judge: Annotated[
-        Optional[str], typer.Option("--judge", help="External evaluator model for A/B comparisons")
+        Optional[str],
+        typer.Option("--judge", help="External evaluator model ID or alias for A/B comparisons"),
     ] = None,
     coherence_judge: Annotated[
         Optional[str],
         typer.Option(
             "--coherence-judge",
-            help="LLM judge model for semantic coherence analysis (e.g. claude-sonnet-4-5). "
+            help="LLM judge model ID or alias for semantic coherence analysis. "
             "Defaults to the regex-based analyzer when not set. "
             "Ideally different from the model being diagnosed to avoid self-eval bias.",
         ),
@@ -492,7 +565,7 @@ def ratchet(
     """Run the full 9-step diagnostic ratchet sequence."""
     from bdk.session import SessionState
 
-    sess: SessionState | None
+    sess: SessionState | None = None
     # Handle session resume
     if resume:
         try:
@@ -506,6 +579,12 @@ def ratchet(
             console.print("[green]Session already complete — no remaining steps.[/green]")
             raise typer.Exit(0)
 
+    judge_provider, judge_model = _build_judge(judge if behavioral else None)
+    coherence_provider, coherence_model = _build_judge(
+        coherence_judge, api_key, base_url, allow_insecure_base_url
+    )
+    if resume:
+        assert sess is not None
         console.print(
             f"[bold]Resuming session[/bold] from {resume}\n"
             f"  Model: [cyan]{sess.model}[/cyan]\n"
@@ -513,7 +592,9 @@ def ratchet(
             f"  Remaining: {len(remaining)} steps ({', '.join(remaining)})\n"
         )
 
-        engine = _build_engine(sess.model, api_key, base_url, allow_insecure_base_url)
+        engine = _build_engine(
+            sess.model, api_key, base_url, allow_insecure_base_url, resolve_aliases=False
+        )
         engine.messages = sess.messages.copy()
         engine.initial_response = sess.initial_response
         engine.model = sess.model
@@ -536,6 +617,7 @@ def ratchet(
         sequence = remaining
     else:
         engine = _build_engine(model, api_key, base_url, allow_insecure_base_url)
+        model = engine.model
         scenario_name = ""
         scenario_system_prompt = None
 
@@ -644,10 +726,9 @@ def ratchet(
             task_text = (
                 task_text if "task_text" in dir() else (task or "You were asked a question.")
             )
-            judge_provider, judge_model = _build_judge(judge)
             console.print("\n  [bold yellow]⚡ Running behavioral A/B cross-check...[/bold yellow]")
-            if judge:
-                console.print(f"  [dim]Judge: {judge}[/dim]")
+            if judge_model:
+                console.print(f"  [dim]Judge: {judge_model}[/dim]")
             with console.status("Running A/B test..."):
                 ab_result = run_ab_test(
                     engine.provider,
@@ -682,23 +763,17 @@ def ratchet(
             engine.run_sequence(sequence, on_step=on_step)
 
     # Coherence analysis — LLM judge if requested, else regex fallback.
-    if coherence_judge:
+    if coherence_model:
         from bdk.coherence_llm import JudgeRetryPolicy, analyze_coherence_auto
 
-        judge_provider = _create_provider(
-            coherence_judge,
-            api_key=api_key,
-            base_url=base_url,
-            allow_insecure_base_url=allow_insecure_base_url,
-        )
         coherence_checkpoint_path = coherence_checkpoint
         if coherence_checkpoint_path is None and (session or resume):
             coherence_checkpoint_path = Path(f"{session or resume}.coherence.json")
-        with console.status(f"Analyzing coherence with judge [cyan]{coherence_judge}[/cyan]..."):
+        with console.status(f"Analyzing coherence with judge [cyan]{coherence_model}[/cyan]..."):
             coherence_report = analyze_coherence_auto(
                 engine,
-                judge_provider=judge_provider,
-                judge_model=coherence_judge,
+                judge_provider=coherence_provider,
+                judge_model=coherence_model,
                 retry_policy=JudgeRetryPolicy(max_attempts=coherence_retry_attempts),
                 checkpoint_path=coherence_checkpoint_path,
             )
@@ -804,7 +879,7 @@ def ratchet(
 @app.command()
 def compare(
     prompt_id: Annotated[str, typer.Argument(help="Prompt ID to run")],
-    models: Annotated[str, typer.Option(help="Comma-separated model list")],
+    models: Annotated[str, typer.Option(help="Comma-separated model IDs or configured aliases")],
     response: Annotated[Optional[str], typer.Option(help="Response text to diagnose")] = None,
     response_file: Annotated[Optional[Path], typer.Option(help="File with response")] = None,
     task: Annotated[str, typer.Option(help="Original task")] = "You were asked a question.",
@@ -828,7 +903,7 @@ def compare(
 ):
     """Run the same diagnostic prompt across multiple models and compare."""
     text = _read_input(response, response_file)
-    model_list = [m.strip() for m in models.split(",")]
+    model_list = [_resolve_model(m.strip()) for m in models.split(",")]
 
     variables = {}
     if var:
@@ -846,12 +921,12 @@ def compare(
 
     results = []
     for m in model_list:
-        engine = _build_engine(m, api_key, base_url, allow_insecure_base_url)
+        engine = _build_engine(m, api_key, base_url, allow_insecure_base_url, resolve_aliases=False)
         engine.inject_exchange(task=task, response=text)
-        console.print(f"  Running on [cyan]{m}[/cyan]...", end="")
+        console.print(f"  Running on [cyan]{engine.model}[/cyan]...", end="")
         step = engine.run_diagnostic(prompt_id, variables=variables or None)
         console.print(" [green]✓[/green]")
-        results.append((m, step))
+        results.append((engine.model, step))
 
     console.print()
 
@@ -1053,7 +1128,9 @@ def coherence(
 @app.command()
 def crosscheck(
     task: Annotated[str, typer.Option(help="Task to cross-check")],
-    model: Annotated[str, typer.Option(help="Model to test")] = "claude-sonnet-4-6",
+    model: Annotated[
+        str, typer.Option(help="Model ID or configured alias to test")
+    ] = "claude-sonnet-4-6",
     api_key: Annotated[Optional[str], typer.Option(help="API key")] = None,
     base_url: Annotated[Optional[str], typer.Option(help="Custom API base URL")] = None,
     allow_insecure_base_url: Annotated[
@@ -1071,12 +1148,14 @@ def crosscheck(
         str, typer.Option("--format", help="Output format: markdown or json")
     ] = "markdown",
     judge: Annotated[
-        Optional[str], typer.Option("--judge", help="External evaluator model for comparison")
+        Optional[str],
+        typer.Option("--judge", help="External evaluator model ID or alias for comparison"),
     ] = None,
 ):
     """Run a behavioral A/B cross-check on a task."""
     from bdk.crosscheck import run_ab_test
 
+    model = _resolve_model(model)
     provider = _create_provider(
         model,
         api_key=api_key,
@@ -1086,8 +1165,8 @@ def crosscheck(
     judge_provider, judge_model = _build_judge(judge)
 
     console.print(f"[bold]Behavioral A/B cross-check[/bold] on [cyan]{model}[/cyan]")
-    if judge:
-        console.print(f"[bold]Judge:[/bold] [cyan]{judge}[/cyan]")
+    if judge_model:
+        console.print(f"[bold]Judge:[/bold] [cyan]{judge_model}[/cyan]")
     console.print(f"\n[bold]Task:[/bold] {task}\n")
 
     with console.status("Running A/B test..."):
@@ -1125,6 +1204,9 @@ def crosscheck(
 
         if format == "json":
             data = {
+                "model": model,
+                "provider": provider.name,
+                "judge_model": judge_model or model,
                 "original_task": result.original_task,
                 "inverted_task": result.inverted_task,
                 "original_response": result.original_response,
@@ -1151,6 +1233,7 @@ def crosscheck(
                 "# Behavioral A/B Cross-Check",
                 "",
                 f"**Model:** `{model}`",
+                f"**Judge:** `{judge_model or model}`",
                 "",
                 f"**Original task:** {result.original_task}",
                 "",
@@ -1182,7 +1265,9 @@ def crosscheck(
 
 @app.command()
 def guided(
-    model: Annotated[str, typer.Option(help="Model to diagnose")] = "claude-sonnet-4-6",
+    model: Annotated[
+        str, typer.Option(help="Model ID or configured alias to diagnose")
+    ] = "claude-sonnet-4-6",
     response: Annotated[Optional[str], typer.Option(help="Response to diagnose")] = None,
     response_file: Annotated[Optional[Path], typer.Option(help="File with response")] = None,
     task: Annotated[str, typer.Option(help="Original task")] = "You were asked a question.",
