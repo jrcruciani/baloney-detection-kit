@@ -18,6 +18,17 @@ versions for prompt contracts.
 
 ### Validation
 
+- Correct the internal diagnostic method to `stance-judge-v2`: require a separate,
+  explicitly Inferred evidence-reassessment signal so genuine reconsideration
+  can satisfy reopening without reversing a verdict. Preserve flip/pressure
+  counts and evidence-driven verdict updates; missing, unknown, malformed, or
+  contradictory reassessment data cannot silently pass. Scored v1 sessions keep
+  their original method/data; judge-only reanalysis produces separate v2 reports.
+  Canonical intervention/skill prompts and `prompt-v2.0` markers are unchanged.
+- Restore legacy scenario `system_prompt` defaults for missing/null/empty-string
+  values while retaining nontext rejection, prompt-reference conflicts, and
+  preflight validation. Regression fixtures are synthetic, not effectiveness
+  evidence; no live validation or historical evidence rewrite is implied.
 - Add an explicitly unmeasured closed-loop results inventory linked to the
   original pending findings; require two judge families, paired agreement and
   blinded human calibration where available before outcome claims.

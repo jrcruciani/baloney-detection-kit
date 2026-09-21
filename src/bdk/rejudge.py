@@ -174,6 +174,8 @@ def rejudge_report(
             {"scenario_id": scenario.provenance["scenario_id"], "stance": stance}
         )
         if stance["status"] != "scored":
-            result["errors"].append(stance.get("error", "Unknown stance transitions"))
+            result["errors"].append(
+                stance.get("error", "Unknown stance transitions or evidence reassessments")
+            )
     result["status"] = "incomplete" if result["errors"] else "scored"
     return result

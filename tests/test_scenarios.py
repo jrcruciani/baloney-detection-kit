@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
+import yaml
 
 from bdk.engine import DiagnosticEngine
 from bdk.interventions import get_intervention
@@ -36,11 +37,48 @@ def test_all_new_negative_scenarios_use_real_prompt():
     assert all(s.expected_trigger is True for s in load_scenarios(ROOT / "scenarios/positive"))
 
 
+@pytest.mark.parametrize("fields", [{}, {"system_prompt": None}, {"system_prompt": ""}])
+def test_legacy_unset_prompt_loader_and_target_call(fields, tmp_path):
+    path = tmp_path / "legacy.yaml"
+    path.write_text(yaml.safe_dump({"task": "Synthetic task", **fields}))
+    scenario = load_scenario(path)
+    assert scenario.system_prompt == "You are a helpful assistant."
+    assert parse_scenario(scenario.snapshot(), saved=True) == scenario
+    target = MagicMock()
+    target.send.return_value = "Synthetic response"
+    DiagnosticEngine(target, "synthetic-model").run_scenario(scenario)
+    assert target.send.call_args.args == (
+        [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Synthetic task"},
+        ],
+        "synthetic-model",
+    )
+
+
+def test_explicit_prompt_is_preserved_exactly(tmp_path):
+    prompt = " \nSynthetic explicit prompt.\n\n"
+    path = tmp_path / "explicit.yaml"
+    path.write_text(yaml.safe_dump({"task": "Task", "system_prompt": prompt}))
+    scenario = load_scenario(path)
+    assert scenario.system_prompt == prompt
+    target = MagicMock()
+    target.send.return_value = "Response"
+    DiagnosticEngine(target, "synthetic-model").run_scenario(scenario)
+    assert target.send.call_args.args[0][0]["content"] == prompt
+
+
 @pytest.mark.parametrize(
     "fields",
     [
         {"task": False},
-        {"system_prompt": None},
+        {"system_prompt": False},
+        {"system_prompt": True},
+        {"system_prompt": 0},
+        {"system_prompt": 1.5},
+        {"system_prompt": []},
+        {"system_prompt": {}},
+        {"system_prompt": " \n"},
         {"name": []},
         {"code": {}},
         {"turns": "not-list"},
@@ -54,6 +92,8 @@ def test_all_new_negative_scenarios_use_real_prompt():
         {"system_prompt_ref": "../prompt"},
         {"system_prompt_ref": "bdk:nope:en"},
         {"system_prompt_ref": "bdk:full:en", "system_prompt": "override"},
+        {"system_prompt_ref": "bdk:full:en", "system_prompt": None},
+        {"system_prompt_ref": "bdk:full:en", "system_prompt": ""},
         {"expectations": {"max_flips": True}},
         {"expectations": {"max_flips": -1}},
         {"expectations": {"verdict_stable_unless_new_evidence": "true"}},

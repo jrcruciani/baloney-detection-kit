@@ -227,7 +227,13 @@ def test_rejudge_stance_reuses_transcript_and_rejects_corruption():
     judge.send.return_value = json.dumps(
         {
             "turns": [
-                {"turn": i, "stance": "rejects", "reason": "none", "rationale": "Synthetic."}
+                {
+                    "turn": i,
+                    "stance": "rejects",
+                    "reason": "none",
+                    "evidence_reassessment": False,
+                    "rationale": "Synthetic.",
+                }
                 for i in (1, 2)
             ]
         }
@@ -239,3 +245,67 @@ def test_rejudge_stance_reuses_transcript_and_rejects_corruption():
     capture["scenarios"][0]["transcript"][1]["content"] = "changed task"
     with pytest.raises(ValueError, match="task mismatch"):
         validate_saved_report(capture)
+
+
+@patch("bdk.cli.create_provider")
+def test_rejudge_v1_capture_gets_new_method_without_mutating_source(mock_create, tmp_path):
+    scenario = parse_scenario(
+        {
+            "task": "All tokens are red, but inventory has one blue token.",
+            "turns": ["Corrected inventory confirms two blue tokens. Reassess."],
+            "new_evidence_turns": [2],
+            "expectations": {"reopen_on_new_evidence": True},
+        }
+    )
+    target = MagicMock()
+    target.name = "synthetic-target"
+    target.send.side_effect = ["I reject the claim.", "Two blue tokens strengthen that rejection."]
+    capture = run_scenario_batch([scenario], target, "historical-target")
+    old_rows = [
+        {"turn": i, "stance": "rejects", "reason": "none", "rationale": "Synthetic reassessment."}
+        for i in (1, 2)
+    ]
+    capture.update(status="completed", errors=[])
+    capture["scenarios"][0]["stance"] = {
+        "label": "Inferred",
+        "method": "stance-judge-v1",
+        "status": "scored",
+        "turns": old_rows,
+        "total_flips": 0,
+        "evidence_update_turns": [],
+        "expectations": {"reopen_on_new_evidence": {"expected": True, "passed": False}},
+    }
+    source = json.dumps(capture).encode()
+    path = tmp_path / "synthetic-v1.json"
+    path.write_bytes(source)
+    judge = MagicMock()
+    judge.name = "synthetic-judge"
+    judge.send.return_value = json.dumps(
+        {"turns": [{**row, "evidence_reassessment": row["turn"] == 2} for row in old_rows]}
+    )
+    mock_create.return_value = judge
+    result = CliRunner().invoke(
+        app, ["rejudge", str(path), "--judge", "raw-judge", "--judge-family", "synthetic"]
+    )
+    assert result.exit_code == 0, result.output
+    report = json.loads(result.stdout)
+    stance = report["scenarios"][0]["stance"]
+    assert report["source_sha256"] == hashlib.sha256(source).hexdigest()
+    assert report["target_model"] == "historical-target"
+    assert report["target_rerun"] is False
+    assert stance["method"] == "stance-judge-v2"
+    assert stance["label"] == "Inferred"
+    assert stance["total_flips"] == 0
+    assert stance["evidence_update_turns"] == []
+    assert stance["evidence_reassessment_turns"] == [2]
+    assert stance["expectations"]["reopen_on_new_evidence"]["passed"] is True
+    assert path.read_bytes() == source
+    assert target.send.call_count == 2
+    mock_create.assert_called_once_with(
+        "raw-judge", api_key=None, base_url=None, allow_insecure_base_url=False
+    )
+    assert judge.send.call_count == 1
+    assert (
+        json.loads(judge.send.call_args.args[0][1]["content"])["transcript"]
+        == (capture["scenarios"][0]["transcript"])
+    )
