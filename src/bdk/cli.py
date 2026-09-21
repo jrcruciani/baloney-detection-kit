@@ -15,7 +15,7 @@ from rich.table import Table
 
 from bdk import __version__
 from bdk.engine import DiagnosticEngine
-from bdk.interventions import get_intervention, list_interventions
+from bdk.interventions import get_intervention
 from bdk.prompts import (
     get_diagnostic_variant,
     get_flowchart,
@@ -230,13 +230,15 @@ def apply_prompt(
     output: Annotated[
         Optional[Path], typer.Option(help="Save the intervention prompt to a file")
     ] = None,
+    lang: Annotated[
+        str, typer.Option("--lang", help="Prompt language: en (all variants), es (compact/full)")
+    ] = "en",
 ):
     """Print or save a preventive BDK intervention prompt."""
     try:
-        prompt = get_intervention(variant)
-    except KeyError:
-        available = ", ".join(list_interventions())
-        console.print(f"[red]Unknown intervention {variant!r}. Choose one of: {available}.[/red]")
+        prompt = get_intervention(variant, lang=lang)
+    except (KeyError, ValueError) as exc:
+        console.print(str(exc.args[0]), style="red", markup=False)
         raise typer.Exit(1)
 
     if output:

@@ -1,8 +1,8 @@
 """Synchronize intervention distributions without rewriting Markdown wrappers.
 
-Only the marked prompt regions in ROOT_PROMPT.md and skill/SKILL.md are generated.
-The skill's plain text prompt and packaged intervention mirrors are whole-file
-outputs. Diagnostic prompts are deliberately outside this script's scope.
+Only marked prompt regions in the English/Spanish root wrappers and English
+skill/SKILL.md are generated. The English skill's plain text prompt and packaged
+intervention mirrors are whole-file outputs. Diagnostic prompts are out of scope.
 """
 
 from __future__ import annotations
@@ -18,6 +18,9 @@ END = "<!-- bdk:prompt:end -->"
 CANONICAL = Path("prompts/intervention/prompt-full.md")
 VARIANTS = ("compact", "full", "high-stakes", "agent", "reviewer", "second-opinion")
 WRAPPERS = (Path("ROOT_PROMPT.md"), Path("skill/SKILL.md"))
+SPANISH_CANONICAL = Path("prompts/intervention/es/prompt-full.md")
+SPANISH_VARIANTS = ("compact", "full")
+SPANISH_WRAPPERS = (Path("ROOT_PROMPT.es.md"),)
 SKILL_TEXT = Path("skill/prompts/critical_investigation_mode.txt")
 PACKAGED = Path("src/bdk/data/interventions")
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,26 +54,31 @@ def check_version(text: str, label: str, *, skill: bool = False) -> None:
 
 def outputs(root: Path) -> dict[Path, str]:
     """Validate every source/wrapper before returning any generated writes."""
-    canonical = read_text(root / CANONICAL)
-    check_version(canonical, str(CANONICAL))
-    _, region, _ = split_region(canonical, str(CANONICAL))
-    block = re.fullmatch(r"\n```text\n(.+\n)```\n", region, flags=re.DOTALL)
-    if block is None or "```" in block[1] or not block[1].strip():
-        raise ValueError(f"{CANONICAL}: expected one nonempty fenced text prompt")
-
     generated = {}
-    for wrapper in WRAPPERS:
-        text = read_text(root / wrapper)
-        check_version(text, str(wrapper), skill=wrapper.name == "SKILL.md")
-        prefix, _, suffix = split_region(text, str(wrapper))
-        generated[wrapper] = prefix + region + suffix
-    generated[SKILL_TEXT] = VERSION_MARKER + "\n" + block[1]
+    for canonical_path, variants, wrappers, packaged in (
+        (CANONICAL, VARIANTS, WRAPPERS, PACKAGED),
+        (SPANISH_CANONICAL, SPANISH_VARIANTS, SPANISH_WRAPPERS, PACKAGED / "es"),
+    ):
+        canonical = read_text(root / canonical_path)
+        check_version(canonical, str(canonical_path))
+        _, region, _ = split_region(canonical, str(canonical_path))
+        block = re.fullmatch(r"\n```text\n(.+\n)```\n", region, flags=re.DOTALL)
+        if block is None or "```" in block[1] or not block[1].strip():
+            raise ValueError(f"{canonical_path}: expected one nonempty fenced text prompt")
 
-    for variant in VARIANTS:
-        source = CANONICAL.parent / f"prompt-{variant}.md"
-        text = read_text(root / source)
-        check_version(text, str(source))
-        generated[PACKAGED / source.name] = text
+        for wrapper in wrappers:
+            text = read_text(root / wrapper)
+            check_version(text, str(wrapper), skill=wrapper.name == "SKILL.md")
+            prefix, _, suffix = split_region(text, str(wrapper))
+            generated[wrapper] = prefix + region + suffix
+        if canonical_path == CANONICAL:
+            generated[SKILL_TEXT] = VERSION_MARKER + "\n" + block[1]
+
+        for variant in variants:
+            source = canonical_path.parent / f"prompt-{variant}.md"
+            text = read_text(root / source)
+            check_version(text, str(source))
+            generated[packaged / source.name] = text
     return generated
 
 

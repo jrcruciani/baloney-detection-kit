@@ -123,7 +123,16 @@ Retrieve a preventive intervention:
 ```bash
 bdk apply compact
 bdk apply high-stakes --output system-prompt.md
+bdk apply compact --lang es
+bdk apply full --lang es --output system-prompt.es.md
 ```
+
+English (`--lang en`) remains the default for all six variants. Spanish (`es`)
+is available only for compact/full, including the self-contained
+[`ROOT_PROMPT.es.md`](ROOT_PROMPT.es.md). Unsupported languages and unavailable
+variants fail explicitly; they never fall back to English. Spanish prose keeps
+English section/output labels for machine parsing. See
+[language coverage and review](prompts/intervention/README.md#languages-and-translation-review).
 
 Run diagnosis:
 

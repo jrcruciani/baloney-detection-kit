@@ -35,6 +35,10 @@ jobs:
               assert find_spec(module) is None, f"Unexpected SDK installed: {module}"
           PY
           .venv-base/bin/bdk apply compact
+          .venv-base/bin/bdk apply compact --lang es --output "$RUNNER_TEMP/prompt-compact.es.md"
+          cmp prompts/intervention/es/prompt-compact.md "$RUNNER_TEMP/prompt-compact.es.md"
+          .venv-base/bin/bdk apply full --lang es --output "$RUNNER_TEMP/prompt-full.es.md"
+          cmp prompts/intervention/es/prompt-full.md "$RUNNER_TEMP/prompt-full.es.md"
 
   test:
     runs-on: ubuntu-latest

@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 
 from bdk import __version__
 from bdk.cli import app
+from bdk.interventions import get_intervention, list_interventions
 
 runner = CliRunner()
 
@@ -38,6 +39,13 @@ class TestOptionalSDKs:
                 assert result.exit_code == 0, result.output
                 assert "Compact Prompt" in result.output
                 assert "proportionate epistemic friction" in result.output
+                for variant in ("compact", "full"):
+                    result = CliRunner().invoke(
+                        bdk.cli.app, ["apply", variant, "--lang", "es"]
+                    )
+                    assert result.exit_code == 0, result.output
+                    assert "fricción epistémica proporcionada" in result.output
+                    assert "<!-- bdk prompt-v2.0 -->" in result.output
                 for name in ("anthropic", "openai", "google", "google.genai"):
                     assert sys.modules[name] is None
             """),
@@ -101,6 +109,86 @@ class TestOptionalSDKs:
             'Provider "anthropic" requires: pip install "baloney-detection-kit[anthropic]"'
         ) in result.output
         assert "Traceback" not in result.output
+
+
+class TestApplyCommand:
+    def test_no_options_preserve_english_compact(self):
+        default = runner.invoke(app, ["apply"])
+        explicit = runner.invoke(app, ["apply", "compact", "--lang", "en"])
+        assert default.exit_code == explicit.exit_code == 0
+        assert default.output == explicit.output
+
+    @pytest.mark.parametrize("variant", ["compact", "full"])
+    def test_spanish_stdout(self, variant):
+        result = runner.invoke(app, ["apply", variant, "--lang", "es"])
+        assert result.exit_code == 0
+        assert result.output.startswith("<!-- bdk prompt-v2.0 -->\n")
+        assert "fricción epistémica proporcionada" in result.output
+        assert "GATE 1" in result.output
+        assert "GATE 2" in result.output
+        assert "Add proportionate epistemic friction" not in result.output
+
+    @pytest.mark.parametrize("lang", ["en", "es"])
+    def test_default_variant_is_compact(self, lang):
+        default = runner.invoke(app, ["apply", "--lang", lang])
+        explicit = runner.invoke(app, ["apply", "compact", "--lang", lang])
+        assert default.exit_code == explicit.exit_code == 0
+        assert default.output == explicit.output
+
+    @pytest.mark.parametrize("variant", list_interventions())
+    def test_default_language_remains_english(self, variant):
+        default = runner.invoke(app, ["apply", variant])
+        explicit = runner.invoke(app, ["apply", variant, "--lang", "en"])
+        assert default.exit_code == explicit.exit_code == 0
+        assert default.output == explicit.output
+        assert "GATE 1" in default.output
+
+    @pytest.mark.parametrize(
+        "lang,variant",
+        [(lang, variant) for lang in ("en", "es") for variant in list_interventions(lang=lang)],
+    )
+    def test_output_file_preserves_exact_prompt(self, tmp_path, lang, variant):
+        output = tmp_path / "prompt.md"
+        result = runner.invoke(app, ["apply", variant, "--lang", lang, "--output", str(output)])
+        assert result.exit_code == 0
+        assert output.read_bytes() == get_intervention(variant, lang=lang).encode("utf-8")
+        assert "Intervention saved to" in result.output
+        assert "<!-- bdk prompt-v2.0 -->" not in result.output
+
+    @pytest.mark.parametrize("lang", ["unknown", "pt", "fr", "", "ES", "../en", "/en"])
+    def test_invalid_language_errors_without_writing(self, tmp_path, lang):
+        output = tmp_path / "prompt.md"
+        output.write_text("Keep existing content", encoding="utf-8")
+        result = runner.invoke(app, ["apply", "full", "--lang", lang, "--output", str(output)])
+        assert result.exit_code == 1
+        assert isinstance(result.exception, SystemExit)
+        assert "Unsupported intervention language" in result.output
+        assert "en, es" in result.output
+        assert "Traceback" not in result.output
+        assert "<!-- bdk prompt-" not in result.output
+        assert output.read_text(encoding="utf-8") == "Keep existing content"
+
+    @pytest.mark.parametrize("lang", ["en", "es"])
+    @pytest.mark.parametrize("variant", ["unknown", "../prompt-full", "/full", "es/full"])
+    def test_invalid_variant_errors_without_writing(self, tmp_path, lang, variant):
+        output = tmp_path / "prompt.md"
+        result = runner.invoke(app, ["apply", variant, "--lang", lang, "--output", str(output)])
+        assert result.exit_code == 1
+        assert isinstance(result.exception, SystemExit)
+        assert "not found for language" in result.output
+        assert "Traceback" not in result.output
+        assert not output.exists()
+
+    @pytest.mark.parametrize("variant", ["high-stakes", "agent", "reviewer", "second-opinion"])
+    def test_unavailable_spanish_variant_errors_without_fallback(self, tmp_path, variant):
+        output = tmp_path / "prompt.md"
+        result = runner.invoke(app, ["apply", variant, "--lang", "es", "--output", str(output)])
+        assert result.exit_code == 1
+        assert isinstance(result.exception, SystemExit)
+        assert "not found for language 'es'" in result.output
+        assert "compact, full" in " ".join(result.output.split())
+        assert "<!-- bdk prompt-" not in result.output
+        assert not output.exists()
 
 
 class TestListCommand:
