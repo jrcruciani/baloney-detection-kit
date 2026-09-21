@@ -27,25 +27,32 @@ class TestSessionState:
 
     def test_remaining_steps_all(self):
         sess = SessionState.create(
-            provider_name="openai", model="gpt-4o",
+            provider_name="openai",
+            model="gpt-4o",
             sequence=["2.1", "2.4", "2.5"],
         )
         assert sess.remaining_steps == ["2.1", "2.4", "2.5"]
 
     def test_remaining_steps_partial(self):
         sess = SessionState.create(
-            provider_name="openai", model="gpt-4o",
+            provider_name="openai",
+            model="gpt-4o",
             sequence=["2.1", "2.4", "2.5"],
         )
         sess.completed_steps = [
-            {"prompt_id": "2.1", "prompt_name": "Layer Map",
-             "prompt_text": "test", "response": "resp"},
+            {
+                "prompt_id": "2.1",
+                "prompt_name": "Layer Map",
+                "prompt_text": "test",
+                "response": "resp",
+            },
         ]
         assert sess.remaining_steps == ["2.4", "2.5"]
 
     def test_remaining_steps_all_done(self):
         sess = SessionState.create(
-            provider_name="openai", model="gpt-4o",
+            provider_name="openai",
+            model="gpt-4o",
             sequence=["2.1", "2.4"],
         )
         sess.completed_steps = [
@@ -64,8 +71,12 @@ class TestSessionState:
             task="Review code",
         )
         sess.completed_steps = [
-            {"prompt_id": "2.1", "prompt_name": "Layer Map",
-             "prompt_text": "diagnose", "response": "analysis result"},
+            {
+                "prompt_id": "2.1",
+                "prompt_name": "Layer Map",
+                "prompt_text": "diagnose",
+                "response": "analysis result",
+            },
         ]
         sess.messages = [
             {"role": "system", "content": "You are..."},
@@ -92,7 +103,9 @@ class TestSessionState:
     def test_save_updates_timestamp(self, tmp_path):
         path = tmp_path / "session.json"
         sess = SessionState.create(
-            provider_name="openai", model="gpt-4o", sequence=["2.1"],
+            provider_name="openai",
+            model="gpt-4o",
+            sequence=["2.1"],
         )
         sess.save(path)
         first_update = sess.updated_at

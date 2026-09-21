@@ -219,9 +219,7 @@ class TestGetInterventionPrompts:
         assert all(p["mode"] == "diagnostic+intervention" for p in prompts)
 
     def test_count_matches_filter(self):
-        assert len(get_intervention_prompts()) == len(
-            list_prompts(mode="diagnostic+intervention")
-        )
+        assert len(get_intervention_prompts()) == len(list_prompts(mode="diagnostic+intervention"))
 
 
 class TestFlowchartObservationDescriptions:

@@ -20,7 +20,10 @@ runner = CliRunner()
 class TestOptionalSDKs:
     def test_clean_import_and_apply_without_any_sdk(self):
         result = subprocess.run(
-            [sys.executable, "-c", textwrap.dedent("""
+            [
+                sys.executable,
+                "-c",
+                textwrap.dedent("""
                 import sys
 
                 assert "bdk.cli" not in sys.modules
@@ -37,7 +40,8 @@ class TestOptionalSDKs:
                 assert "proportionate epistemic friction" in result.output
                 for name in ("anthropic", "openai", "google", "google.genai"):
                     assert sys.modules[name] is None
-            """)],
+            """),
+            ],
             env={"PATH": os.environ.get("PATH", ""), "PYTHONPATH": os.pathsep.join(sys.path)},
             capture_output=True,
             text=True,
@@ -45,16 +49,22 @@ class TestOptionalSDKs:
         )
         assert result.returncode == 0, result.stdout + result.stderr
 
-    @pytest.mark.parametrize("command", [
-        ["run", "1.1", "--response", "test response"],
-        ["crosscheck", "--task", "test task"],
-    ])
-    @pytest.mark.parametrize("model,provider,extra", [
-        ("claude-sonnet-4-6", "anthropic", "anthropic"),
-        ("gpt-4o", "openai", "openai"),
-        ("gemini-pro", "gemini", "gemini"),
-        ("azure/gpt-5", "azure_foundry", "openai"),
-    ])
+    @pytest.mark.parametrize(
+        "command",
+        [
+            ["run", "1.1", "--response", "test response"],
+            ["crosscheck", "--task", "test task"],
+        ],
+    )
+    @pytest.mark.parametrize(
+        "model,provider,extra",
+        [
+            ("claude-sonnet-4-6", "anthropic", "anthropic"),
+            ("gpt-4o", "openai", "openai"),
+            ("gemini-pro", "gemini", "gemini"),
+            ("azure/gpt-5", "azure_foundry", "openai"),
+        ],
+    )
     def test_missing_sdk_has_clean_install_hint(self, monkeypatch, command, model, provider, extra):
         for name in ("anthropic", "openai", "google", "google.genai"):
             monkeypatch.setitem(sys.modules, name, None)
@@ -69,10 +79,13 @@ class TestOptionalSDKs:
             f'Provider "{provider}" requires: pip install "baloney-detection-kit[{extra}]"'
         )
 
-    @pytest.mark.parametrize("command", [
-        ["crosscheck", "--task", "test task", "--judge", "claude-sonnet-4-6"],
-        ["ratchet", "--response", "test response", "--coherence-judge", "claude-sonnet-4-6"],
-    ])
+    @pytest.mark.parametrize(
+        "command",
+        [
+            ["crosscheck", "--task", "test task", "--judge", "claude-sonnet-4-6"],
+            ["ratchet", "--response", "test response", "--coherence-judge", "claude-sonnet-4-6"],
+        ],
+    )
     def test_missing_judge_sdk_has_clean_install_hint(self, monkeypatch, openai_sdk, command):
         monkeypatch.setitem(sys.modules, "anthropic", None)
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
@@ -176,6 +189,27 @@ class TestRunCommand:
 
 
 class TestReadInputLimits:
+    @pytest.mark.parametrize("source", ["text", "file", "stdin"])
+    @pytest.mark.parametrize("max_bytes", [None, 4])
+    def test_reads_valid_input(self, source, max_bytes, tmp_path, monkeypatch):
+        from io import StringIO
+
+        from bdk.cli import _read_input
+
+        text = "abcd"
+        path = tmp_path / "response.txt"
+        path.write_text(text, encoding="utf-8")
+        monkeypatch.setattr(sys, "stdin", StringIO(text))
+
+        assert (
+            _read_input(
+                text if source == "text" else None,
+                path if source == "file" else None,
+                max_bytes=max_bytes,
+            )
+            == text
+        )
+
     def test_response_text_limit(self):
         import typer
 
@@ -209,6 +243,35 @@ class TestReadInputLimits:
             _read_input(None, None, max_bytes=3)
 
 
+class TestRatchetSessionPersistence:
+    @pytest.mark.parametrize("resume", [False, True])
+    @patch("bdk.cli.create_provider")
+    def test_saves_completed_steps(self, mock_create, resume, tmp_path):
+        from bdk.session import SessionState
+
+        provider = MagicMock()
+        provider.name = "mock"
+        provider.send.return_value = "[Observed] This is a diagnostic response."
+        mock_create.return_value = provider
+        path = tmp_path / "ratchet.json"
+        if resume:
+            SessionState.create(provider_name="mock", model="mock-model", sequence=["1.1"]).save(
+                path
+            )
+            args = ["--resume", str(path)]
+        else:
+            args = ["--session", str(path), "--response", "Initial response."]
+
+        result = runner.invoke(app, ["ratchet", "--model", "mock-model", *args])
+
+        assert result.exit_code == 0, result.output
+        saved = SessionState.load(path)
+        assert saved.completed_steps
+        assert saved.remaining_steps == []
+        assert len(saved.completed_steps) == provider.send.call_count
+        assert saved.messages[-1]["content"] == provider.send.return_value
+
+
 class TestNoArgsShowsWelcome:
     def test_no_args_shows_welcome(self):
         result = runner.invoke(app, [])
@@ -222,6 +285,7 @@ class TestRegexCoherenceWarning:
 
     def _make_session_json(self, tmp_path, n_steps: int):
         import json
+
         steps = [
             {
                 "prompt_id": f"p{i}",
@@ -380,9 +444,7 @@ class TestRatchetBehavioral:
 
         scenario = tmp_path / "scenario.yaml"
         scenario.write_text(
-            "name: prompt propagation\n"
-            "system_prompt: Use BDK.\n"
-            "task: Test this claim.\n",
+            "name: prompt propagation\nsystem_prompt: Use BDK.\ntask: Test this claim.\n",
             encoding="utf-8",
         )
 

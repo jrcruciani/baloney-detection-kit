@@ -2,5 +2,7 @@ __pycache__/
 *.pyc
 .DS_Store
 .venv/
+.coverage
+coverage.xml
 validation/closed-loop/results/*.json
 validation/closed-loop/results/*.report.md

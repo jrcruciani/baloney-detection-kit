@@ -27,15 +27,17 @@ def _judge_json(
     presentation_shift_score: float = 0.0,
     comparison: str = "Responses agree on substance. Observed: tone differs.",
 ) -> str:
-    return json.dumps({
-        "substance_changed": substance_changed,
-        "severity_labels_shifted": severity_labels_shifted,
-        "urgency_language_shifted": urgency_language_shifted,
-        "hedging_delta": hedging_delta,
-        "omissions_added": omissions_added or [],
-        "presentation_shift_score": presentation_shift_score,
-        "comparison": comparison,
-    })
+    return json.dumps(
+        {
+            "substance_changed": substance_changed,
+            "severity_labels_shifted": severity_labels_shifted,
+            "urgency_language_shifted": urgency_language_shifted,
+            "hedging_delta": hedging_delta,
+            "omissions_added": omissions_added or [],
+            "presentation_shift_score": presentation_shift_score,
+            "comparison": comparison,
+        }
+    )
 
 
 class TestHeuristicSubstanceChanged:
@@ -95,8 +97,10 @@ class TestBuildResultFromJudge:
             comparison="Presentation softened without substance change.",
         )
         result = _build_result_from_judge(
-            original_task="t", inverted_task="i",
-            original_response="A", inverted_response="B",
+            original_task="t",
+            inverted_task="i",
+            original_response="A",
+            inverted_response="B",
             raw_comparison=raw,
         )
         assert isinstance(result, ABTestResult)
@@ -115,8 +119,10 @@ class TestBuildResultFromJudge:
             hedging_delta=-5.0,  # too low
         )
         result = _build_result_from_judge(
-            original_task="t", inverted_task="i",
-            original_response="A", inverted_response="B",
+            original_task="t",
+            inverted_task="i",
+            original_response="A",
+            inverted_response="B",
             raw_comparison=raw,
         )
         assert result.presentation_shift_score == 1.0
@@ -126,8 +132,10 @@ class TestBuildResultFromJudge:
         """Fields missing from JSON fall back to dataclass defaults."""
         raw = '{"substance_changed": true}'
         result = _build_result_from_judge(
-            original_task="t", inverted_task="i",
-            original_response="A", inverted_response="B",
+            original_task="t",
+            inverted_task="i",
+            original_response="A",
+            inverted_response="B",
             raw_comparison=raw,
         )
         assert result.substance_changed is True
@@ -139,8 +147,10 @@ class TestBuildResultFromJudge:
     def test_malformed_json_falls_back_to_heuristic(self):
         raw = "This comparison shows the model changed position on the topic."
         result = _build_result_from_judge(
-            original_task="t", inverted_task="i",
-            original_response="A", inverted_response="B",
+            original_task="t",
+            inverted_task="i",
+            original_response="A",
+            inverted_response="B",
             raw_comparison=raw,
         )
         # Heuristic fallback detected "changed position".
@@ -153,8 +163,10 @@ class TestBuildResultFromJudge:
     def test_malformed_json_heuristic_no_match(self):
         raw = "Not valid JSON and no substance-change keywords here."
         result = _build_result_from_judge(
-            original_task="t", inverted_task="i",
-            original_response="A", inverted_response="B",
+            original_task="t",
+            inverted_task="i",
+            original_response="A",
+            inverted_response="B",
             raw_comparison=raw,
         )
         assert result.substance_changed is False
@@ -339,7 +351,8 @@ class TestPairProvenance:
             _judge_json(substance_changed=True),
         ]
         result = run_ab_test_with_user_task(
-            provider, "test-model",
+            provider,
+            "test-model",
             original_task="Original task",
             user_inverted_task="Analyst-authored inverse task",
         )
@@ -356,7 +369,8 @@ class TestPairProvenance:
             _judge_json(substance_changed=False),
         ]
         run_ab_test_with_user_task(
-            provider, "test-model",
+            provider,
+            "test-model",
             original_task="Task",
             user_inverted_task="Inverted task",
         )
@@ -371,7 +385,11 @@ class TestPairProvenance:
     def test_user_authored_provenance_explicit(self):
         """Can explicitly set user-authored provenance on an ABTestResult."""
         result = ABTestResult(
-            "t", "i", "r1", "r2", "c",
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
             substance_changed=False,
             pair_provenance="user-authored",
         )

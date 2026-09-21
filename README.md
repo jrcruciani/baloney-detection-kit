@@ -84,6 +84,24 @@ For a source checkout (including the example scenarios below), use
 `pip install -e .` for the base CLI or `pip install -e ".[all]"` for live runs.
 Contributors can use `pip install -e ".[dev]"` to run unit tests without provider SDKs.
 
+CI checks pull requests against any branch, including stacked PRs, on Python
+3.11, 3.12, and 3.13. Run the same offline checks locally:
+
+```bash
+ruff check src/ tests/
+ruff format --check src/ tests/
+mypy src/bdk
+pytest -m "not integration" --cov=bdk --cov-report=xml --cov-report=term-missing --cov-fail-under=60
+```
+
+Use `ruff format src/ tests/` to apply formatting. Type checking includes
+unannotated function bodies without requiring strict annotations everywhere.
+The base-install smoke job separately checks that the CLI works without SDKs.
+CI uploads coverage per Python version and runs `pip-audit` against the resolved
+development environment in a separate, initially non-blocking job; inspect its
+step output and job summary for findings or audit failures. Dependabot checks
+Python dependencies and pinned GitHub Actions weekly.
+
 Retrieve a preventive intervention:
 
 ```bash

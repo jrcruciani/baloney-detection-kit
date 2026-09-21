@@ -149,13 +149,17 @@ class TestCountStructuredLabels:
 
     def test_empty_text(self):
         assert count_structured_labels("") == {
-            "observed": 0, "inferred": 0, "weakly_grounded": 0,
+            "observed": 0,
+            "inferred": 0,
+            "weakly_grounded": 0,
         }
 
     def test_prose_only_returns_zero(self):
         text = "I observed the model. It inferred my intent."
         assert count_structured_labels(text) == {
-            "observed": 0, "inferred": 0, "weakly_grounded": 0,
+            "observed": 0,
+            "inferred": 0,
+            "weakly_grounded": 0,
         }
 
 
@@ -175,6 +179,7 @@ class TestReportIntegration:
 
     def test_structured_path(self):
         from bdk.report import count_labels
+
         text = "- [Observed] claim A\n- [Inferred] claim B\n- [Inferred] claim C"
         counts = count_labels(text)
         assert counts["observed"] == 1
@@ -183,10 +188,8 @@ class TestReportIntegration:
     def test_structured_ignores_prose(self):
         """Prose uses DO NOT inflate counts when structured labels are present."""
         from bdk.report import count_labels
-        text = (
-            "I observed previously. I inferred before too.\n"
-            "- [Observed] real labeled claim\n"
-        )
+
+        text = "I observed previously. I inferred before too.\n- [Observed] real labeled claim\n"
         counts = count_labels(text)
         assert counts["observed"] == 1  # NOT 2
         assert counts["inferred"] == 0  # NOT 1
@@ -194,6 +197,7 @@ class TestReportIntegration:
     def test_legacy_fallback(self):
         """When no structured labels, falls back to bare-word regex."""
         from bdk.report import count_labels
+
         text = "I observed the model behavior and inferred the cause."
         counts = count_labels(text)
         # Legacy regex matches both bare words

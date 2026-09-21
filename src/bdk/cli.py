@@ -32,6 +32,7 @@ from bdk.report import (
     generate_report,
 )
 from bdk.security import (
+    DEFAULT_MAX_INPUT_BYTES,
     ensure_text_within_limit,
     private_write_text,
     read_text_file_limited,
@@ -74,16 +75,14 @@ def _warn_regex_coherence_if_applicable(n_steps: int, console: Console) -> bool:
 
 def _read_input(text: str | None, file: Path | None, *, max_bytes: int | None = None) -> str:
     """Read input from flag, file, or stdin."""
+    limit = DEFAULT_MAX_INPUT_BYTES if max_bytes is None else max_bytes
     try:
         if text is not None:
-            kwargs = {"max_bytes": max_bytes} if max_bytes is not None else {}
-            return ensure_text_within_limit(text, source="--response", **kwargs)
+            return ensure_text_within_limit(text, source="--response", max_bytes=limit)
         if file:
-            kwargs = {"max_bytes": max_bytes} if max_bytes is not None else {}
-            return read_text_file_limited(file, **kwargs)
+            return read_text_file_limited(file, max_bytes=limit)
         if not sys.stdin.isatty():
-            kwargs = {"max_chars": max_bytes} if max_bytes is not None else {}
-            return read_text_stream_limited(sys.stdin, **kwargs)
+            return read_text_stream_limited(sys.stdin, max_chars=limit)
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
     raise typer.BadParameter("Provide --response, --response-file, or pipe via stdin")
@@ -252,10 +251,12 @@ def apply_prompt(
 def list_cmd(
     by_level: Annotated[bool, typer.Option("--by-level", help="Group prompts by level")] = False,
     diagnostic_only: Annotated[
-        bool, typer.Option("--diagnostic-only", help="Show only diagnostic prompts"),
+        bool,
+        typer.Option("--diagnostic-only", help="Show only diagnostic prompts"),
     ] = False,
     intervention_only: Annotated[
-        bool, typer.Option("--intervention-only", help="Show only intervention prompts"),
+        bool,
+        typer.Option("--intervention-only", help="Show only intervention prompts"),
     ] = False,
 ):
     """List all available diagnostic prompts."""
@@ -281,8 +282,12 @@ def list_cmd(
 
         for p in list_prompts(mode=mode):
             table.add_row(
-                p["id"], p["name"], str(p["level"]), p["category"],
-                p.get("mode", ""), p["description"],
+                p["id"],
+                p["name"],
+                str(p["level"]),
+                p["category"],
+                p.get("mode", ""),
+                p["description"],
             )
         console.print(table)
     else:
@@ -307,8 +312,7 @@ def list_cmd(
             console.print(f"  [bold yellow]{obs['label']}[/bold yellow]")
             for prompt_id, prompt in prompts:
                 console.print(
-                    f"    [cyan]{prompt_id}[/cyan] {prompt['name']} — "
-                    f"{prompt['description']}"
+                    f"    [cyan]{prompt_id}[/cyan] {prompt['name']} — {prompt['description']}"
                 )
             console.print()
 
@@ -453,8 +457,8 @@ def ratchet(
         typer.Option(
             "--coherence-judge",
             help="LLM judge model for semantic coherence analysis (e.g. claude-sonnet-4-5). "
-                 "Defaults to the regex-based analyzer when not set. "
-                 "Ideally different from the model being diagnosed to avoid self-eval bias.",
+            "Defaults to the regex-based analyzer when not set. "
+            "Ideally different from the model being diagnosed to avoid self-eval bias.",
         ),
     ] = None,
     coherence_checkpoint: Annotated[
@@ -486,6 +490,7 @@ def ratchet(
     """Run the full 9-step diagnostic ratchet sequence."""
     from bdk.session import SessionState
 
+    sess: SessionState | None
     # Handle session resume
     if resume:
         try:
@@ -555,9 +560,7 @@ def ratchet(
                 initial = engine.setup_scenario(task_text, scenario_system_prompt)
 
             console.print(
-                Panel(
-                    initial[:500] + ("..." if len(initial) > 500 else ""), title="Model response"
-                )
+                Panel(initial[:500] + ("..." if len(initial) > 500 else ""), title="Model response")
             )
 
         elif response or response_file:
@@ -572,9 +575,7 @@ def ratchet(
             with console.status("Sending task to model..."):
                 initial = engine.setup_scenario(task)
             console.print(
-                Panel(
-                    initial[:500] + ("..." if len(initial) > 500 else ""), title="Model response"
-                )
+                Panel(initial[:500] + ("..." if len(initial) > 500 else ""), title="Model response")
             )
 
         else:
@@ -601,27 +602,28 @@ def ratchet(
     elif resume:
         sess = SessionState.load(resume)
 
+    session_path = session or resume
     console.print(f"\n[bold]Running {len(sequence)}-step diagnostic ratchet[/bold]\n")
 
     ab_result = None
 
     def on_step(step):
         labels = count_labels(step.response)
-        label_str = (
-            f"[green]{labels['observed']}O[/green] "
-            f"[yellow]{labels['inferred']}I[/yellow]"
-        )
+        label_str = f"[green]{labels['observed']}O[/green] [yellow]{labels['inferred']}I[/yellow]"
         console.print(f"  [green]✓[/green] {step.prompt_id} — {step.prompt_name}  {label_str}")
         # Save session state after each step
         if sess is not None:
-            sess.completed_steps.append({
-                "prompt_id": step.prompt_id,
-                "prompt_name": step.prompt_name,
-                "prompt_text": step.prompt_text,
-                "response": step.response,
-            })
+            sess.completed_steps.append(
+                {
+                    "prompt_id": step.prompt_id,
+                    "prompt_name": step.prompt_name,
+                    "prompt_text": step.prompt_text,
+                    "response": step.response,
+                }
+            )
             sess.messages = engine.messages.copy()
-            sess.save(session or resume)
+            assert session_path is not None
+            sess.save(session_path)
 
     if behavioral:
         # Split sequence: run up to 2.5, then A/B test, then the rest
@@ -646,16 +648,17 @@ def ratchet(
                 console.print(f"  [dim]Judge: {judge}[/dim]")
             with console.status("Running A/B test..."):
                 ab_result = run_ab_test(
-                    engine.provider, engine.model, task_text,
+                    engine.provider,
+                    engine.model,
+                    task_text,
                     system_prompt=scenario_system_prompt,
-                    judge_provider=judge_provider, judge_model=judge_model,
+                    judge_provider=judge_provider,
+                    judge_model=judge_model,
                 )
             changed = "[red]yes[/red]" if ab_result.substance_changed else "[green]no[/green]"
             console.print(f"  [green]✓[/green] A/B cross-check — substance changed: {changed}")
             if ab_result.presentation_shift_score > 0.0:
-                shift_color = (
-                    "red" if ab_result.presentation_shift_score > 0.3 else "yellow"
-                )
+                shift_color = "red" if ab_result.presentation_shift_score > 0.3 else "yellow"
                 console.print(
                     f"  [dim]presentation shift: [{shift_color}]"
                     f"{ab_result.presentation_shift_score:.2f}[/{shift_color}][/dim]"
@@ -755,25 +758,39 @@ def ratchet(
     if output:
         if format == "json":
             report = generate_json_report(
-                engine, scenario_name, coherence=coherence_report, score=diag_score,
+                engine,
+                scenario_name,
+                coherence=coherence_report,
+                score=diag_score,
                 ab_result=ab_result,
             )
         else:
             report = generate_report(
-                engine, scenario_name, coherence=coherence_report, score=diag_score,
+                engine,
+                scenario_name,
+                coherence=coherence_report,
+                score=diag_score,
                 ab_result=ab_result,
             )
         private_write_text(output, report)
         console.print(f"\n[green]Report saved to {output}[/green]")
     elif format == "json":
-        console.print(generate_json_report(
-            engine, scenario_name, coherence=coherence_report, score=diag_score,
-            ab_result=ab_result,
-        ))
+        console.print(
+            generate_json_report(
+                engine,
+                scenario_name,
+                coherence=coherence_report,
+                score=diag_score,
+                ab_result=ab_result,
+            )
+        )
     else:
         console.print()
         report = generate_report(
-            engine, scenario_name, coherence=coherence_report, score=diag_score,
+            engine,
+            scenario_name,
+            coherence=coherence_report,
+            score=diag_score,
             ab_result=ab_result,
         )
         console.print(Markdown(report))
@@ -846,8 +863,7 @@ def compare(
             [
                 f"## {m}",
                 "",
-                f"> 🟢 Observed: {labels['observed']} · "
-                f"🟡 Inferred: {labels['inferred']}",
+                f"> 🟢 Observed: {labels['observed']} · 🟡 Inferred: {labels['inferred']}",
                 "",
                 step.response,
                 "",
@@ -903,8 +919,7 @@ def score(
 
     if "steps" not in data:
         console.print(
-            f"[red]Error:[/red] {report_file} is not a valid bdk report "
-            "(missing 'steps')"
+            f"[red]Error:[/red] {report_file} is not a valid bdk report (missing 'steps')"
         )
         raise typer.Exit(code=1)
 
@@ -939,10 +954,7 @@ def score(
     result = score_diagnosis(engine, coherence=coh)
 
     profile = result.support_profile
-    hyp_lines = "\n".join(
-        f"[bold]{h.name}:[/bold] {h.score:.2f}"
-        for h in profile.hypotheses
-    )
+    hyp_lines = "\n".join(f"[bold]{h.name}:[/bold] {h.score:.2f}" for h in profile.hypotheses)
     console.print(
         Panel(
             f"[bold]Dominant hypothesis:[/bold] {profile.dominant}\n"
@@ -984,8 +996,7 @@ def coherence(
 
     if "steps" not in data:
         console.print(
-            f"[red]Error:[/red] {report_file} is not a valid bdk report "
-            "(missing 'steps')"
+            f"[red]Error:[/red] {report_file} is not a valid bdk report (missing 'steps')"
         )
         raise typer.Exit(code=1)
     _ = None  # provider not needed for analysis
@@ -1079,8 +1090,11 @@ def crosscheck(
 
     with console.status("Running A/B test..."):
         result = run_ab_test(
-            provider, model, task,
-            judge_provider=judge_provider, judge_model=judge_model,
+            provider,
+            model,
+            task,
+            judge_provider=judge_provider,
+            judge_model=judge_model,
         )
 
     changed = "[red]Yes[/red]" if result.substance_changed else "[green]No[/green]"
@@ -1142,8 +1156,7 @@ def crosscheck(
                 "",
                 f"**Substance changed:** {'Yes' if result.substance_changed else 'No'}",
                 f"**Presentation shift score:** {result.presentation_shift_score:.2f}",
-                f"**Severity labels shifted:** "
-                f"{'Yes' if result.severity_labels_shifted else 'No'}",
+                f"**Severity labels shifted:** {'Yes' if result.severity_labels_shifted else 'No'}",
                 f"**Urgency language shifted:** "
                 f"{'Yes' if result.urgency_language_shifted else 'No'}",
                 f"**Hedging delta (A→B):** {result.hedging_delta:+.2f}",

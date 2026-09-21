@@ -149,7 +149,10 @@ class TestAzureFoundrySend:
 
     @pytest.mark.parametrize("temperature", [0.0, 0.3])
     def test_gpt_send_retries_without_temperature_when_responses_rejects_it(
-        self, foundry_env, openai_sdk, temperature,
+        self,
+        foundry_env,
+        openai_sdk,
+        temperature,
     ):
         fake_response = SimpleNamespace(
             output=[SimpleNamespace(content=[SimpleNamespace(text="pong")])]
@@ -183,13 +186,21 @@ class TestAzureFoundrySend:
         assert calls[0]["temperature"] == temperature
         assert "temperature" not in calls[1]
 
-    @pytest.mark.parametrize("bad_request,message,temperature", [
-        (False, "temperature rejected", 0.3),
-        (True, "model not found", 0.3),
-        (True, "temperature rejected", None),
-    ])
+    @pytest.mark.parametrize(
+        "bad_request,message,temperature",
+        [
+            (False, "temperature rejected", 0.3),
+            (True, "model not found", 0.3),
+            (True, "temperature rejected", None),
+        ],
+    )
     def test_no_retry_for_other_errors(
-        self, foundry_env, openai_sdk, bad_request, message, temperature,
+        self,
+        foundry_env,
+        openai_sdk,
+        bad_request,
+        message,
+        temperature,
     ):
         error_type = openai_sdk.BadRequestError if bad_request else RuntimeError
         error = error_type(message)
@@ -221,7 +232,9 @@ class TestAzureFoundrySend:
             text = provider.send([], "gpt-raw:id", response_format={"type": "json_object"})
         assert text == "pong"
         create.assert_called_once_with(
-            model="gpt-raw:id", input=[], text={"format": {"type": "json_object"}},
+            model="gpt-raw:id",
+            input=[],
+            text={"format": {"type": "json_object"}},
         )
 
     def test_insecure_endpoint_is_rejected_before_client_creation(self, foundry_env, openai_sdk):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
 from unittest.mock import MagicMock
 
 import pytest
@@ -20,6 +21,7 @@ from bdk.coherence_llm import (
     _find_balanced_json_object,
     _is_hedged,
     _parse_judge_response,
+    _retry_after_seconds,
     _strip_json_fence,
     analyze_coherence_auto,
     analyze_coherence_llm,
@@ -58,10 +60,10 @@ class _HttpStatusError(Exception):
 
 class TestStripJsonFence:
     def test_removes_json_fence(self):
-        assert _strip_json_fence("```json\n{\"a\": 1}\n```") == '{"a": 1}'
+        assert _strip_json_fence('```json\n{"a": 1}\n```') == '{"a": 1}'
 
     def test_removes_bare_fence(self):
-        assert _strip_json_fence("```\n{\"a\": 1}\n```") == '{"a": 1}'
+        assert _strip_json_fence('```\n{"a": 1}\n```') == '{"a": 1}'
 
     def test_passthrough(self):
         assert _strip_json_fence('{"a": 1}') == '{"a": 1}'
@@ -103,11 +105,15 @@ class TestComputeLLMScore:
 
     def test_high_score_with_references(self):
         claims = [
-            JudgedClaim(f"c{i}", "model", "observed",
-                        contradicts_prior_step=None,
-                        references_prior_step=1,
-                        is_fresh_claim=False,
-                        step_num=2 + (i % 3))
+            JudgedClaim(
+                f"c{i}",
+                "model",
+                "observed",
+                contradicts_prior_step=None,
+                references_prior_step=1,
+                is_fresh_claim=False,
+                step_num=2 + (i % 3),
+            )
             for i in range(10)
         ]
         score = _compute_llm_score(claims, total_steps=5)
@@ -115,11 +121,15 @@ class TestComputeLLMScore:
 
     def test_low_score_with_contradictions(self):
         claims = [
-            JudgedClaim(f"c{i}", "model", "observed",
-                        contradicts_prior_step=1,
-                        references_prior_step=None,
-                        is_fresh_claim=False,
-                        step_num=2 + (i % 3))
+            JudgedClaim(
+                f"c{i}",
+                "model",
+                "observed",
+                contradicts_prior_step=1,
+                references_prior_step=None,
+                is_fresh_claim=False,
+                step_num=2 + (i % 3),
+            )
             for i in range(5)
         ]
         score = _compute_llm_score(claims, total_steps=5)
@@ -139,16 +149,13 @@ class TestComputeLLMScore:
     def test_score_bounded(self):
         # extreme input -> still in [0, 1]
         claims = [
-            JudgedClaim("c", "model", "observed", 1, None, True, step_num=2)
-            for _ in range(50)
+            JudgedClaim("c", "model", "observed", 1, None, True, step_num=2) for _ in range(50)
         ]
         score = _compute_llm_score(claims, total_steps=3)
         assert 0.0 <= score <= 1.0
 
     def test_step_1_claims_ignored(self):
-        only_step_1 = [
-            JudgedClaim("c", "model", "observed", None, None, True, step_num=1)
-        ]
+        only_step_1 = [JudgedClaim("c", "model", "observed", None, None, True, step_num=1)]
         assert _compute_llm_score(only_step_1, total_steps=3) == 0.5
 
     def test_high_severity_contradiction_caps_score_below_genuine(self):
@@ -203,24 +210,28 @@ class TestAnalyzeCoherenceLLM:
         assert judge.send.call_count == 0
 
     def test_detects_semantic_contradiction(self):
-        engine = _engine_with([
-            "Step 1: model is optimizing for safety above all.",
-            "Step 2: actually the model is optimizing for helpfulness, not safety.",
-        ])
-        judge_json = json.dumps({
-            "claims": [
-                {
-                    "text": "model optimizes for helpfulness not safety",
-                    "layer": "model",
-                    "self_label": "inferred",
-                    "contradicts_prior_step": 1,
-                    "references_prior_step": 1,
-                    "is_fresh_claim": False,
-                    "severity": "high",
-                    "contradiction_explanation": "directly reverses step 1",
-                },
-            ],
-        })
+        engine = _engine_with(
+            [
+                "Step 1: model is optimizing for safety above all.",
+                "Step 2: actually the model is optimizing for helpfulness, not safety.",
+            ]
+        )
+        judge_json = json.dumps(
+            {
+                "claims": [
+                    {
+                        "text": "model optimizes for helpfulness not safety",
+                        "layer": "model",
+                        "self_label": "inferred",
+                        "contradicts_prior_step": 1,
+                        "references_prior_step": 1,
+                        "is_fresh_claim": False,
+                        "severity": "high",
+                        "contradiction_explanation": "directly reverses step 1",
+                    },
+                ],
+            }
+        )
         judge = _mock_judge([judge_json])
         report = analyze_coherence_llm(engine, judge, "judge-model")
         assert report.consistency_score <= 0.3
@@ -229,25 +240,53 @@ class TestAnalyzeCoherenceLLM:
         assert "step 1" in report.contradictions[0].lower()
 
     def test_detects_genuine_coherence(self):
-        engine = _engine_with([
-            "Step 1 claim about safety.",
-            "Step 2 building on step 1.",
-            "Step 3 building on step 1 and step 2.",
-        ])
+        engine = _engine_with(
+            [
+                "Step 1 claim about safety.",
+                "Step 2 building on step 1.",
+                "Step 3 building on step 1 and step 2.",
+            ]
+        )
         judge_responses = [
-            json.dumps({"claims": [
-                {"text": "elaborates step 1", "layer": "model", "self_label": "observed",
-                 "contradicts_prior_step": None, "references_prior_step": 1,
-                 "is_fresh_claim": False, "contradiction_explanation": ""},
-            ]}),
-            json.dumps({"claims": [
-                {"text": "reinforces step 1 finding", "layer": "model", "self_label": "observed",
-                 "contradicts_prior_step": None, "references_prior_step": 1,
-                 "is_fresh_claim": False, "contradiction_explanation": ""},
-                {"text": "extends step 2", "layer": "model", "self_label": "inferred",
-                 "contradicts_prior_step": None, "references_prior_step": 2,
-                 "is_fresh_claim": False, "contradiction_explanation": ""},
-            ]}),
+            json.dumps(
+                {
+                    "claims": [
+                        {
+                            "text": "elaborates step 1",
+                            "layer": "model",
+                            "self_label": "observed",
+                            "contradicts_prior_step": None,
+                            "references_prior_step": 1,
+                            "is_fresh_claim": False,
+                            "contradiction_explanation": "",
+                        },
+                    ]
+                }
+            ),
+            json.dumps(
+                {
+                    "claims": [
+                        {
+                            "text": "reinforces step 1 finding",
+                            "layer": "model",
+                            "self_label": "observed",
+                            "contradicts_prior_step": None,
+                            "references_prior_step": 1,
+                            "is_fresh_claim": False,
+                            "contradiction_explanation": "",
+                        },
+                        {
+                            "text": "extends step 2",
+                            "layer": "model",
+                            "self_label": "inferred",
+                            "contradicts_prior_step": None,
+                            "references_prior_step": 2,
+                            "is_fresh_claim": False,
+                            "contradiction_explanation": "",
+                        },
+                    ]
+                }
+            ),
         ]
         judge = _mock_judge(judge_responses)
         report = analyze_coherence_llm(engine, judge, "judge-model")
@@ -257,11 +296,21 @@ class TestAnalyzeCoherenceLLM:
 
     def test_fresh_narratives_detected(self):
         engine = _engine_with(["step 1", "step 2", "step 3"])
-        fresh_json = json.dumps({"claims": [
-            {"text": "unrelated claim", "layer": "model", "self_label": "inferred",
-             "contradicts_prior_step": None, "references_prior_step": None,
-             "is_fresh_claim": True, "contradiction_explanation": ""},
-        ]})
+        fresh_json = json.dumps(
+            {
+                "claims": [
+                    {
+                        "text": "unrelated claim",
+                        "layer": "model",
+                        "self_label": "inferred",
+                        "contradicts_prior_step": None,
+                        "references_prior_step": None,
+                        "is_fresh_claim": True,
+                        "contradiction_explanation": "",
+                    },
+                ]
+            }
+        )
         judge = _mock_judge([fresh_json, fresh_json])
         report = analyze_coherence_llm(engine, judge, "judge-model")
         assert report.fresh_narratives == 2
@@ -292,13 +341,25 @@ class TestAnalyzeCoherenceLLM:
 
     def test_skips_empty_step_response(self):
         engine = _engine_with(["s1", "", "s3"])
-        judge = _mock_judge([
-            json.dumps({"claims": [
-                {"text": "c", "layer": "model", "self_label": "observed",
-                 "contradicts_prior_step": None, "references_prior_step": 1,
-                 "is_fresh_claim": False, "contradiction_explanation": ""},
-            ]}),
-        ])
+        judge = _mock_judge(
+            [
+                json.dumps(
+                    {
+                        "claims": [
+                            {
+                                "text": "c",
+                                "layer": "model",
+                                "self_label": "observed",
+                                "contradicts_prior_step": None,
+                                "references_prior_step": 1,
+                                "is_fresh_claim": False,
+                                "contradiction_explanation": "",
+                            },
+                        ]
+                    }
+                ),
+            ]
+        )
         report = analyze_coherence_llm(engine, judge, "judge-model")
         # Only step 3 makes a judge call; step 2 is empty
         assert judge.send.call_count == 1
@@ -307,27 +368,49 @@ class TestAnalyzeCoherenceLLM:
     def test_tolerates_string_step_numbers(self):
         engine = _engine_with(["s1", "s2"])
         # Judge returns step numbers as strings (common LLM quirk)
-        judge_json = json.dumps({"claims": [
-            {"text": "c", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": "1", "references_prior_step": "1",
-             "is_fresh_claim": False, "contradiction_explanation": "x"},
-        ]})
+        judge_json = json.dumps(
+            {
+                "claims": [
+                    {
+                        "text": "c",
+                        "layer": "model",
+                        "self_label": "observed",
+                        "contradicts_prior_step": "1",
+                        "references_prior_step": "1",
+                        "is_fresh_claim": False,
+                        "contradiction_explanation": "x",
+                    },
+                ]
+            }
+        )
         judge = _mock_judge([judge_json])
         report = analyze_coherence_llm(engine, judge, "judge-model")
         assert report.backward_references == 1
         assert len(report.contradictions) == 1
 
     def test_coherence_axes_are_reported(self):
-        engine = _engine_with([
-            "Step 1: model is optimizing for safety.",
-            "Step 2: it references safety. Maybe this sentence is hedged.",
-        ])
-        judge_json = json.dumps({"claims": [
-            {"text": "references safety", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": None, "references_prior_step": 1,
-             "is_fresh_claim": False, "severity": "medium",
-             "contradiction_explanation": ""},
-        ]})
+        engine = _engine_with(
+            [
+                "Step 1: model is optimizing for safety.",
+                "Step 2: it references safety. Maybe this sentence is hedged.",
+            ]
+        )
+        judge_json = json.dumps(
+            {
+                "claims": [
+                    {
+                        "text": "references safety",
+                        "layer": "model",
+                        "self_label": "observed",
+                        "contradicts_prior_step": None,
+                        "references_prior_step": 1,
+                        "is_fresh_claim": False,
+                        "severity": "medium",
+                        "contradiction_explanation": "",
+                    },
+                ]
+            }
+        )
         judge = _mock_judge([judge_json])
         report = analyze_coherence_llm(engine, judge, "judge-model")
         assert report.coherence_axes["claim_count"] == 1
@@ -389,10 +472,12 @@ class TestLayer1HedgeFilter:
 
     def test_hedged_claims_dont_reach_judge_prompt(self):
         """Mock-assert: filtered text passed to judge omits hedged sentences."""
-        engine = _engine_with([
-            "Step 1: model claims safety.",
-            "I think the model contradicts itself. Creo que es distinto.",
-        ])
+        engine = _engine_with(
+            [
+                "Step 1: model claims safety.",
+                "I think the model contradicts itself. Creo que es distinto.",
+            ]
+        )
         captured: list[str] = []
 
         def capture_send(messages, model, **_kwargs):
@@ -450,19 +535,48 @@ class TestLayer2JudgeDiscipline:
 
 
 class TestJudgeRetryAndCheckpointing:
+    @pytest.mark.parametrize(
+        ("headers", "response_headers", "expected"),
+        [
+            (None, {"Retry-After": "2.5"}, 2.5),
+            ({"Retry-After": "1"}, {"Retry-After": "2.5"}, 1.0),
+            (None, None, None),
+        ],
+    )
+    def test_retry_after_handles_optional_sdk_response(self, headers, response_headers, expected):
+        error = _HttpStatusError(429)
+        error.headers = headers
+        error.response = SimpleNamespace(headers=response_headers)
+        assert _retry_after_seconds(error) == expected
+
+    def test_retry_after_handles_plain_exception(self):
+        assert _retry_after_seconds(RuntimeError("offline")) is None
+
     def test_retries_retryable_status_then_succeeds(self):
         engine = _engine_with(["s1 claim.", "s2 references step 1."])
-        judge_json = json.dumps({"claims": [
-            {"text": "references step 1", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": None, "references_prior_step": 1,
-             "is_fresh_claim": False, "severity": "medium",
-             "contradiction_explanation": ""},
-        ]})
-        judge = _mock_judge([
-            _HttpStatusError(429, "rate limited"),
-            _HttpStatusError(503, "temporarily unavailable"),
-            judge_json,
-        ])
+        judge_json = json.dumps(
+            {
+                "claims": [
+                    {
+                        "text": "references step 1",
+                        "layer": "model",
+                        "self_label": "observed",
+                        "contradicts_prior_step": None,
+                        "references_prior_step": 1,
+                        "is_fresh_claim": False,
+                        "severity": "medium",
+                        "contradiction_explanation": "",
+                    },
+                ]
+            }
+        )
+        judge = _mock_judge(
+            [
+                _HttpStatusError(429, "rate limited"),
+                _HttpStatusError(503, "temporarily unavailable"),
+                judge_json,
+            ]
+        )
         report = analyze_coherence_llm(
             engine,
             judge,
@@ -490,12 +604,26 @@ class TestJudgeRetryAndCheckpointing:
     def test_checkpoint_resume_skips_scored_steps(self, tmp_path):
         checkpoint = tmp_path / "coherence-checkpoint.json"
         first_engine = _engine_with(["s1 claim.", "s2 references step 1."])
-        first_judge = _mock_judge([json.dumps({"claims": [
-            {"text": "references step 1", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": None, "references_prior_step": 1,
-             "is_fresh_claim": False, "severity": "medium",
-             "contradiction_explanation": ""},
-        ]})])
+        first_judge = _mock_judge(
+            [
+                json.dumps(
+                    {
+                        "claims": [
+                            {
+                                "text": "references step 1",
+                                "layer": "model",
+                                "self_label": "observed",
+                                "contradicts_prior_step": None,
+                                "references_prior_step": 1,
+                                "is_fresh_claim": False,
+                                "severity": "medium",
+                                "contradiction_explanation": "",
+                            },
+                        ]
+                    }
+                )
+            ]
+        )
         analyze_coherence_llm(
             first_engine,
             first_judge,
@@ -504,17 +632,33 @@ class TestJudgeRetryAndCheckpointing:
             retry_policy=JudgeRetryPolicy(initial_delay=0, jitter=0),
         )
 
-        second_engine = _engine_with([
-            "s1 claim.",
-            "s2 references step 1.",
-            "s3 references step 2.",
-        ])
-        second_judge = _mock_judge([json.dumps({"claims": [
-            {"text": "references step 2", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": None, "references_prior_step": 2,
-             "is_fresh_claim": False, "severity": "medium",
-             "contradiction_explanation": ""},
-        ]})])
+        second_engine = _engine_with(
+            [
+                "s1 claim.",
+                "s2 references step 1.",
+                "s3 references step 2.",
+            ]
+        )
+        second_judge = _mock_judge(
+            [
+                json.dumps(
+                    {
+                        "claims": [
+                            {
+                                "text": "references step 2",
+                                "layer": "model",
+                                "self_label": "observed",
+                                "contradicts_prior_step": None,
+                                "references_prior_step": 2,
+                                "is_fresh_claim": False,
+                                "severity": "medium",
+                                "contradiction_explanation": "",
+                            },
+                        ]
+                    }
+                )
+            ]
+        )
         report = analyze_coherence_llm(
             second_engine,
             second_judge,
@@ -546,12 +690,13 @@ class TestJudgeRetryAndCheckpointing:
         assert any("could not be loaded" in error for error in report.judge_errors)
 
     def test_compute_coherence_axes_directly(self):
-        axes = _compute_coherence_axes([
-            JudgedClaim("a", "model", "observed", None, 1, False, step_num=2),
-            JudgedClaim("b", "model", "observed", 1, None, False,
-                        severity="high", step_num=2),
-            JudgedClaim("c", "model", "observed", None, None, True, step_num=2),
-        ])
+        axes = _compute_coherence_axes(
+            [
+                JudgedClaim("a", "model", "observed", None, 1, False, step_num=2),
+                JudgedClaim("b", "model", "observed", 1, None, False, severity="high", step_num=2),
+                JudgedClaim("c", "model", "observed", None, None, True, step_num=2),
+            ]
+        )
         assert axes["claim_count"] == 3
         assert axes["reference_density"] == pytest.approx(1 / 3)
         assert axes["contradiction_rate"] == pytest.approx(1 / 3)
@@ -562,12 +707,12 @@ class TestJudgeRetryAndCheckpointing:
 class TestParseJsonDirty:
     def test_handles_preamble_postamble_and_stray_braces(self):
         raw = (
-            'Sure, here is the analysis:\n'
+            "Sure, here is the analysis:\n"
             '{"claims": [{"text": "claim with } brace inside", '
             '"layer": "model", "self_label": "observed", '
             '"contradicts_prior_step": null, "references_prior_step": 1, '
             '"is_fresh_claim": false}]}\n'
-            'Hope that helps. Let me know if you need more {detail}.'
+            "Hope that helps. Let me know if you need more {detail}."
         )
         claims = _parse_judge_response(raw)
         assert len(claims) == 1
@@ -611,8 +756,14 @@ class TestSeverityWeightedScoring:
 
     def test_invalid_severity_falls_back_to_medium(self):
         claim = JudgedClaim(
-            "c", "model", "observed", 1, None, False,
-            severity="catastrophic", step_num=2,
+            "c",
+            "model",
+            "observed",
+            1,
+            None,
+            False,
+            severity="catastrophic",
+            step_num=2,
         )
         # Should not raise; treats unknown severity as medium.
         score = _compute_llm_score([claim], total_steps=3)
@@ -643,21 +794,25 @@ class TestAnalyzeCoherenceAuto:
 
     def test_regex_fallback_detects_obvious_contradiction(self):
         # "however I previously said" matches one of the regex contradiction patterns.
-        engine = _engine_with([
-            "I am committed to safety.",
-            "However I previously said I would always be safe, which was wrong.",
-        ])
+        engine = _engine_with(
+            [
+                "I am committed to safety.",
+                "However I previously said I would always be safe, which was wrong.",
+            ]
+        )
         report = analyze_coherence_auto(engine)
         assert report.llm_used is False
         assert len(report.contradictions) >= 1
 
     def test_regex_fallback_clean_conversation_high_score(self):
         # Step 2 references step 1 → high regex score.
-        engine = _engine_with([
-            "Step 1: I am committed to safety in all responses.",
-            "Step 2: As I mentioned, safety remains my priority. "
-            "Building on the previous step, I will elaborate.",
-        ])
+        engine = _engine_with(
+            [
+                "Step 1: I am committed to safety in all responses.",
+                "Step 2: As I mentioned, safety remains my priority. "
+                "Building on the previous step, I will elaborate.",
+            ]
+        )
         report = analyze_coherence_auto(engine)
         assert report.llm_used is False
         # Two backward-reference patterns matched ("as I mentioned",
@@ -667,15 +822,27 @@ class TestAnalyzeCoherenceAuto:
 
     def test_judge_provided_uses_judge(self):
         engine = _engine_with(["s1 claim about X.", "s2 references step 1."])
-        judge = _mock_judge([json.dumps({"claims": [
-            {"text": "elaborates step 1", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": None, "references_prior_step": 1,
-             "is_fresh_claim": False, "severity": "medium",
-             "contradiction_explanation": ""},
-        ]})])
-        report = analyze_coherence_auto(
-            engine, judge_provider=judge, judge_model="judge-model"
+        judge = _mock_judge(
+            [
+                json.dumps(
+                    {
+                        "claims": [
+                            {
+                                "text": "elaborates step 1",
+                                "layer": "model",
+                                "self_label": "observed",
+                                "contradicts_prior_step": None,
+                                "references_prior_step": 1,
+                                "is_fresh_claim": False,
+                                "severity": "medium",
+                                "contradiction_explanation": "",
+                            },
+                        ]
+                    }
+                )
+            ]
         )
+        report = analyze_coherence_auto(engine, judge_provider=judge, judge_model="judge-model")
         assert report.llm_used is True
         assert report.judge_model == "judge-model"
 
@@ -707,9 +874,7 @@ class TestModelConfigShapes:
 
         monkeypatch.setitem(sys.modules, "openai", None)
         client = MagicMock(name="openai-client")
-        provider, model = _coerce_model_config(
-            {"client": client, "model": "gpt-5"}
-        )
+        provider, model = _coerce_model_config({"client": client, "model": "gpt-5"})
         assert provider.client is client
         assert model == "gpt-5"
         assert provider.name == "openai"
@@ -717,28 +882,33 @@ class TestModelConfigShapes:
     def test_api_key_base_url_shape(self, openai_sdk):
         from bdk.coherence_llm import _coerce_model_config
 
-        provider, model = _coerce_model_config({
-            "api_key": "sk-test",
-            "base_url": "http://localhost:8080",
-            "allow_insecure_base_url": True,
-            "model": "local-model",
-        })
+        provider, model = _coerce_model_config(
+            {
+                "api_key": "sk-test",
+                "base_url": "http://localhost:8080",
+                "allow_insecure_base_url": True,
+                "model": "local-model",
+            }
+        )
         assert provider.name == "openai"
         assert model == "local-model"
         openai_sdk.OpenAI.assert_called_once_with(
-            api_key="sk-test", base_url="http://localhost:8080",
+            api_key="sk-test",
+            base_url="http://localhost:8080",
         )
 
     def test_azure_shape(self, openai_sdk):
         from bdk.coherence_llm import _coerce_model_config
 
-        provider, model = _coerce_model_config({
-            "azure_endpoint": "https://example.openai.azure.com",
-            "api_key": "test-key",
-            "api_version": "2024-05-01-preview",
-            "azure_deployment": "custom-deployment",
-            "model": "gpt-5",
-        })
+        provider, model = _coerce_model_config(
+            {
+                "azure_endpoint": "https://example.openai.azure.com",
+                "api_key": "test-key",
+                "api_version": "2024-05-01-preview",
+                "azure_deployment": "custom-deployment",
+                "model": "gpt-5",
+            }
+        )
         assert provider.client is openai_sdk.AzureOpenAI.return_value
         assert model == "custom-deployment"
         openai_sdk.AzureOpenAI.assert_called_once_with(
@@ -747,13 +917,18 @@ class TestModelConfigShapes:
             api_version="2024-05-01-preview",
         )
 
-    @pytest.mark.parametrize("config", [
-        {"api_key": "test-key", "model": "gpt-5"},
-        {
-            "azure_endpoint": "https://example.openai.azure.com",
-            "api_key": "test-key", "api_version": "2024-05-01-preview", "model": "gpt-5",
-        },
-    ])
+    @pytest.mark.parametrize(
+        "config",
+        [
+            {"api_key": "test-key", "model": "gpt-5"},
+            {
+                "azure_endpoint": "https://example.openai.azure.com",
+                "api_key": "test-key",
+                "api_version": "2024-05-01-preview",
+                "model": "gpt-5",
+            },
+        ],
+    )
     def test_missing_openai_sdk_has_install_hint(self, monkeypatch, config):
         import sys
 
@@ -771,11 +946,13 @@ class TestModelConfigShapes:
         from bdk.coherence_llm import _coerce_model_config
 
         with pytest.raises(ValueError, match="non-HTTPS"):
-            _coerce_model_config({
-                "api_key": "sk-test",
-                "base_url": "http://localhost:8080",
-                "model": "local-model",
-            })
+            _coerce_model_config(
+                {
+                    "api_key": "sk-test",
+                    "base_url": "http://localhost:8080",
+                    "model": "local-model",
+                }
+            )
 
     def test_missing_model_raises(self):
         from bdk.coherence_llm import _coerce_model_config
@@ -795,13 +972,22 @@ class TestSoftErrorOutOfRange:
 
     def test_judge_returns_step_number_beyond_prior_max(self):
         engine = _engine_with(["s1", "s2"])
-        judge_json = json.dumps({"claims": [
-            {"text": "c", "layer": "model", "self_label": "observed",
-             "contradicts_prior_step": 99,
-             "references_prior_step": None,
-             "is_fresh_claim": False, "severity": "high",
-             "contradiction_explanation": "out of range"},
-        ]})
+        judge_json = json.dumps(
+            {
+                "claims": [
+                    {
+                        "text": "c",
+                        "layer": "model",
+                        "self_label": "observed",
+                        "contradicts_prior_step": 99,
+                        "references_prior_step": None,
+                        "is_fresh_claim": False,
+                        "severity": "high",
+                        "contradiction_explanation": "out of range",
+                    },
+                ]
+            }
+        )
         judge = _mock_judge([judge_json])
         report = analyze_coherence_llm(engine, judge, "judge-model")
         # Out-of-range coerced to None → no contradiction recorded.

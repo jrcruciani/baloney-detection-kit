@@ -146,78 +146,111 @@ class TestAggregateRuns:
 def _write_case1_fixture(run_dir: Path) -> None:
     """Simulate the artifacts a Case 1 run writes."""
     run_dir.mkdir(parents=True, exist_ok=True)
-    (run_dir / "score.json").write_text(json.dumps({
-        "overall_confidence": 0.85,
-        "layer_separation": 0.67,
-        "ratchet_coherence": 0.96,
-        "behavioral_evidence": 1.0,
-        "substance_stability": 1.0,
-        "presentation_stability": 0.55,
-        "summary": "...",
-    }))
-    (run_dir / "coherence_llm.json").write_text(json.dumps({
-        "score": 0.96, "assessment": "genuine", "backward_references": 12,
-        "contradictions": [], "fresh_narratives": [], "judge_model": "opus-4-5",
-        "claims_count": 37,
-    }))
-    (run_dir / "coherence_regex.json").write_text(json.dumps({
-        "score": 0.40, "assessment": "mixed", "backward_references": 3,
-        "contradictions": [], "fresh_narratives": [],
-    }))
-    (run_dir / "ab_result.json").write_text(json.dumps({
-        "substance_changed": False,
-        "presentation_shift_score": 0.45,
-        "severity_labels_shifted": False,
-        "urgency_language_shifted": True,
-        "hedging_delta": 0.1,
-        "omissions_added": ["Meta-Analysis section"],
-        "original_task_preview": "...",
-        "inverted_task_preview": "...",
-        "original_response_len": 1234,
-        "inverted_response_len": 1300,
-    }))
+    (run_dir / "score.json").write_text(
+        json.dumps(
+            {
+                "overall_confidence": 0.85,
+                "layer_separation": 0.67,
+                "ratchet_coherence": 0.96,
+                "behavioral_evidence": 1.0,
+                "substance_stability": 1.0,
+                "presentation_stability": 0.55,
+                "summary": "...",
+            }
+        )
+    )
+    (run_dir / "coherence_llm.json").write_text(
+        json.dumps(
+            {
+                "score": 0.96,
+                "assessment": "genuine",
+                "backward_references": 12,
+                "contradictions": [],
+                "fresh_narratives": [],
+                "judge_model": "opus-4-5",
+                "claims_count": 37,
+            }
+        )
+    )
+    (run_dir / "coherence_regex.json").write_text(
+        json.dumps(
+            {
+                "score": 0.40,
+                "assessment": "mixed",
+                "backward_references": 3,
+                "contradictions": [],
+                "fresh_narratives": [],
+            }
+        )
+    )
+    (run_dir / "ab_result.json").write_text(
+        json.dumps(
+            {
+                "substance_changed": False,
+                "presentation_shift_score": 0.45,
+                "severity_labels_shifted": False,
+                "urgency_language_shifted": True,
+                "hedging_delta": 0.1,
+                "omissions_added": ["Meta-Analysis section"],
+                "original_task_preview": "...",
+                "inverted_task_preview": "...",
+                "original_response_len": 1234,
+                "inverted_response_len": 1300,
+            }
+        )
+    )
 
 
 def _write_case3_fixture(run_dir: Path) -> None:
     """Simulate the artifacts a Case 3 run writes (comparison file, no ab)."""
     run_dir.mkdir(parents=True, exist_ok=True)
-    (run_dir / "score.json").write_text(json.dumps({
-        "overall_confidence": 0.82,
-        "layer_separation": 0.67,
-        "ratchet_coherence": 0.73,
-        "behavioral_evidence": 1.0,
-        "substance_stability": 1.0,
-        "presentation_stability": 1.0,
-        "summary": "...",
-    }))
-    (run_dir / "coherence_comparison.json").write_text(json.dumps({
-        "regex": {"score": 0.20, "assessment": "performed"},
-        "llm": {"score": 0.73, "assessment": "genuine"},
-        "delta_score": 0.53,
-    }))
+    (run_dir / "score.json").write_text(
+        json.dumps(
+            {
+                "overall_confidence": 0.82,
+                "layer_separation": 0.67,
+                "ratchet_coherence": 0.73,
+                "behavioral_evidence": 1.0,
+                "substance_stability": 1.0,
+                "presentation_stability": 1.0,
+                "summary": "...",
+            }
+        )
+    )
+    (run_dir / "coherence_comparison.json").write_text(
+        json.dumps(
+            {
+                "regex": {"score": 0.20, "assessment": "performed"},
+                "llm": {"score": 0.73, "assessment": "genuine"},
+                "delta_score": 0.53,
+            }
+        )
+    )
 
 
 def _write_case2_fixture(run_dir: Path) -> None:
     """Simulate the artifacts a Case 2 run writes (summary.json is the only
     aggregate-friendly file — coherence_llm.json is not produced)."""
     run_dir.mkdir(parents=True, exist_ok=True)
-    (run_dir / "summary.json").write_text(json.dumps({
-        "response_A_len": 250,
-        "response_B_len": 1800,
-        "behavior_diverged": True,
-        "coherence_llm_score": 0.62,
-        "coherence_llm_assessment": "mixed",
-        "score_overall": 0.71,
-        "score_layer_separation": 0.83,
-    }))
+    (run_dir / "summary.json").write_text(
+        json.dumps(
+            {
+                "response_A_len": 250,
+                "response_B_len": 1800,
+                "behavior_diverged": True,
+                "coherence_llm_score": 0.62,
+                "coherence_llm_assessment": "mixed",
+                "score_overall": 0.71,
+                "score_layer_separation": 0.83,
+            }
+        )
+    )
 
 
 class TestModelConfig:
     def test_resolve_models_uses_foundry_defaults(self, tmp_path: Path, monkeypatch):
         config_path = tmp_path / "foundry_models.yaml"
-        config_path.write_text(
-            "target_model: deepseek-r1\njudge_model: gpt-5\n"
-        )
+        config_path.write_text("target_model: deepseek-r1\njudge_model: gpt-5\n")
         monkeypatch.setattr(run_case, "CONFIG_PATH", config_path)
         assert run_case._resolve_models() == ("deepseek-r1", "gpt-5")
 
@@ -281,11 +314,15 @@ class TestExtractSummary:
         for diverged in (True, True, False, True):
             run_dir = tmp_path / f"run-{len(summaries) + 1}"
             run_dir.mkdir()
-            (run_dir / "summary.json").write_text(json.dumps({
-                "behavior_diverged": diverged,
-                "response_A_len": 100,
-                "response_B_len": 500,
-            }))
+            (run_dir / "summary.json").write_text(
+                json.dumps(
+                    {
+                        "behavior_diverged": diverged,
+                        "response_A_len": 100,
+                        "response_B_len": 500,
+                    }
+                )
+            )
             summaries.append(run_case._extract_summary(run_dir))
         agg = run_case._aggregate_runs(summaries, n_requested=4)
         rate = agg["case2.behavior_diverged"]

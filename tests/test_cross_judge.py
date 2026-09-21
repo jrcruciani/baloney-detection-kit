@@ -19,9 +19,7 @@ import pytest
 # Load the script by path (validation/diagnosis/reproducible/ is not a package).
 # Register in sys.modules so @dataclass can resolve forward refs.
 _ROOT = Path(__file__).resolve().parents[1]
-_SCRIPT_PATH = (
-    _ROOT / "validation" / "diagnosis" / "reproducible" / "cross_judge_case03.py"
-)
+_SCRIPT_PATH = _ROOT / "validation" / "diagnosis" / "reproducible" / "cross_judge_case03.py"
 _SPEC = importlib.util.spec_from_file_location("_cross_judge_under_test", _SCRIPT_PATH)
 assert _SPEC and _SPEC.loader
 cross_judge = importlib.util.module_from_spec(_SPEC)
@@ -134,24 +132,26 @@ def _outcome(key, score, assessment, refs, contradictions):
 
 class TestDefaultJudges:
     def test_build_default_judges_reads_config(self):
-        judges = cross_judge._build_default_judges({
-            "cross_judges": [
-                {
-                    "key": "gpt5",
-                    "family": "azure_foundry",
-                    "model": "gpt-5",
-                    "deployment": "custom-gpt",
-                    "artifact_filename": "coherence_llm_gpt5.json",
-                },
-                {
-                    "key": "mistral",
-                    "family": "azure_foundry",
-                    "model": "mistral-large",
-                    "deployment": "custom-mistral",
-                    "artifact_filename": "coherence_llm_mistral.json",
-                },
-            ]
-        })
+        judges = cross_judge._build_default_judges(
+            {
+                "cross_judges": [
+                    {
+                        "key": "gpt5",
+                        "family": "azure_foundry",
+                        "model": "gpt-5",
+                        "deployment": "custom-gpt",
+                        "artifact_filename": "coherence_llm_gpt5.json",
+                    },
+                    {
+                        "key": "mistral",
+                        "family": "azure_foundry",
+                        "model": "mistral-large",
+                        "deployment": "custom-mistral",
+                        "artifact_filename": "coherence_llm_mistral.json",
+                    },
+                ]
+            }
+        )
         assert [judge.key for judge in judges] == ["gpt5", "mistral"]
         assert judges[0].default_model == "gpt-5"
         assert judges[0].deployment == "custom-gpt"
@@ -186,7 +186,10 @@ class TestBuildCrossJudgeReport:
         outcomes = [
             _outcome("opus", 0.73, "genuine", 178, []),
             cross_judge.JudgeOutcome(
-                key="gpt5", model="gpt-5", family="openai", ran=False,
+                key="gpt5",
+                model="gpt-5",
+                family="openai",
+                ran=False,
                 skip_reason="OPENAI_API_KEY not set",
             ),
         ]
@@ -200,7 +203,11 @@ class TestBuildCrossJudgeReport:
     def test_all_judges_skipped(self):
         outcomes = [
             cross_judge.JudgeOutcome(
-                key="opus", model="x", family="anthropic", ran=False, skip_reason="no key",
+                key="opus",
+                model="x",
+                family="anthropic",
+                ran=False,
+                skip_reason="no key",
             ),
         ]
         report = cross_judge.build_cross_judge_report(outcomes)
@@ -220,12 +227,16 @@ class TestLoadEngineFromSession:
             "initial_response": "...",
             "steps": [
                 {
-                    "prompt_id": "1.1", "prompt_name": "Calvin",
-                    "prompt_text": "?", "response": "step1",
+                    "prompt_id": "1.1",
+                    "prompt_name": "Calvin",
+                    "prompt_text": "?",
+                    "response": "step1",
                 },
                 {
-                    "prompt_id": "1.2", "prompt_name": "Herbie",
-                    "prompt_text": "?", "response": "step2",
+                    "prompt_id": "1.2",
+                    "prompt_name": "Herbie",
+                    "prompt_text": "?",
+                    "response": "step2",
                 },
             ],
         }
@@ -297,12 +308,18 @@ class TestRunCrossJudge:
 
         judges = [
             cross_judge.JudgeConfig(
-                "opus", "anthropic", "ANTHROPIC_API_KEY",
-                "claude-opus-4-5", "coherence_llm_opus.json",
+                "opus",
+                "anthropic",
+                "ANTHROPIC_API_KEY",
+                "claude-opus-4-5",
+                "coherence_llm_opus.json",
             ),
             cross_judge.JudgeConfig(
-                "gpt5", "openai", "OPENAI_API_KEY",
-                "gpt-5", "coherence_llm_gpt5.json",
+                "gpt5",
+                "openai",
+                "OPENAI_API_KEY",
+                "gpt-5",
+                "coherence_llm_gpt5.json",
             ),
         ]
         report = cross_judge.run_cross_judge(case_dir, judges)
@@ -328,24 +345,32 @@ class TestRunCrossJudge:
 
         # Don't actually construct an Anthropic client — stub the provider factory
         monkeypatch.setattr(
-            cross_judge, "_build_provider",
+            cross_judge,
+            "_build_provider",
             lambda model, api_key, family=None, deployment=None: SimpleNamespace(
                 name=family or model
             ),
         )
         monkeypatch.setattr(
-            cross_judge, "analyze_coherence_llm",
+            cross_judge,
+            "analyze_coherence_llm",
             _fake_coherence_report,
         )
 
         judges = [
             cross_judge.JudgeConfig(
-                "opus", "anthropic", "ANTHROPIC_API_KEY",
-                "claude-opus-4-5", "coherence_llm_opus.json",
+                "opus",
+                "anthropic",
+                "ANTHROPIC_API_KEY",
+                "claude-opus-4-5",
+                "coherence_llm_opus.json",
             ),
             cross_judge.JudgeConfig(
-                "gpt5", "openai", "OPENAI_API_KEY",
-                "gpt-5", "coherence_llm_gpt5.json",
+                "gpt5",
+                "openai",
+                "OPENAI_API_KEY",
+                "gpt-5",
+                "coherence_llm_gpt5.json",
             ),
         ]
         report = cross_judge.run_cross_judge(case_dir, judges)
@@ -374,7 +399,8 @@ class TestRunCrossJudge:
         (case_dir / "artifacts" / "session.json").write_text(json.dumps(session))
         monkeypatch.setenv("ANTHROPIC_API_KEY", "fake-key")
         monkeypatch.setattr(
-            cross_judge, "_build_provider",
+            cross_judge,
+            "_build_provider",
             lambda model, api_key, family=None, deployment=None: SimpleNamespace(
                 name=family or model
             ),
@@ -383,8 +409,11 @@ class TestRunCrossJudge:
 
         judges = [
             cross_judge.JudgeConfig(
-                "opus", "anthropic", "ANTHROPIC_API_KEY",
-                "claude-opus-4-5", "coherence_llm_opus.json",
+                "opus",
+                "anthropic",
+                "ANTHROPIC_API_KEY",
+                "claude-opus-4-5",
+                "coherence_llm_opus.json",
             ),
         ]
         cross_judge.run_cross_judge(case_dir, judges)
@@ -395,7 +424,9 @@ class TestRunCrossJudge:
         assert "REDACTED" in json.dumps(artifact)
 
     def test_all_judge_calls_errored_recorded_as_skipped(
-        self, tmp_path: Path, monkeypatch,
+        self,
+        tmp_path: Path,
+        monkeypatch,
     ):
         """Quota/rate-limit failures across every step should count as skip."""
         case_dir = tmp_path / "case-03"
@@ -404,12 +435,16 @@ class TestRunCrossJudge:
             "model": "claude-sonnet-4-5",
             "steps": [
                 {
-                    "prompt_id": "1.1", "prompt_name": "x",
-                    "prompt_text": "?", "response": "r1",
+                    "prompt_id": "1.1",
+                    "prompt_name": "x",
+                    "prompt_text": "?",
+                    "response": "r1",
                 },
                 {
-                    "prompt_id": "1.2", "prompt_name": "x",
-                    "prompt_text": "?", "response": "r2",
+                    "prompt_id": "1.2",
+                    "prompt_name": "x",
+                    "prompt_text": "?",
+                    "response": "r2",
                 },
             ],
         }
@@ -433,7 +468,8 @@ class TestRunCrossJudge:
             )
 
         monkeypatch.setattr(
-            cross_judge, "_build_provider",
+            cross_judge,
+            "_build_provider",
             lambda model, api_key, family=None, deployment=None: SimpleNamespace(
                 name=family or model
             ),
@@ -442,8 +478,11 @@ class TestRunCrossJudge:
 
         judges = [
             cross_judge.JudgeConfig(
-                "opus", "anthropic", "ANTHROPIC_API_KEY",
-                "claude-opus-4-5", "coherence_llm_opus.json",
+                "opus",
+                "anthropic",
+                "ANTHROPIC_API_KEY",
+                "claude-opus-4-5",
+                "coherence_llm_opus.json",
             ),
         ]
         report = cross_judge.run_cross_judge(case_dir, judges)

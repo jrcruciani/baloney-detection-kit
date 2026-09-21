@@ -23,8 +23,7 @@ def test_skill_frontmatter():
         subdirs[:] = sorted(
             name
             for name in subdirs
-            if name not in excluded_dirs
-            and not (Path(directory) / name / "pyvenv.cfg").is_file()
+            if name not in excluded_dirs and not (Path(directory) / name / "pyvenv.cfg").is_file()
         )
         if "SKILL.md" in files:
             skill_paths.append(Path(directory) / "SKILL.md")

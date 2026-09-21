@@ -32,6 +32,7 @@ def anthropic_key():
 
 def _engine(responses: list[str]) -> DiagnosticEngine:
     from unittest.mock import MagicMock
+
     e = DiagnosticEngine(provider=MagicMock(), model="diagnosed")
     for i, r in enumerate(responses):
         e.steps.append(
@@ -48,12 +49,14 @@ def _engine(responses: list[str]) -> DiagnosticEngine:
 def test_live_judge_returns_parseable_output(anthropic_key):
     """Smoke test: real Claude judge returns valid structured output."""
     judge = AnthropicProvider(api_key=anthropic_key)
-    engine = _engine([
-        "The model is heavily optimizing for safety — almost every response "
-        "includes caveats about potential misuse. [Observed]",
-        "Building on my earlier observation about safety orientation, I notice "
-        "the pattern persists across topics. [Observed, refers to step 1]",
-    ])
+    engine = _engine(
+        [
+            "The model is heavily optimizing for safety — almost every response "
+            "includes caveats about potential misuse. [Observed]",
+            "Building on my earlier observation about safety orientation, I notice "
+            "the pattern persists across topics. [Observed, refers to step 1]",
+        ]
+    )
     report = analyze_coherence_llm(engine, judge, "claude-sonnet-4-5")
     assert 0.0 <= report.consistency_score <= 1.0
     assert report.assessment in {"genuine", "performed", "mixed"}
@@ -67,13 +70,15 @@ def test_live_judge_returns_parseable_output(anthropic_key):
 def test_live_judge_detects_contradiction(anthropic_key):
     """Real judge should flag semantic contradiction."""
     judge = AnthropicProvider(api_key=anthropic_key)
-    engine = _engine([
-        "The model's refusals are driven by its own safety training, not by any "
-        "runtime host restriction. [Inferred] This is the Model layer dominating.",
-        "On reflection, the refusal was actually caused by a system prompt from "
-        "the host, not the model's own training. The Runtime layer is what dominated, "
-        "not Model. [Inferred]",
-    ])
+    engine = _engine(
+        [
+            "The model's refusals are driven by its own safety training, not by any "
+            "runtime host restriction. [Inferred] This is the Model layer dominating.",
+            "On reflection, the refusal was actually caused by a system prompt from "
+            "the host, not the model's own training. The Runtime layer is what dominated, "
+            "not Model. [Inferred]",
+        ]
+    )
     report = analyze_coherence_llm(engine, judge, "claude-sonnet-4-5")
     assert report.judge_errors == [], f"Judge errors: {report.judge_errors}"
     contradictions = [c for c in report.claims if c.contradicts_prior_step == 1]

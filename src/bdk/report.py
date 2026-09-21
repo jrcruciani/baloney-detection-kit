@@ -5,10 +5,19 @@ from __future__ import annotations
 import json
 import re
 from datetime import datetime, timezone
+from typing import TypedDict
 
 from bdk import __version__
 from bdk.engine import DiagnosticEngine
 from bdk.labels import count_structured_labels, has_structured_labels
+
+
+class _ReportStep(TypedDict):
+    prompt_id: str
+    prompt_name: str
+    prompt_text: str
+    response: str
+    labels: dict[str, int]
 
 
 def count_labels(text: str) -> dict[str, int]:
@@ -121,10 +130,7 @@ def generate_report(
 
     for i, step in enumerate(engine.steps, 1):
         labels = count_labels(step.response)
-        label_summary = (
-            f"🟢 Observed: {labels['observed']} · "
-            f"🟡 Inferred: {labels['inferred']}"
-        )
+        label_summary = f"🟢 Observed: {labels['observed']} · 🟡 Inferred: {labels['inferred']}"
         lines.extend(
             [
                 f"## Step {i}: {step.prompt_id} — {step.prompt_name}",
@@ -236,9 +242,7 @@ def generate_report(
         profile = score.support_profile
         hypothesis_lines = []
         for h in profile.hypotheses:
-            hypothesis_lines.append(
-                f"  - **{h.name}:** {h.score:.2f} — {'; '.join(h.signals[:2])}"
-            )
+            hypothesis_lines.append(f"  - **{h.name}:** {h.score:.2f} — {'; '.join(h.signals[:2])}")
         lines.extend(
             [
                 "## Diagnostic Score",
@@ -345,7 +349,7 @@ def generate_json_report(
 ) -> str:
     """Generate structured JSON report."""
     now = datetime.now(timezone.utc).isoformat()
-    steps_data = []
+    steps_data: list[_ReportStep] = []
     for step in engine.steps:
         labels = count_labels(step.response)
         steps_data.append(
@@ -358,7 +362,7 @@ def generate_json_report(
             }
         )
 
-    report = {
+    report: dict[str, object] = {
         "version": __version__,
         "timestamp": now,
         "model": engine.model,

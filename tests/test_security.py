@@ -73,6 +73,10 @@ def test_validate_base_url_accepts_public_https():
     assert validate_base_url("https://api.example.com/v1") == "https://api.example.com/v1"
 
 
+def test_validate_base_url_accepts_none():
+    assert validate_base_url(None) is None
+
+
 def test_validate_base_url_rejects_malformed():
     with pytest.raises(ValueError, match="absolute http"):
         validate_base_url("not-a-url")

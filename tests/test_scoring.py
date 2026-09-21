@@ -35,10 +35,12 @@ def _make_engine(responses: list[str]) -> DiagnosticEngine:
 
 class TestAggregateLabels:
     def test_counts_across_steps(self):
-        engine = _make_engine([
-            "This is Observed behavior. Also Inferred tendency.",
-            "Another Inferred claim. Another Observed fact.",
-        ])
+        engine = _make_engine(
+            [
+                "This is Observed behavior. Also Inferred tendency.",
+                "Another Inferred claim. Another Observed fact.",
+            ]
+        )
         labels = _aggregate_labels(engine)
         assert labels["observed"] == 2
         assert labels["inferred"] == 2
@@ -51,10 +53,12 @@ class TestAggregateLabels:
 
 class TestMeasureLayerSeparation:
     def test_all_three_layers(self):
-        engine = _make_engine([
-            "Model-level tendency toward safety. Runtime policy restricts this. "
-            "Conversation-specific effect from inferred from the user preferences.",
-        ])
+        engine = _make_engine(
+            [
+                "Model-level tendency toward safety. Runtime policy restricts this. "
+                "Conversation-specific effect from inferred from the user preferences.",
+            ]
+        )
         score = _measure_layer_separation(engine)
         assert score == 1.0
 
@@ -105,21 +109,36 @@ class TestPresentationStability:
 
     def test_partial_shift(self):
         result = ABTestResult(
-            "t", "i", "r1", "r2", "c", substance_changed=False,
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
+            substance_changed=False,
             presentation_shift_score=0.3,
         )
         assert abs(_score_presentation_stability(result) - 0.7) < 1e-9
 
     def test_full_shift(self):
         result = ABTestResult(
-            "t", "i", "r1", "r2", "c", substance_changed=False,
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
+            substance_changed=False,
             presentation_shift_score=1.0,
         )
         assert _score_presentation_stability(result) == 0.0
 
     def test_clamps_out_of_range(self):
         result = ABTestResult(
-            "t", "i", "r1", "r2", "c", substance_changed=False,
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
+            substance_changed=False,
             presentation_shift_score=1.5,
         )
         assert _score_presentation_stability(result) == 0.0
@@ -158,13 +177,17 @@ class TestWeightedComposite:
 
 class TestScoreDiagnosis:
     def test_full_scoring(self):
-        engine = _make_engine([
-            "Observed: Model-level tendency. Inferred: Runtime host policy effect.",
-            "Observed: Conversation-specific adaptation inferred from the user.",
-        ])
+        engine = _make_engine(
+            [
+                "Observed: Model-level tendency. Inferred: Runtime host policy effect.",
+                "Observed: Conversation-specific adaptation inferred from the user.",
+            ]
+        )
         coherence = CoherenceReport(
-            consistency_score=0.8, assessment="high-continuity",
-            backward_references=3, fresh_narratives=0,
+            consistency_score=0.8,
+            assessment="high-continuity",
+            backward_references=3,
+            fresh_narratives=0,
         )
         ab = ABTestResult("t", "i", "r1", "r2", "c", substance_changed=False)
         result = score_diagnosis(engine, coherence=coherence, ab_result=ab)
@@ -179,7 +202,11 @@ class TestScoreDiagnosis:
         # support_profile is populated
         assert isinstance(result.support_profile, DiagnosticSupportProfile)
         assert result.support_profile.dominant in {
-            "model-level", "runtime-host", "conversation-level", "multi-causal", "unknown"
+            "model-level",
+            "runtime-host",
+            "conversation-level",
+            "multi-causal",
+            "unknown",
         }
 
     def test_without_optional_data(self):
@@ -204,11 +231,18 @@ class TestScoreDiagnosis:
         """Case 1 pattern: substance stable but presentation shifted."""
         engine = _make_engine(["Observed behavior."])
         coherence = CoherenceReport(
-            consistency_score=0.8, assessment="high-continuity",
-            backward_references=3, fresh_narratives=0,
+            consistency_score=0.8,
+            assessment="high-continuity",
+            backward_references=3,
+            fresh_narratives=0,
         )
         ab = ABTestResult(
-            "t", "i", "r1", "r2", "c", substance_changed=False,
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
+            substance_changed=False,
             presentation_shift_score=0.5,
         )
         result = score_diagnosis(engine, coherence=coherence, ab_result=ab)
@@ -217,7 +251,12 @@ class TestScoreDiagnosis:
     def test_no_presentation_flag_when_shift_small(self):
         engine = _make_engine(["Observed behavior."])
         ab = ABTestResult(
-            "t", "i", "r1", "r2", "c", substance_changed=False,
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
+            substance_changed=False,
             presentation_shift_score=0.1,
         )
         result = score_diagnosis(engine, ab_result=ab)
@@ -227,7 +266,12 @@ class TestScoreDiagnosis:
         """If substance changed, presentation summary is not the story."""
         engine = _make_engine(["Observed behavior."])
         ab = ABTestResult(
-            "t", "i", "r1", "r2", "c", substance_changed=True,
+            "t",
+            "i",
+            "r1",
+            "r2",
+            "c",
+            substance_changed=True,
             presentation_shift_score=0.8,
         )
         result = score_diagnosis(engine, ab_result=ab)
@@ -239,9 +283,13 @@ class TestScoreDiagnosis:
         result = score_diagnosis(engine)
         # With no layers mentioned and no behavioral tests, evidence should be thin
         # and dominant should be "unknown"
-        assert result.support_profile.dominant in {"unknown", "multi-causal",
-                                                    "model-level", "runtime-host",
-                                                    "conversation-level"}
+        assert result.support_profile.dominant in {
+            "unknown",
+            "multi-causal",
+            "model-level",
+            "runtime-host",
+            "conversation-level",
+        }
 
     def test_overall_confidence_is_compat_property(self):
         """overall_confidence property returns a float in [0, 1]."""

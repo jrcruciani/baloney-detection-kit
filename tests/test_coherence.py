@@ -143,15 +143,17 @@ class TestAnalyzeCoherence:
         assert report.assessment == "fragmented"
 
     def test_genuine_coherence(self):
-        engine = _make_engine([
-            "The model shows safety-first behavior.",
-            "As I mentioned earlier, safety is the primary driver. As I noted above, "
-            "this is consistent with my previous analysis of the model's tendencies.",
-            "Building on my earlier analysis, as I mentioned, the pattern is clear. "
-            "Consistent with my earlier statement about safety orientation.",
-            "As I mentioned, as noted above, consistent with my earlier diagnosis. "
-            "As I previously noted, the safety pattern persists as I explained before.",
-        ])
+        engine = _make_engine(
+            [
+                "The model shows safety-first behavior.",
+                "As I mentioned earlier, safety is the primary driver. As I noted above, "
+                "this is consistent with my previous analysis of the model's tendencies.",
+                "Building on my earlier analysis, as I mentioned, the pattern is clear. "
+                "Consistent with my earlier statement about safety orientation.",
+                "As I mentioned, as noted above, consistent with my earlier diagnosis. "
+                "As I previously noted, the safety pattern persists as I explained before.",
+            ]
+        )
         report = analyze_coherence(engine)
         assert report.consistency_score >= 0.5
         assert report.backward_references > 0
