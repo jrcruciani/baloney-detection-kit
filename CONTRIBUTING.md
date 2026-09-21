@@ -42,14 +42,18 @@ Run the complete nonintegration suite and quality checks before every commit:
 pytest -m "not integration"
 ruff check src/ tests/ scripts/
 ruff format --check src/ tests/ scripts/
-mypy src/bdk scripts/check_markdown_links.py
+mypy src/bdk scripts/check_markdown_links.py scripts/sync_prompts.py
 python scripts/check_markdown_links.py
+python scripts/sync_prompts.py --check
 ```
 
 Use `ruff format src/ tests/ scripts/` when formatting needs correction.
 The link checker is offline and covers repository Markdown, including
 `SECURITY.md`, `CONTRIBUTING.md`, and the pull request template; it does not
 fetch URLs or validate heading anchors.
+For intervention changes, edit the canonical full block or specialized source
+variants, then run `python scripts/sync_prompts.py` before checking. See the
+[prompt distribution contract](prompts/intervention/README.md#canonical-contract-and-synchronization).
 
 CI also measures coverage with:
 

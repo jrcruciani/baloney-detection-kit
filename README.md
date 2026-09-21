@@ -95,8 +95,9 @@ CI checks pull requests against any branch, including stacked PRs, on Python
 ```bash
 ruff check src/ tests/ scripts/
 ruff format --check src/ tests/ scripts/
-mypy src/bdk scripts/check_markdown_links.py
+mypy src/bdk scripts/check_markdown_links.py scripts/sync_prompts.py
 python scripts/check_markdown_links.py
+python scripts/sync_prompts.py --check
 pytest -m "not integration" --cov=bdk --cov-report=xml --cov-report=term-missing --cov-fail-under=60
 ```
 
@@ -114,6 +115,8 @@ It checks file and directory paths, accepts URL-encoded paths, fragments and
 queries, and skips remote URLs and literal code examples. It does not validate
 heading anchors or fetch remote content. Untracked virtual environments and
 tool caches are excluded; tracked Markdown is never excluded as tooling.
+The [intervention distribution contract](prompts/intervention/README.md#canonical-contract-and-synchronization)
+defines the canonical full prompt and wrapper-preserving synchronization.
 
 Retrieve a preventive intervention:
 
@@ -141,7 +144,9 @@ bdk score report.json
 
 ## The intervention protocol
 
-When confidence, evidence, and consequence are materially misaligned:
+First require an actual claim signal: confidence-evidence mismatch, inflated
+novelty or importance, endorsement before checks, framing used to evade evidence,
+or repeated pressure. Then choose a mode by mismatch and consequence. Full uses:
 
 1. Define and type the smallest reviewable claim.
 2. Scope current knowledge and the limits of any search.
@@ -150,9 +155,12 @@ When confidence, evidence, and consequence are materially misaligned:
 5. Compare only credible alternatives and their discriminators.
 6. Calibrate the conclusion and recommend one useful next step.
 
-Use light mode for ordinary exploration, full mode for material mismatch, and
-stabilization mode when pressure for agreement repeats without new evidence.
-Disagreement with expert consensus is a signal to inspect, not a verdict.
+Default to Light's 3-4 lines after a signal; use Full for substantial mismatch or
+consequential action needing deeper checks. A high-stakes domain alone never
+forces Full. Ordinary no-claim questions and humble exploration need no
+intervention. Under repeated pressure, Stabilization first rechecks its own
+errors and reopens for changed evidence, premises, or facts. Disagreement with
+consensus alone is neither a trigger nor a verdict.
 
 ## The diagnostic protocol
 

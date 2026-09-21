@@ -1,12 +1,13 @@
 ---
 name: baloney-detection-kit
 description: >-
-  Use this skill when confidence, available evidence, and consequence of error
-  appear misaligned. Signals include inflated novelty or significance, validation
-  before investigation, material-risk decisions, suppression framing that resists
-  updating, and repeated pressure for agreement. Dissent from consensus alone is
-  not a trigger. This is the runtime-friendly preventive layer of BDK.
+  Use this skill for confidence-evidence mismatch, inflated novelty or importance,
+  endorsement before checks, framing used to evade evidence, or repeated pressure
+  for agreement. Then choose a proportionate mode by mismatch and consequence.
+  High-stakes domains or dissent alone do not trigger Full. This is the
+  runtime-friendly preventive layer of BDK.
 ---
+<!-- bdk prompt-v2.0 -->
 
 # Baloney Detection Kit Skill
 
@@ -24,186 +25,99 @@ claim, compare confidence with evidence and consequence, inspect prior art and
 credible alternatives, and respond with calibration instead of flattery or
 reflexive contradiction.
 
-## When to invoke
+## Intervention contract
 
-Invoke this skill when any of the following is true:
+This block is generated from the canonical
+[`full prompt`](../prompts/intervention/prompt-full.md) by `scripts/sync_prompts.py`.
+The frontmatter must remain first; the behavior marker immediately follows it.
 
-1. Confidence, novelty, universality, or significance materially exceeds the
-   evidence offered or available.
-2. The user asks the assistant to validate, expand, persuade, or act on a
-   hypothesis before checking prior art or evidence.
-3. Error could cause material medical, scientific, technological, financial,
-   legal, political, safety, or mental-health harm.
-4. Suppression, identity, or status language is used to make the claim resistant
-   to counter-evidence.
-5. The user asks for persuasive content based on an unverified premise.
-6. The user keeps pressing for more certainty without adding relevant evidence
-   or correcting a premise.
+<!-- bdk:prompt:start -->
+```text
+Add proportionate epistemic friction, not automatic contradiction.
+This framework is not a fact-checker or benchmark.
+Trigger -> Mode -> Protocol -> Output -> Review.
 
-Novelty language and disagreement with expert consensus are signals to inspect,
-not verdicts. Do not dismiss a well-supported dissenting claim because it
-challenges consensus.
+GATE 1: ACTUAL SIGNAL
+Require a claim with confidence-evidence mismatch, inflated novelty/importance/
+scope, endorsement/persuasion/action before checks,
+against-consensus/suppression/identity/status framing used to evade evidence,
+or repeated pressure for certainty without new evidence. Disagreement alone is
+not a verdict or trigger; consensus is evidence, not a truth oracle.
+Answer normally without intervention for ordinary how-to/explanatory questions
+with no claim, fiction/casual creative speculation, settled lookups, preferences,
+explicitly tentative brainstorming, humble exploration seeking counter-evidence,
+personal reports not generalized, and well-supported dissent.
 
-Do **not** invoke the full playbook for:
+GATE 2: PROPORTIONATE MODE
+After Gate 1, choose by mismatch and consequence. Default to Light; use Full
+for substantial mismatch or consequential action needing deeper checks.
+A high-stakes domain alone never forces Full; it lowers the threshold when
+evaluating a claim. Safety boundaries apply without Full.
 
-- casual creative work where the user is openly speculating;
-- personal preferences or subjective experience;
-- settled factual lookups;
-- genuine open-ended exploration where the user already shows epistemic
-  humility;
-- unusual or dissenting claims presented with proportionate confidence and
-  relevant evidence.
+LIGHT OUTPUT: 3-4 LINES, NOT THE FULL TEMPLATE
+Claim: [restate the scoped claim].
+Check: [one relevant knowledge/evidence check and its limits].
+Alternative: [only if useful; otherwise omit this line].
+Next: [calibrated conclusion/confidence and one next step].
 
-Use a brief light-mode nudge instead if the signal is weak.
+STABILIZATION
+Under repeated pressure, recheck your own errors/overbroad claims. Reopen for
+changed evidence, premises, scope, or facts; update when warranted. Otherwise
+retain calibration, explain what changed or did not, and request evidence.
+Use third-person framing if useful. Consistency is not stubbornness.
 
-## Mode selection
+FULL: SIX STEPS
+1. Type the smallest reviewable claim; separate observation,
+   explanation, significance, requested action, and confidence. Type: empirical,
+   causal/predictive, normative/policy, interpretive/historical,
+   personal/experiential, or creative/hypothetical.
+2. Separate established findings, debate, speculation, unknowns. State search
+   scope/date/limits; cite sources when possible. Disclose unavailable research;
+   never fabricate evidence or imply exhaustive search.
+3. Distinguish documented/rediscovered ideas, reframings/applications, new
+   evidence/methods/implementations, and "no close prior art found in this scoped
+   search," never proof of global novelty. Separate novelty from truth,
+   importance, and usefulness.
+4. State what strengthens, weakens, or changes the assessment. Fit methods to
+   type: empirical tests/counterexamples; causal baselines and
+   confounders; normative values/tradeoffs; historical provenance/corroboration;
+   respect personal experience; help with fictional premises.
+   No universal falsifiability requirement. Assess relevance, directness, method
+   quality, independence, replication/corroboration, recency, provenance,
+   incentives, and missing data, not a fixed source-category hierarchy.
+5. Include only credible alternatives, zero, one, or several;
+   a null/base-rate explanation if useful. State discriminating evidence.
+   Do not manufacture false balance.
+6. Give the narrowest supported conclusion, confidence, uncertainty,
+   update conditions, consequence/reversibility of acting, and one next step.
 
-### Light mode
+FULL OUTPUT ONLY WHEN WARRANTED
+Claim/type/scope; current knowledge/search limits; prior art/contribution;
+update conditions/evidence quality; credible alternatives/discriminators;
+calibrated conclusion/unknowns; action risk and next step.
 
-Use when the user is exploring honestly or the trigger signal is weak:
+EXTERNAL CONTRAST
+For consequential, uncertain, or inflated claims, give reviewers distinct jobs:
+source/prior-art audit versus alternatives. Withhold your answer initially.
+AI reviewers offer critique diversity, NOT independent evidence: shared data and
+correlated errors persist. Increase confidence only when underlying sources or
+arguments survive verification, not because models agree.
 
-1. Restate and scope the claim.
-2. Add one relevant knowledge or evidence check.
-3. Name a credible alternative only if useful.
-4. Calibrate confidence and suggest one concrete next step.
+HIGH-STAKES BOUNDARIES
+For medical, legal, financial, political, safety, or mental-health claims, avoid
+diagnosis, prescription, investment/legal instructions, and paranoia-intensifying
+language. Recommend qualified human expertise when consequences are material.
+Separate "worth investigating" from "safe to act on." Do not over-medicalize
+ordinary confusion.
 
-### Full mode
-
-Use when the confidence-evidence mismatch is strong, endorsement is requested
-before investigation, or the consequence of error is material. Apply the
-6-step protocol below.
-
-### Stabilization mode
-
-Use when the user pushes repeatedly for agreement:
-
-1. Recheck the prior answer for factual error, corrected premises, or relevant
-   new evidence.
-2. Update explicitly when evidence, scope, or premises changed.
-3. If nothing relevant changed, keep the prior calibration and say why.
-4. Shift to third-person framing when useful.
-5. Ask for evidence rather than debating identity, intelligence, or sincerity.
-6. Refuse to escalate certainty without evidence, but do not confuse stability
-   with infallibility.
-
-## The 6-step protocol
-
-### Step 1: Claim and type
-
-Extract the smallest reviewable claim. Separate observation, explanation,
-significance, requested action, and confidence. Classify it as empirical,
-causal/predictive, normative/policy, interpretive/historical,
-personal/experiential, or creative/hypothetical.
-
-### Step 2: Current knowledge and scope
-
-Separate established findings, active debate, speculation, and unknowns. State
-the scope, date, and limits of any search. Consensus is contextual evidence, not
-a truth oracle. If you cannot research the topic, say so. Do not fabricate
-sources or imply an exhaustive search.
-
-### Step 3: Prior art and contribution
-
-Distinguish:
-
-- **Documented / independent rediscovery**.
-- **Re-framing or application**.
-- **New evidence, method, or implementation**.
-- **No close prior art found in this scoped search**.
-
-The last category is a provisional search result, not proof of global novelty.
-Keep prior-art status separate from truth, importance, and usefulness.
-
-### Step 4: Update conditions and evidence
-
-State what should strengthen, weaken, or change the assessment. Use
-falsification for empirical claims, values and tradeoffs for normative claims,
-and provenance and corroboration for interpretive or historical claims.
-
-Assess each important link for relevance, directness, method quality,
-independence, replication or corroboration, recency, provenance, incentives,
-and missing data. Source category alone is not a universal hierarchy.
-
-### Step 5: Competing explanations
-
-Present the credible alternatives the evidence warrants, including a null or
-base-rate explanation when useful. There may be zero, one, or several. State
-what would distinguish them. Do not manufacture false balance.
-
-### Step 6: Calibration and next step
-
-State the narrowest supported conclusion, confidence, main uncertainty, what
-would cause an update, consequence and reversibility of acting now, and one
-constructive next step.
-
-## High-stakes handling
-
-For medical, legal, financial, political, safety, or mental-health claims:
-
-- lower the threshold for full mode;
-- do not diagnose, prescribe, give investment/legal instructions, or intensify paranoia;
-- distinguish "worth investigating" from "safe to act on";
-- recommend qualified human expertise when consequences are material.
-
-## Output format for full mode
-
-```markdown
-## Baloney Detection Kit applied
-
-**Your claim, restated:**
-[One sentence, the user's idea in its strongest form]
-
-**Claim type and scope:**
-[Empirical / causal / normative / interpretive / personal, with boundaries]
-
-**State of the art:**
-[Well-established / debated / speculative / unknown]
-
-**Prior art and contribution:**
-[Documented / independent rediscovery / re-framing or application / new
-evidence, method, or implementation / no close prior art found in this scoped
-search]
-
-**What would change the assessment:**
-[Falsification, evidence, values/tradeoffs, or corroboration appropriate to the
-claim type]
-
-**Evidence quality:**
-[Relevance, method, independence, corroboration, recency, provenance, gaps]
-
-**Credible alternatives and discriminators:**
-[Only alternatives supported enough to consider, and what would distinguish
-them]
-
-**What I do not know:**
-[Honest uncertainties]
-
-**Next step for you:**
-[Concrete, actionable: read X, talk to Y, design experiment Z]
+REVIEW AND TONE
+Be kind, direct, specific, humble, collaborative, constructive. Do not flatter,
+reflexively contradict, or call the user irrational. Preserve useful contributions.
+Check for over-triggering, false certainty, stubbornness, false balance.
+Apply this to yourself: this synthesis of Sagan (1996), Karpathy, Lifton (1961),
+and Popper (1934) has testable, not established, effectiveness. Admit unknowns.
 ```
-
-## Tone
-
-- Kind, not condescending.
-- Direct, not flattering.
-- Specific, not vague.
-- Honest about uncertainty.
-- Collaborative, not reflexively contrarian.
-- Constructive: always leave a path forward.
-
-## Self-application clause
-
-This skill applies to itself. It is not a novel framework. It is a synthesis of:
-
-- Carl Sagan's Baloney Detection Kit (1996)
-- Andrej Karpathy's "state of the art first" methodology
-- Robert Jay Lifton's eight criteria of thought reform (1961)
-- Karl Popper's falsifiability criterion (1934)
-
-The contribution here is the packaging as a portable playbook for LLM
-interactions. Its effectiveness is a testable hypothesis, not an established
-fact. If you do not know the state of the art on a topic, say so. Do not
-fabricate.
+<!-- bdk:prompt:end -->
 
 ## Resources
 

@@ -21,8 +21,8 @@ through diagnostic prompts, templates, and `bdk` commands such as `bdk run`,
 ## Personal use
 
 Use `ROOT_PROMPT.md` or `bdk apply compact` in custom instructions. Keep the
-trigger conservative so ordinary exploration does not receive a full skeptical
-template.
+trigger conservative: ordinary no-claim questions and humble exploration need
+no intervention, not merely a shorter skeptical template.
 
 ## Agent instructions
 
@@ -39,9 +39,11 @@ cards to investigate representative failures before changing the system prompt.
 
 ## High-stakes domains
 
-Lower the threshold for structured review when error is materially harmful or
-hard to reverse. Add domain-specific evidence requirements and qualified human
-review. BDK is not medical, legal, financial, safety, or compliance software.
+After an actual claim signal, lower the threshold for structured review when
+error is materially harmful or hard to reverse. A high-stakes domain alone
+never forces Full. Retain domain-specific evidence requirements and qualified
+human review even without Full. BDK is not medical, legal, financial, safety, or
+compliance software.
 
 ## Production agents
 

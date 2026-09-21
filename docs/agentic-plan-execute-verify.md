@@ -12,8 +12,9 @@ provider-specific details in the downstream system that uses the playbook.
 
 ## Why the pattern fits
 
-BDK describes a conversation behavior: before validating a weak, inflated,
-high-stakes, or novel-sounding claim, add epistemic friction. Plan -> Execute ->
+BDK describes a conversation behavior: require an actual claim signal, then add
+epistemic friction proportionate to mismatch and consequence before endorsement.
+A high-stakes domain or disagreement alone is not a trigger. Plan -> Execute ->
 Verify systems provide a natural runtime shape for that behavior:
 
 1. **Plan:** decide whether the playbook should fire and which mode applies.
@@ -33,8 +34,8 @@ inside that shape without importing the sample's sports-domain code.
 
 | BDK concept | Plan -> Execute -> Verify component | Integration rule |
 |-------------|--------------------------------------|------------------|
-| Trigger conditions | Planner | Detect material confidence-evidence-consequence mismatch. Treat novelty, suppression framing, dissent, validation requests, and multi-turn pressure as signals, not verdicts. |
-| Light / full / stabilization mode | Planner | Select the lightest mode that preserves rigor. Do not force the full template on humble exploration. |
+| Trigger conditions (Gate 1) | Planner | Require confidence-evidence mismatch, inflated novelty/importance, endorsement before checks, framing used to evade evidence, or repeated pressure. Disagreement alone is not a trigger or verdict. |
+| Light / full / stabilization mode (Gate 2) | Planner | After a signal, choose by mismatch and consequence. Default to 3-4-line Light; a high-stakes domain alone never forces Full. No-claim questions and humble exploration need no intervention. |
 | Six-step protocol | Plan steps | Convert claim typing, scoped current knowledge, contribution, update conditions, evidence quality, credible alternatives, and calibration into explicit steps. |
 | Evidence-backed practice | Executor | Use search, retrieval, citations, internal knowledge bases, or domain sources when available; record scope and evaluate provenance and independence. |
 | External contrast | Executor | Assign distinct source-audit and hypothesis-test jobs when warranted. Send the object, not the prior answer; never count model agreement as evidence. |
@@ -65,9 +66,10 @@ evidence neutrally.
 ### 2. Plan: create a BDK activity plan
 
 The planner should output a plan that is specific enough to execute and narrow
-enough to avoid unnecessary friction.
+enough to avoid unnecessary friction, only after Gate 1. Full requires
+substantial mismatch or consequential action needing deeper checks.
 
-Example conceptual shape:
+Example conceptual shape after finding substantial confidence-evidence mismatch:
 
 ```json
 {
@@ -153,8 +155,8 @@ with fields like these:
 | `claim` | The atomic claim or decision being reviewed. |
 | `claim_type` | Empirical, causal/predictive, normative/policy, interpretive/historical, personal/experiential, or creative/hypothetical. |
 | `confidence_evidence_consequence` | Why friction was or was not proportionate. |
-| `trigger_reason` | Why BDK fired, or why it stayed in light mode. |
-| `mode` | `light`, `full`, or `stabilization`. |
+| `trigger_reason` | Why BDK fired, or why no intervention was needed. |
+| `mode` | If triggered: `light`, `full`, or `stabilization`. |
 | `steps` | Planned BDK checks and their outputs. |
 | `sources` | Prior-art or evidence references used during execution. |
 | `reviewers` | External model reviewers and their distinct jobs, if used. |
