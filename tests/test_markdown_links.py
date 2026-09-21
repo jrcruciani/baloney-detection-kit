@@ -216,9 +216,11 @@ def test_cli_reports_non_repository_error(tmp_path):
 
 
 def test_repository_markdown_links():
-    errors = [
-        error
-        for source in links.markdown_files(_ROOT)
-        for error in links.check_markdown(source, _ROOT)
-    ]
+    files = links.markdown_files(_ROOT)
+    assert {
+        _ROOT / "SECURITY.md",
+        _ROOT / "CONTRIBUTING.md",
+        _ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md",
+    } <= set(files)
+    errors = [error for source in files for error in links.check_markdown(source, _ROOT)]
     assert not errors, "\n".join(errors)

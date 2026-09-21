@@ -1,0 +1,127 @@
+name: Adverse-effect report
+description: Report unwanted intervention behavior with minimal, redacted evidence.
+title: "[Adverse effect]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Never paste API keys, personal data, or private transcripts, including in attachments.
+        Share only a minimal REDACTED or synthetic excerpt; do not upload an entire saved session.
+        For suspected vulnerabilities, stop and follow
+        [SECURITY.md](https://github.com/jrcruciani/baloney-detection-kit/blob/main/SECURITY.md)
+        instead of posting exploit details or transcripts publicly.
+        A model response or judge score alone is not proof of a general effect.
+  - type: checkboxes
+    id: safe-report
+    attributes:
+      label: Safe public report
+      options:
+        - label: I have removed API keys, personal data, and private transcripts; this is not a vulnerability disclosure.
+          required: true
+  - type: input
+    id: bdk-version
+    attributes:
+      label: BDK version or commit
+      placeholder: "For example: 3.0.0 or a commit SHA"
+    validations:
+      required: true
+  - type: input
+    id: prompt-variant
+    attributes:
+      label: Prompt variant or file
+      description: Identify the variant and any local edits.
+      placeholder: "For example: compact, full, high-stakes, agent, reviewer, second-opinion, or a diagnostic card"
+    validations:
+      required: true
+  - type: input
+    id: prompt-version
+    attributes:
+      label: Prompt behavior version marker
+      description: Copy the marker; if absent, say absent and identify the file/commit. Do not guess.
+      placeholder: "For example: prompt-v2.0"
+    validations:
+      required: true
+  - type: textarea
+    id: model-runtime
+    attributes:
+      label: Model and runtime
+      description: Model/version, provider or host, relevant settings/tools, date, run count, and seed policy if known. No keys or private endpoints.
+    validations:
+      required: true
+  - type: textarea
+    id: transcript
+    attributes:
+      label: Minimal REDACTED transcript
+      description: Use synthetic content or the smallest manually redacted prompt/response excerpt. If no excerpt is safe, describe a synthetic reproduction instead.
+      placeholder: |
+        User: [minimal synthetic or REDACTED input]
+        Assistant: [minimal synthetic or REDACTED response]
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Describe the intended useful outcome and a baseline/control if available.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: Describe the mismatch, evidence limits, and what changed under the intervention.
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Adverse-effect category
+      multiple: true
+      options:
+        - over-trigger
+        - under-trigger
+        - stubbornness
+        - false balance
+        - reduced usefulness
+        - unsafe guidance
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Observed or potential severity
+      description: Reporter assessment, not a maintainer priority or response-time guarantee.
+      options:
+        - Low - minor friction
+        - Moderate - materially reduced usefulness
+        - High - plausible serious consequence
+        - Critical - actual or imminent serious consequence
+        - Uncertain
+    validations:
+      required: true
+  - type: dropdown
+    id: consequence-domain
+    attributes:
+      label: High-stakes consequence domain
+      description: Select applicable domains without identifying people or sharing private case details.
+      multiple: true
+      options:
+        - Not high-stakes
+        - Health
+        - Legal
+        - Financial
+        - Physical safety
+        - Employment or education
+        - Privacy or security
+        - Other high-stakes domain (describe below)
+        - Uncertain
+    validations:
+      required: true
+  - type: textarea
+    id: consequence
+    attributes:
+      label: Consequence and uncertainty
+      description: Distinguish observed harm from hypothetical risk, note reviewer judgment and uncertainty, and describe any workaround. No personal details.
+    validations:
+      required: true
