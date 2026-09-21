@@ -125,6 +125,8 @@ bdk apply compact
 bdk apply high-stakes --output system-prompt.md
 bdk apply compact --lang es
 bdk apply full --lang es --output system-prompt.es.md
+bdk apply compact --format json
+bdk apply --list --lang es --format json
 ```
 
 English (`--lang en`) remains the default for all six variants. Spanish (`es`)
@@ -134,22 +136,75 @@ variants fail explicitly; they never fall back to English. Spanish prose keeps
 English section/output labels for machine parsing. See
 [language coverage and review](prompts/intervention/README.md#languages-and-translation-review).
 
+`apply` defaults to plain, exact packaged Markdown, without terminal wrapping or
+markup interpretation. `--format json` prints exactly one object with the keys
+`variant`, `prompt_version`, `lang`, and `content`; `content` preserves the full
+prompt, including Unicode and newlines. The behavior version (currently
+`prompt-v2.0`) comes from the prompt's validated marker, not the package version.
+`--list` takes no variant and lists only the variants available for `--lang`,
+with their versions and language. In JSON mode it returns an array of objects
+with `variant`, `prompt_version`, and `lang` (no prompt bodies).
+`--output` writes the same selected representation with owner-only permissions
+where supported; its confirmation goes to stderr, leaving stdout empty.
+Invalid formats, languages, or variant/list combinations fail without writing.
+
+### Model aliases
+
+Pass a raw model ID, or define case-sensitive aliases in `./bdk.toml` or
+`~/.config/bdk/config.toml`. Replace these illustrative placeholders with your
+actual model IDs before using the aliases:
+
+```toml
+[models]
+default = "<model-id>"
+anthropic = "<anthropic-model-id>"
+openai = "<openai-model-id>"
+gemini = "<gemini-model-id>"
+azure = "azure/<deployment-or-model-id>"
+```
+
+The user file is loaded first; the current-directory file overrides individual
+aliases and retains other user aliases. There is no parent-directory search or
+environment-variable expansion. The only supported top-level table is
+`[models]`, containing nonempty alias-to-string mappings without whitespace.
+Values are literal raw model IDs, not URLs, credentials, or the reserved name
+`default`. Aliases are looked up once: values are never expanded as other aliases.
+Keep keys and endpoints in the existing environment variables or CLI flags,
+not these files. Both files are validated even when local aliases override user
+aliases; malformed TOML/schema, invalid values, and unreadable files fail
+explicitly rather than silently falling back.
+
+`--model`, each entry in `compare --models`, `--judge`, and `--coherence-judge`
+accept aliases. Resolved IDs reach both provider selection and model requests,
+and appear in model/judge report metadata and saved sessions/checkpoints.
+`--model default` requires an explicit `[models].default`; it never sends the
+literal `default` to an API. Other unconfigured names still pass through as raw
+IDs. Omitting `--model` retains the existing CLI default, not the `default` alias.
+Provider routing, including Azure deployment handling, is unchanged.
+
+Aliases are CLI-only: Python library APIs still take raw IDs. Resuming a session
+uses its saved raw ID without alias lookup, so later config edits cannot retarget
+it. Offline `coherence` and `score` analysis likewise leaves historical report
+IDs unchanged and does not load alias configuration.
+
 Run diagnosis:
 
 ```bash
-bdk guided --model claude-sonnet-4-6
-bdk run 1.2 --model gpt-4o --response "the suspicious response"
-bdk ratchet --scenario scenarios/sycophancy.yaml --model gpt-4o
-bdk compare 1.1 --models claude-sonnet-4-6,gpt-4o --response "the response"
+bdk guided --model "<model-id>"
+bdk run 1.2 --model default --response "the suspicious response"
+bdk ratchet --scenario scenarios/sycophancy.yaml --model default
+bdk compare 1.1 --models anthropic,openai --response "the response"
 ```
 
 Run behavioral checks and scoring:
 
 ```bash
-bdk crosscheck --task "Explain the evidence" --model gpt-4o
+bdk crosscheck --task "Explain the evidence" --model default --judge anthropic
 bdk coherence report.json
 bdk score report.json
 ```
+
+Alias-based examples require the [model alias configuration](#model-aliases) above.
 
 ## The intervention protocol
 

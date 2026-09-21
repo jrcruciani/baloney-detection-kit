@@ -9,6 +9,20 @@ import pytest
 
 
 @pytest.fixture
+def isolated_model_config(tmp_path, monkeypatch):
+    """Keep CLI configuration reads and writes away from the developer's files."""
+    home = tmp_path / "home"
+    cwd = tmp_path / "work"
+    home.mkdir()
+    cwd.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.chdir(cwd)
+    user = home / ".config" / "bdk" / "config.toml"
+    user.parent.mkdir(parents=True)
+    return user, cwd / "bdk.toml"
+
+
+@pytest.fixture
 def provider_env(monkeypatch):
     for name in os.environ:
         if (
