@@ -4,17 +4,30 @@ from __future__ import annotations
 
 import os
 from abc import ABC, abstractmethod
+from importlib import import_module
+from types import ModuleType
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
-try:
-    import openai
-except ImportError:  # pragma: no cover - optional dependency
-    openai = None
-
 from bdk.security import validate_base_url
 
-OpenAI = openai.OpenAI if openai is not None else None
+
+class ProviderDependencyError(ImportError):
+    """A selected provider's optional SDK is not installed."""
+
+    def __init__(self, provider: str, extra: str):
+        super().__init__(
+            f'Provider "{provider}" requires: pip install "baloney-detection-kit[{extra}]"'
+        )
+
+
+def _load_sdk(module: str, *, provider: str, extra: str) -> ModuleType:
+    try:
+        return import_module(module)
+    except ModuleNotFoundError as exc:
+        if exc.name not in {module, module.split(".")[0]}:
+            raise
+        raise ProviderDependencyError(provider, extra) from exc
 
 
 class UnsupportedProviderOption(Exception):
@@ -51,8 +64,7 @@ class AnthropicProvider(Provider):
     name = "anthropic"
 
     def __init__(self, api_key: str):
-        import anthropic
-
+        anthropic = _load_sdk("anthropic", provider=self.name, extra="anthropic")
         self.client = anthropic.Anthropic(api_key=api_key)
 
     def send(
@@ -108,7 +120,8 @@ class OpenAIProvider(Provider):
                 base_url,
                 allow_insecure=allow_insecure_base_url,
             )
-        self.client = OpenAI(**kwargs)
+        openai = _load_sdk("openai", provider=self.name, extra="openai")
+        self.client = openai.OpenAI(**kwargs)
 
     def send(
         self,
@@ -150,7 +163,9 @@ class AzureFoundryProvider(Provider):
             endpoint,
             allow_insecure=allow_insecure_base_url,
         )
-        self.client = OpenAI(
+        openai = _load_sdk("openai", provider=self.name, extra="openai")
+        self._bad_request_error = openai.BadRequestError
+        self.client = openai.OpenAI(
             api_key=api_key,
             base_url=self._build_base_url(self._endpoint, family),
             default_query={"api-version": api_version},
@@ -181,12 +196,11 @@ class AzureFoundryProvider(Provider):
     def _create_responses(self, kwargs: dict[str, Any], *, temperature: float | None) -> Any:
         try:
             return self.client.responses.create(**kwargs)
-        except Exception as exc:
-            if openai is not None and isinstance(exc, openai.BadRequestError):
-                message = str(exc).lower()
-                if temperature is not None and "temperature" in message:
-                    kwargs.pop("temperature", None)
-                    return self.client.responses.create(**kwargs)
+        except self._bad_request_error as exc:
+            message = str(exc).lower()
+            if temperature is not None and "temperature" in message:
+                kwargs.pop("temperature", None)
+                return self.client.responses.create(**kwargs)
             raise
 
     def send(
@@ -247,9 +261,8 @@ class GeminiProvider(Provider):
     name = "gemini"
 
     def __init__(self, api_key: str):
-        from google import genai
-        from google.genai import types
-
+        genai = _load_sdk("google.genai", provider=self.name, extra="gemini")
+        types = import_module("google.genai.types")
         self.client = genai.Client(api_key=api_key)
         self._types = types
 

@@ -24,7 +24,7 @@ from bdk.prompts import (
     get_ratchet_sequence,
     list_prompts,
 )
-from bdk.providers import create_provider
+from bdk.providers import Provider, ProviderDependencyError, create_provider
 from bdk.report import (
     count_labels,
     generate_json_report,
@@ -89,13 +89,32 @@ def _read_input(text: str | None, file: Path | None, *, max_bytes: int | None = 
     raise typer.BadParameter("Provide --response, --response-file, or pipe via stdin")
 
 
+def _create_provider(
+    model: str,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    *,
+    allow_insecure_base_url: bool = False,
+) -> Provider:
+    try:
+        return create_provider(
+            model,
+            api_key=api_key,
+            base_url=base_url,
+            allow_insecure_base_url=allow_insecure_base_url,
+        )
+    except ProviderDependencyError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from None
+
+
 def _build_engine(
     model: str,
     api_key: str | None,
     base_url: str | None,
     allow_insecure_base_url: bool = False,
 ) -> DiagnosticEngine:
-    provider = create_provider(
+    provider = _create_provider(
         model,
         api_key=api_key,
         base_url=base_url,
@@ -111,7 +130,7 @@ def _build_judge(judge: str | None) -> tuple:
     """
     if not judge:
         return None, None
-    judge_provider = create_provider(judge)
+    judge_provider = _create_provider(judge)
     return judge_provider, judge
 
 
@@ -661,7 +680,7 @@ def ratchet(
     if coherence_judge:
         from bdk.coherence_llm import JudgeRetryPolicy, analyze_coherence_auto
 
-        judge_provider = create_provider(
+        judge_provider = _create_provider(
             coherence_judge,
             api_key=api_key,
             base_url=base_url,
@@ -1045,7 +1064,7 @@ def crosscheck(
     """Run a behavioral A/B cross-check on a task."""
     from bdk.crosscheck import run_ab_test
 
-    provider = create_provider(
+    provider = _create_provider(
         model,
         api_key=api_key,
         base_url=base_url,

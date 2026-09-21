@@ -700,9 +700,12 @@ class TestAnalyzeCoherenceAuto:
 class TestModelConfigShapes:
     """Layer 3 client contract: three documented model_config shapes."""
 
-    def test_client_shape(self):
+    def test_client_shape(self, monkeypatch):
+        import sys
+
         from bdk.coherence_llm import _coerce_model_config
 
+        monkeypatch.setitem(sys.modules, "openai", None)
         client = MagicMock(name="openai-client")
         provider, model = _coerce_model_config(
             {"client": client, "model": "gpt-5"}
@@ -711,7 +714,7 @@ class TestModelConfigShapes:
         assert model == "gpt-5"
         assert provider.name == "openai"
 
-    def test_api_key_base_url_shape(self):
+    def test_api_key_base_url_shape(self, openai_sdk):
         from bdk.coherence_llm import _coerce_model_config
 
         provider, model = _coerce_model_config({
@@ -722,6 +725,47 @@ class TestModelConfigShapes:
         })
         assert provider.name == "openai"
         assert model == "local-model"
+        openai_sdk.OpenAI.assert_called_once_with(
+            api_key="sk-test", base_url="http://localhost:8080",
+        )
+
+    def test_azure_shape(self, openai_sdk):
+        from bdk.coherence_llm import _coerce_model_config
+
+        provider, model = _coerce_model_config({
+            "azure_endpoint": "https://example.openai.azure.com",
+            "api_key": "test-key",
+            "api_version": "2024-05-01-preview",
+            "azure_deployment": "custom-deployment",
+            "model": "gpt-5",
+        })
+        assert provider.client is openai_sdk.AzureOpenAI.return_value
+        assert model == "custom-deployment"
+        openai_sdk.AzureOpenAI.assert_called_once_with(
+            azure_endpoint="https://example.openai.azure.com",
+            api_key="test-key",
+            api_version="2024-05-01-preview",
+        )
+
+    @pytest.mark.parametrize("config", [
+        {"api_key": "test-key", "model": "gpt-5"},
+        {
+            "azure_endpoint": "https://example.openai.azure.com",
+            "api_key": "test-key", "api_version": "2024-05-01-preview", "model": "gpt-5",
+        },
+    ])
+    def test_missing_openai_sdk_has_install_hint(self, monkeypatch, config):
+        import sys
+
+        from bdk.coherence_llm import _coerce_model_config
+        from bdk.providers import ProviderDependencyError
+
+        monkeypatch.setitem(sys.modules, "openai", None)
+        with pytest.raises(ProviderDependencyError) as exc:
+            _coerce_model_config(config)
+        assert str(exc.value) == (
+            'Provider "openai" requires: pip install "baloney-detection-kit[openai]"'
+        )
 
     def test_api_key_base_url_requires_opt_in_for_local_http(self):
         from bdk.coherence_llm import _coerce_model_config

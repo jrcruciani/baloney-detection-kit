@@ -1120,7 +1120,7 @@ def _coerce_model_config(
     ``model_config`` shape cleanly because their API surfaces differ.
     Use ``analyze_coherence_llm`` directly for those.
     """
-    from bdk.providers import OpenAIProvider
+    from bdk.providers import OpenAIProvider, _load_sdk
 
     if "model" not in model_config:
         raise ValueError("model_config must include a 'model' key")
@@ -1133,10 +1133,7 @@ def _coerce_model_config(
         return provider, model
 
     if "azure_endpoint" in model_config:
-        try:
-            import openai
-        except ImportError as e:  # pragma: no cover
-            raise ImportError("openai package required for Azure model_config") from e
+        openai = _load_sdk("openai", provider="openai", extra="openai")
         client = openai.AzureOpenAI(
             azure_endpoint=model_config["azure_endpoint"],
             api_key=model_config["api_key"],

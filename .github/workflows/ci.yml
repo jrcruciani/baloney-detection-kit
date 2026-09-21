@@ -7,6 +7,31 @@ on:
     branches: [main]
 
 jobs:
+  base-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install only the base package in an isolated environment
+        run: |
+          python -m venv .venv-base
+          .venv-base/bin/python -m pip install .
+
+      - name: Check the CLI without provider SDKs
+        run: |
+          .venv-base/bin/python - <<'PY'
+          from importlib.util import find_spec
+          import bdk.cli
+
+          for module in ("anthropic", "openai", "google"):
+              assert find_spec(module) is None, f"Unexpected SDK installed: {module}"
+          PY
+          .venv-base/bin/bdk apply compact
+
   test:
     runs-on: ubuntu-latest
     strategy:

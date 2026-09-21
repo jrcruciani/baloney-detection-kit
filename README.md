@@ -50,23 +50,39 @@ For diagnosis:
 
 ## Reference CLI
 
-Requires Python 3.11 or newer.
+Requires Python 3.11 or newer. The base install supports prompts, templates,
+and `bdk apply` without any model-provider SDKs:
 
 ```bash
-git clone https://github.com/jrcruciani/baloney-detection-kit.git
-cd baloney-detection-kit
-python -m pip install -e .
+pip install baloney-detection-kit
 ```
 
-For Gemini models, install the optional Google Gen AI SDK:
+For live model runs, install all provider SDKs:
 
 ```bash
-python -m pip install -e ".[gemini]"
+pip install "baloney-detection-kit[all]"
 ```
+
+Or install only the provider you need:
+
+| Provider | Install |
+|---|---|
+| Anthropic | `pip install "baloney-detection-kit[anthropic]"` |
+| OpenAI, OpenAI-compatible APIs, Azure Foundry / Azure OpenAI | `pip install "baloney-detection-kit[openai]"` |
+| Gemini (Google Gen AI) | `pip install "baloney-detection-kit[gemini]"` |
+
+SDKs load only when their provider is constructed. Set `ANTHROPIC_API_KEY`,
+`OPENAI_API_KEY`, or the corresponding provider credentials, or pass `--api-key`.
+Azure Foundry also requires `AZURE_FOUNDRY_API_KEY` and `AZURE_FOUNDRY_ENDPOINT`
+(or its chat/GPT-specific endpoint variables).
 
 Set `GEMINI_API_KEY` or `GOOGLE_API_KEY`, or pass `--api-key`. The Gemini
-adapter uses `google-genai>=1.0`, imported only when a Gemini provider is
-created, with a separate client per provider rather than global SDK configuration.
+adapter uses `google-genai>=1.0`, with a separate client per provider rather than
+global SDK configuration.
+
+For a source checkout (including the example scenarios below), use
+`pip install -e .` for the base CLI or `pip install -e ".[all]"` for live runs.
+Contributors can use `pip install -e ".[dev]"` to run unit tests without provider SDKs.
 
 Retrieve a preventive intervention:
 
