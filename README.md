@@ -2,69 +2,22 @@
 
 > Epistemic friction, behavioral diagnosis, and validation for AI conversations.
 
-**Topics:**
-[![Topic: llm](https://img.shields.io/badge/topic-llm-gray)](https://github.com/topics/llm)
-[![Topic: critical-thinking](https://img.shields.io/badge/topic-critical--thinking-gray)](https://github.com/topics/critical-thinking)
-[![Topic: sycophancy](https://img.shields.io/badge/topic-sycophancy-gray)](https://github.com/topics/sycophancy)
-[![Topic: prompt-engineering](https://img.shields.io/badge/topic-prompt--engineering-gray)](https://github.com/topics/prompt-engineering)
-[![Topic: ai-safety](https://img.shields.io/badge/topic-ai--safety-gray)](https://github.com/topics/ai-safety)
-[![Topic: agent-skills](https://img.shields.io/badge/topic-agent--skills-gray)](https://github.com/topics/agent-skills)
+[![CI](https://github.com/jrcruciani/baloney-detection-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/jrcruciani/baloney-detection-kit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-These labels describe subject matter, not efficacy or certification. GitHub
-repository topics are separate maintainer settings.
+## 30-second start: paste the ROOT_PROMPT block
 
-Baloney Detection Kit (BDK) helps practitioners prevent unsupported confidence
-amplification, diagnose why an AI response went wrong, and test whether an
-intervention improved behavior without making the assistant reflexively
-contrarian.
+1. Open [`ROOT_PROMPT.md`](ROOT_PROMPT.md) and copy its `text` block.
+2. Paste that block as your LLM's **system prompt or custom instructions**.
+3. Start your conversation. No installation or external files are needed.
 
-BDK 3.0 has one operating loop:
+Use [`ROOT_PROMPT.es.md`](ROOT_PROMPT.es.md) for Spanish, or choose a
+[specialized prompt](prompts/intervention/) for a shorter field or a specific role.
+BDK is framework-first: these instructions are advisory, not a truth oracle or
+enforced security controls. Effectiveness remains subject to
+[validation and review](#evidence-status).
 
-```text
-Detect risk -> Apply friction -> Diagnose behavior -> Validate outcomes
-```
-
-## Scope and boundaries
-
-The project is framework-first. Every layer can be used manually with prompts
-and templates. The `bdk` Python CLI is a reference implementation for teams that
-need repeatable model runs, cross-checks, scoring, and reports.
-LLM judges are review aids, not ground truth.
-BDK is not a truth oracle, automatic fact-checker, leaderboard benchmark,
-orchestrator, or RAG framework.
-
-## What BDK includes
-
-| Layer | Question | Main artifacts |
-|---|---|---|
-| Detection | Is confidence misaligned with evidence or consequence? | Trigger rules, claim typing, human checklist |
-| Intervention | How should the assistant respond before endorsing the claim? | Compact, full, high-stakes, agent, reviewer, and second-opinion prompts |
-| Diagnosis | Why did this output emerge? | Model/runtime/conversation split, 16 diagnostic prompts, nine-step ratchet |
-| Validation | Did the intervention help, and what did it damage? | A/B cross-checks, coherence analysis, scoring, scenarios, reports |
-
-BDK does not claim to inspect model weights or reveal hidden reasoning.
-Diagnostic explanations are hypotheses constrained by observable behavior.
-Behavioral probes and human review carry more weight than model self-report.
-
-## Quick start without installing anything
-
-For prevention:
-
-1. Read [`PLAYBOOK.md`](PLAYBOOK.md).
-2. Choose a prompt from [`prompts/intervention/`](prompts/intervention/).
-3. Use the checklist in [`skill/checklist/`](skill/checklist/).
-
-For diagnosis:
-
-1. Write the expected outcome, constraints, and verification.
-2. Identify the observed symptom.
-3. Select a card from
-   [`prompts/diagnosis/cards/`](prompts/diagnosis/cards/).
-4. Label every diagnostic claim as Observed or Inferred.
-5. Escalate through the ratchet only when the consequence justifies it.
-6. Preserve the transcript in [`templates/diagnosis/`](templates/diagnosis/).
-
-## Agent skill integrations
+## Use the skill
 
 For Copilot CLI, Claude Code, or Cursor, follow the
 [installation and invocation guide](docs/integration.md). Copy the complete
@@ -78,7 +31,7 @@ the generated copy bundles its required local resources without symlinks.
 Instructions are advisory, not enforced security controls or evidence of
 effectiveness. Installing the skill does not guarantee automatic invocation.
 
-## Reference CLI
+## Use the reference CLI
 
 Requires Python 3.11 or newer. The base install includes diagnostic and
 intervention prompts and supports `bdk apply` without model-provider SDKs.
@@ -145,6 +98,10 @@ tool caches are excluded; tracked Markdown is never excluded as tooling.
 The [intervention distribution contract](prompts/intervention/README.md#canonical-contract-and-synchronization)
 defines the canonical full prompt and wrapper-preserving synchronization.
 
+`bdk` is the canonical executable. The deprecated `robopsych` alias remains
+compatible throughout BDK 3.x and will be removed in 4.0. Use `bdk` in new
+integrations; the deprecation note appears only in help, never in command output.
+
 Retrieve a preventive intervention:
 
 ```bash
@@ -190,6 +147,10 @@ gemini = "<gemini-model-id>"
 azure = "azure/<deployment-or-model-id>"
 ```
 
+For one concrete example, `review = "gpt-4o"` under `[models]` makes
+`bdk run 1.2 --model review --response "the suspicious response"` use `gpt-4o`.
+This is an illustrative ID, not a claim of current availability in your account.
+
 The user file is loaded first; the current-directory file overrides individual
 aliases and retains other user aliases. There is no parent-directory search or
 environment-variable expansion. The only supported top-level table is
@@ -232,6 +193,68 @@ bdk score report.json
 ```
 
 Alias-based examples require the [model alias configuration](#model-aliases) above.
+
+## Scope and boundaries
+
+The project is framework-first. Every layer can be used manually with prompts
+and templates. The `bdk` Python CLI is a reference implementation for teams that
+need repeatable model runs, cross-checks, scoring, and reports.
+LLM judges are review aids, not ground truth.
+BDK is not a truth oracle, automatic fact-checker, leaderboard benchmark,
+orchestrator, or RAG framework.
+
+## What BDK includes
+
+Baloney Detection Kit (BDK) helps practitioners prevent unsupported confidence
+amplification, diagnose why an AI response went wrong, and test whether an
+intervention improved behavior without making the assistant reflexively
+contrarian.
+
+BDK 3.0 has one operating loop:
+
+```text
+Detect risk -> Apply friction -> Diagnose behavior -> Validate outcomes
+```
+
+| Layer | Question | Main artifacts |
+|---|---|---|
+| Detection | Is confidence misaligned with evidence or consequence? | Trigger rules, claim typing, human checklist |
+| Intervention | How should the assistant respond before endorsing the claim? | Compact, full, high-stakes, agent, reviewer, and second-opinion prompts |
+| Diagnosis | Why did this output emerge? | Model/runtime/conversation split, 16 diagnostic prompts, nine-step ratchet |
+| Validation | Did the intervention help, and what did it damage? | A/B cross-checks, coherence analysis, scoring, scenarios, reports |
+
+BDK does not claim to inspect model weights or reveal hidden reasoning.
+Diagnostic explanations are hypotheses constrained by observable behavior.
+Behavioral probes and human review carry more weight than model self-report.
+
+**Topics:**
+[![Topic: llm](https://img.shields.io/badge/topic-llm-gray)](https://github.com/topics/llm)
+[![Topic: critical-thinking](https://img.shields.io/badge/topic-critical--thinking-gray)](https://github.com/topics/critical-thinking)
+[![Topic: sycophancy](https://img.shields.io/badge/topic-sycophancy-gray)](https://github.com/topics/sycophancy)
+[![Topic: prompt-engineering](https://img.shields.io/badge/topic-prompt--engineering-gray)](https://github.com/topics/prompt-engineering)
+[![Topic: ai-safety](https://img.shields.io/badge/topic-ai--safety-gray)](https://github.com/topics/ai-safety)
+[![Topic: agent-skills](https://img.shields.io/badge/topic-agent--skills-gray)](https://github.com/topics/agent-skills)
+
+These labels describe subject matter, not efficacy or certification. GitHub
+repository topics are separate maintainer settings.
+
+## Manual prevention and diagnosis
+
+For prevention:
+
+1. Read [`PLAYBOOK.md`](PLAYBOOK.md).
+2. Choose a prompt from [`prompts/intervention/`](prompts/intervention/).
+3. Use the checklist in [`skill/checklist/`](skill/checklist/).
+
+For diagnosis:
+
+1. Write the expected outcome, constraints, and verification.
+2. Identify the observed symptom.
+3. Select a card from
+   [`prompts/diagnosis/cards/`](prompts/diagnosis/cards/).
+4. Label every diagnostic claim as Observed or Inferred.
+5. Escalate through the ratchet only when the consequence justifies it.
+6. Preserve the transcript in [`templates/diagnosis/`](templates/diagnosis/).
 
 ## The intervention protocol
 
@@ -324,29 +347,44 @@ human evidence.
 ```text
 baloney-detection-kit/
 ├── PLAYBOOK.md                    Preventive operating protocol
-├── ROOT_PROMPT.md                 Self-contained intervention prompt
+├── ROOT_PROMPT.md                 Self-contained English intervention
+├── ROOT_PROMPT.es.md              Self-contained Spanish intervention
+├── CONTRIBUTING.md                Community workflow and offline checks
+├── SECURITY.md                    Private reporting and data boundaries
+├── VERSIONING.md                  Product, prompt, and compatibility policy
+├── CHANGELOG.md                   Release history and Unreleased changes
 ├── docs/
+│   ├── CONTEXT.md                 Product context and navigation
+│   ├── RELEASING.md               Human-gated publication checklist
 │   ├── agentic-plan-execute-verify.md  Agentic runtime integration pattern
 │   ├── deployment-contexts.md     Adoption and deployment guidance
 │   ├── integration.md             Copilot CLI, Claude Code, and Cursor setup
+│   ├── migration.md               Migration guidance
+│   ├── plans/                     Diagnostic engine design history
 │   ├── related-work.md            Intellectual lineage and positioning
 │   └── second-opinion-operational.md  External-review practice notes
 ├── framework/
 │   └── diagnosis/                 Behavioral diagnostic method
 ├── prompts/
-│   ├── intervention/              Preventive prompt variants
+│   ├── intervention/              Six English variants; es/ compact and full
 │   └── diagnosis/                 Diagnostic cards and catalog
 ├── skill/                         Legacy skill and editable source
 ├── skills/baloney-detection-kit/   Generated portable skill and local resources
 ├── .claude-plugin/plugin.json     Claude Code plugin metadata
 ├── src/bdk/                       Reference CLI and analysis engine
+│   └── data/interventions/        Packaged English/Spanish prompt mirrors
 ├── tests/                         Unit and integration tests
 ├── scripts/                       Offline repository checks
-├── scenarios/                     Runnable scenario examples
+├── scenarios/
+│   ├── negative/                  Eight non-trigger firing-proxy cases
+│   ├── positive/                  Two trigger firing-proxy cases
+│   └── multiturn-pressure.yaml    Sequential pressure and corrected premise
 ├── templates/diagnosis/           Human diagnostic worksheets
 ├── validation/
-│   ├── closed-loop/               Intervention calibration
-│   └── diagnosis/                 Diagnostic validation
+│   ├── closed-loop/               Protocol, scenarios, RESULTS.md, results/
+│   └── diagnosis/                 Agreement, calibration, reproducible cases
+├── essay/                         Authored essays and case studies
+├── posts/                         Authored publication drafts
 └── research/diagnosis-paper/      Research scaffold
 ```
 

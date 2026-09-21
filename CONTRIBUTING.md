@@ -68,6 +68,20 @@ provider charges. Do not copy another developer's credentials or use real keys
 in fixtures. Keep ordinary regression tests deterministic and offline with
 mocks or synthetic examples.
 
+## Markdown-only formatting
+
+Build the formatter inventory from `git ls-files`, not a recursive directory
+walk; never include dependencies, virtual environments, Git internals, or caches.
+Exclude authored prose in `essay/`, `posts/`, and `research/diagnosis-paper/`,
+and historical evidence in `validation/**/artifacts/` or any `results/` directory.
+Preserve copyable code blocks, prompt instruction bodies and markers exactly;
+keep `skill/SKILL.md` instructions and its first YAML block intact.
+Format canonical documentation before running `python scripts/sync_prompts.py`
+to update derived root regions, `skills/baloney-detection-kit/`, and packaged
+mirrors. Keep `docs/RELEASING.md` at most 30 lines. Check semantic and prompt-body
+invariants as well as the required gates, and commit formatting separately
+without wording or link changes.
+
 ## Behavioral changes and evidence
 
 Changes to prompts, triggers, modes, high-stakes boundaries, output contracts,
