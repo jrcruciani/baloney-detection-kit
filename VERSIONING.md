@@ -2,8 +2,13 @@
 
 BDK versions the complete distribution while preserving explicit prompt
 behavior contracts.
+See the README's [Scope and boundaries](README.md#scope-and-boundaries) for
+what the distribution does and does not cover.
 
 ## Product version
+
+Distribution releases use `vX.Y.Z` labels, such as `v3.0.0`; package metadata
+stores the corresponding `X.Y.Z` version.
 
 The product version covers:
 
@@ -21,9 +26,14 @@ Semantic Versioning applies:
   or report formats, or material method changes.
 
 The version appears in `pyproject.toml`, `src/bdk/__init__.py`,
-`CITATION.cff`, and release notes.
+`CITATION.cff`, and release notes. See [`CHANGELOG.md`](CHANGELOG.md) for the
+distribution's release history.
 
 ## Prompt behavior version
+
+Prompt behavior labels use `prompt-vX.Y`, such as `prompt-v2.0`. They identify
+behavior contracts, not distribution releases, and evolve independently of the
+product version.
 
 Prompt changes can alter model behavior without changing a Python API. A
 reproducible run must record:

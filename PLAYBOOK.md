@@ -6,6 +6,9 @@ error appear misaligned. The protocol can be used manually, embedded as a
 prompt or skill, or exercised through the integrated CLI and validation
 surfaces.
 
+See the README's [Scope and boundaries](README.md#scope-and-boundaries) for
+the project-wide scope.
+
 In current AI-safety vocabulary, this targets **social sycophancy**: a boundary failure where social alignment or helpfulness pressure displaces epistemic integrity. See [`related-work.md`](related-work.md) for the mapping.
 
 ## TL;DR
@@ -327,7 +330,10 @@ Bad sentence:
 
 ## 8. Manual review
 
-After applying the playbook, use [`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review the response. This is deliberately manual. If a team wants automated evaluation, it should live outside this repo.
+After applying the playbook, use
+[`skill/checklist/review_rubric.md`](skill/checklist/review_rubric.md) to review
+the response. This review is deliberately manual. CLI scoring and validation
+recipes can support repeatable checks, but do not replace human judgment.
 
 Review four different outcomes:
 

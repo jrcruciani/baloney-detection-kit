@@ -13,9 +13,14 @@ BDK 3.0 has one operating loop:
 Detect risk -> Apply friction -> Diagnose behavior -> Validate outcomes
 ```
 
+## Scope and boundaries
+
 The project is framework-first. Every layer can be used manually with prompts
 and templates. The `bdk` Python CLI is a reference implementation for teams that
 need repeatable model runs, cross-checks, scoring, and reports.
+LLM judges are review aids, not ground truth.
+BDK is not a truth oracle, automatic fact-checker, leaderboard benchmark,
+orchestrator, or RAG framework.
 
 ## What BDK includes
 
