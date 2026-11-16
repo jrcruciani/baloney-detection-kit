@@ -39,7 +39,8 @@ RULES = {
     "forced-full-template": r"\buse this exact structure\b",
     "obsolete-tooling-denial": (
         r"\b(?:it|bdk|this (?:repo(?:sitory)?|project)) (?:has|ships|provides|includes) no "
-        r"(?:package api|runner|benchmark|evaluator)\b"
+        r"(?:package(?: api)?|runner|benchmark|evaluator)\b"
+        r"|\bno runner,\s*no benchmark,\s*no package(?: api)?,\s*no evaluator\b"
         r"|\bkeep (?:all )?(?:automated )?(?:evaluators|provider[- ]specific code)"
         r" (?:outside this repo(?:sitory)?|downstream)\b"
     ),
@@ -140,6 +141,9 @@ def test_distributed_markdown_has_no_known_protocol_contradictions():
         ("user-label", "You might be in a mini-cult."),
         ("forced-full-template", "Use this exact structure: [full template]."),
         ("obsolete-tooling-denial", "It has no package API."),
+        ("obsolete-tooling-denial", "This project has no package."),
+        ("obsolete-tooling-denial", "BDK has no package."),
+        ("obsolete-tooling-denial", "No runner, no benchmark, no package, no evaluator."),
         ("obsolete-tooling-denial", "BDK includes no runner."),
         ("obsolete-tooling-denial", "Keep automated evaluators outside this repo."),
         ("obsolete-product-or-path", "Robopsychology now ships as the diagnostic layer."),
@@ -163,6 +167,9 @@ def test_obsolete_prescriptions_fail_even_inside_quotes_or_copyable_blocks(rule,
         "A high-stakes domain alone never forces Full.",
         "Disagreement alone is not a verdict or trigger.",
         "The framework is not a fact-checker or benchmark. BDK includes reference evaluators.",
+        "This framework is not a benchmark or fact-checker.",
+        "Do not say: No runner, no benchmark, no package, no evaluator.",
+        "Reject the claim: This project has no package.",
         "Require at least two judge model families, not two explanations.",
         "Include only credible alternatives, zero, one, or several.",
         "Credible alternatives:\n\n1. Generalized representation.\n2. Surface statistics.",
