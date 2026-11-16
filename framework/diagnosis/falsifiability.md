@@ -18,23 +18,28 @@ Read every output through this lens:
 | Convenient story | Warning sign; run a behavioral cross-check                          |
 | Unknowable       | Human analyst judgment; do not force the model to pretend certainty |
 
-## Evidence source hierarchy
+## Evidence quality, not source rank
 
-Not all evidence carries the same epistemic weight. Use this hierarchy when
-weighing diagnostic support:
+Assess relevance, directness, method quality, independence, corroboration,
+recency, provenance, incentives, and missing data. No source category or human
+role automatically outranks another. Record what each source can actually show:
 
-| Source                                         | Weight  | Notes                                                               |
-| ---------------------------------------------- | ------- | ------------------------------------------------------------------- |
-| Human analyst judgment from direct observation | Highest | Irreplaceable; the analyst must record their reasoning              |
-| Behavioral probe result                        | High    | Observed change under controlled variation; one factor at a time    |
-| Transcript artifact                            | Medium  | Visible in the conversation record; not explained away by the model |
-| Runtime artifact                               | Medium  | System prompt, tool call, policy event; externally verifiable       |
-| Model self-report (Observed label)             | Low     | Claims about behavior tied to explicit constraints                  |
-| Model self-report (Inferred label)             | Lowest  | Plausible reconstruction; treat as hypothesis only                  |
+| Source | Appraisal and limits |
+| --- | --- |
+| Human analyst judgment | Record observations, reasoning, assumptions, and possible bias; authority is not corroboration. |
+| Behavioral probe result | Inspect controls, changed factors, baselines, repeatability, and alternative causes. |
+| Transcript artifact | Check completeness, context, and whether the record supports the specific claim. |
+| Runtime artifact | Verify provenance and timing of system prompts, tool calls, or policy events. |
+| Model self-report (Observed label) | Verify the claimed visible behavior or explicit constraint against the record. The label is not evidence by itself. |
+| Model self-report (Inferred label) | Treat the proposed cause as a hypothesis needing independent behavioral checks. |
 
 A diagnosis supported only by model self-report is a hypothesis. A diagnosis
 corroborated by behavioral probe results and transcript artifacts is candidate
 evidence. Neither is a verified causal explanation without controlled testing.
+These diagnostic tests concern empirical claims about behavior, not a universal
+falsifiability rule for normative, interpretive, or personal claims. For the
+intervention contract, see the canonical
+[full prompt](../../prompts/intervention/prompt-full.md).
 
 ## What makes a diagnosis testable
 

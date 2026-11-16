@@ -102,7 +102,9 @@ The same command generates the complete English portable
 file under the legacy `skill/` tree plus explicit source resources. It uses the
 newly synchronized skill text in the same pass. Required playbook, full-prompt,
 and operational-note resources are local; path rewrites do not alter the prompt
-block or frontmatter. See [runtime integrations](../../docs/integration.md)
+block or frontmatter. Generated Markdown provenance sits outside instructions;
+byte-exact retrieval and attribution outputs keep their formats. See the
+[architecture inventory](../../docs/architecture.md) and [runtime integrations](../../docs/integration.md)
 for the inventory, copy/install paths, and optional remote documentation links.
 The output tree is never scanned as input. `--check` detects added, missing,
 changed, and obsolete output files; regeneration removes obsolete files only
@@ -115,7 +117,8 @@ invalid source/wrapper version markers fail explicitly before any writes.
 `--check` reports missing/stale generated outputs without writing, with exit
 status 1 for drift, 2 for invalid input, and 0 for synchronization. Diagnostic
 cards, calibration, and preregistration are not generated. Legacy skill examples
-are copied verbatim, not rewritten or assigned intervention version markers.
+retain their instruction content, with generated provenance and declared path
+rebasing in portable copies, not new intervention version markers.
 
 Size checks count Unicode characters and whitespace-delimited words, using
 characters / 4 as a rough English token estimate, **not a model tokenizer**.

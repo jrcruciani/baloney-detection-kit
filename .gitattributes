@@ -1,0 +1,7 @@
+# Whole-file outputs and files containing generated prompt regions.
+/ROOT_PROMPT.md linguist-generated=true
+/ROOT_PROMPT.es.md linguist-generated=true
+/skill/SKILL.md linguist-generated=true
+/skill/prompts/critical_investigation_mode.txt linguist-generated=true
+/skills/baloney-detection-kit/** linguist-generated=true
+/src/bdk/data/interventions/** linguist-generated=true

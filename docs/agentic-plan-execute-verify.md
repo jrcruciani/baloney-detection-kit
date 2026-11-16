@@ -4,9 +4,12 @@ How to compose baloney-detection-kit with agentic runtimes that already use a
 Plan -> Execute -> Verify architecture, such as
 [Robert Eichenseer's AgenticAI.PlanExecuteValidate](https://github.com/RobertEichenseer/AgenticAI.PlanExecuteValidate).
 
-This is an integration pattern, not an official adapter. Keep this repository a
-playbook. Put orchestration code, framework bindings, automated evaluators, and
-provider-specific details in the downstream system that uses the playbook.
+This is an integration pattern, not an official adapter. BDK includes a playbook,
+a reference CLI/package, provider adapters, and offline evaluation tooling.
+Application-specific orchestration and framework bindings belong in the
+downstream system; they are distinct from BDK's bundled reference tooling.
+The [canonical full prompt](../prompts/intervention/prompt-full.md) defines the
+intervention contract.
 
 ______________________________________________________________________
 
@@ -190,8 +193,10 @@ ______________________________________________________________________
 - **Do not copy external assets or code casually.** Link to
   AgenticAI.PlanExecuteValidate as a reference pattern unless its license and
   your project policy explicitly allow reuse.
-- **Do not move the framework into this repo.** Keep provider-specific code,
-  MCP wiring, notebooks, evaluators, and SDK adapters downstream.
+- **Keep application orchestration downstream.** Application-specific MCP
+  wiring, notebooks, and framework bindings are not bundled adapters. BDK's
+  existing provider adapters and evaluators remain reference tooling, not a
+  requirement for using the playbook.
 
 ______________________________________________________________________
 
@@ -220,8 +225,8 @@ Start with manual review:
 - [`second-opinion-operational.md`](second-opinion-operational.md) covers common
   orchestration failures when asking reviewer models.
 
-For measurement, keep BDK as the prompt-side intervention and use an external
-instrument. The closed-loop protocol in
+For measurement, separate the prompt-side intervention from the instrument
+evaluating it, even when both use tooling bundled in BDK. The closed-loop protocol in
 [`validation/closed-loop/`](../validation/closed-loop/) shows how to compare a
 control prompt against BDK using
 [BDK diagnostics](https://github.com/jrcruciani/baloney-detection-kit).

@@ -31,6 +31,7 @@ This block is generated from the canonical
 [`full prompt`](../prompts/intervention/prompt-full.md) by `scripts/sync_prompts.py`.
 The frontmatter must remain first; the behavior marker immediately follows it.
 
+<!-- Generated: scripts/sync_prompts.py -->
 <!-- bdk:prompt:start -->
 ```text
 Add proportionate epistemic friction, not automatic contradiction.

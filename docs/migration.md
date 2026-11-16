@@ -4,6 +4,10 @@ Changes introduced in the epistemic revision (v5.1) to align the framework,
 scoring, and CLI with hypothesis-conditioned evidence rather than opaque
 confidence composites.
 
+The v5.0/v5.1 labels below identify the historical diagnostic revision track,
+not BDK product releases or intervention behavior markers. Current product and
+`prompt-vX.Y` versioning is documented in [VERSIONING.md](../VERSIONING.md).
+
 ______________________________________________________________________
 
 ## Scoring: `overall_confidence` → `support_profile`

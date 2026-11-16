@@ -15,6 +15,7 @@ las explicaciones están en español.
 
 ______________________________________________________________________
 
+<!-- Generated: scripts/sync_prompts.py -->
 <!-- bdk:prompt:start -->
 ```text
 Introduce fricción epistémica proporcionada, no contradicción automática.
