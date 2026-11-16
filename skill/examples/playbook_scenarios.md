@@ -2,6 +2,12 @@
 
 These are short scenario sketches, not automated tests. Use them to calibrate when the playbook should fire, when it should stay light, and how it should behave under pressure.
 
+Apply the two gates in the [canonical full prompt](../../prompts/intervention/prompt-full.md):
+require an actual claim signal first, then choose Light by default or Full for
+substantial mismatch or consequential action needing deeper checks. Domain,
+dissent, a request for review, or a reasonable correction alone is not a trigger.
+The modes below describe the stated context, not automatic keyword rules.
+
 For full dialogue examples, see [`complete_conversations.md`](complete_conversations.md).
 
 ______________________________________________________________________
@@ -28,7 +34,7 @@ ______________________________________________________________________
 
 **User:** "I am trying to understand whether LLMs learn something like linguistic structure. What should I read first?"
 
-**Mode:** Light mode or ordinary helpful answer.
+**Mode:** Ordinary helpful answer; no intervention.
 
 **Why:** The user is already asking for context and sources.
 
@@ -82,7 +88,9 @@ ______________________________________________________________________
 
 **User:** "Maybe the useful insight is not that LLMs prove language structures knowledge, but that they make old structuralist intuitions experientially obvious to non-specialists."
 
-**Mode:** Light mode or full mode depending on context.
+**Mode:** Ordinary answer for this tentative re-framing. If surrounding context
+still shows a claim signal, use Light by default; Full needs substantial
+mismatch or consequential action needing deeper checks.
 
 **Why:** The user is no longer claiming pure novelty; they are refining the claim.
 
@@ -114,9 +122,12 @@ ______________________________________________________________________
 
 **User:** "The media are hiding the real cause of the election result. Everyone who looks closely can see it."
 
-**Mode:** Full mode if the user is asserting it as true; light mode if they are asking how to investigate.
+**Mode:** Light if suppression framing is being used to evade evidence; Full
+only for substantial mismatch or consequential action needing deeper checks.
+Answer normally if the user is humbly asking how to investigate.
 
-**Why:** Suppression framing plus a political claim where false validation can spread misinformation.
+**Why:** The signal would be evasion or unsupported certainty, not political
+content or disagreement by itself. Clarify the evidence before assuming evasion.
 
 **Good response pattern:**
 
@@ -180,11 +191,11 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 11. Light mode on a sensitive but humble question
+## 11. Non-trigger: sensitive but humble question
 
 **User:** "I read that sleep supplements might help anxiety. I am not sure what to believe. How should I think about it?"
 
-**Mode:** Light mode.
+**Mode:** Ordinary helpful answer; no intervention. Safety boundaries still apply.
 
 **Why:** Health-adjacent, but the user is not claiming certainty or asking for validation.
 
@@ -193,7 +204,8 @@ ______________________________________________________________________
 - Keep it concise.
 - Say evidence varies by supplement and context.
 - Suggest checking reputable medical sources and talking to a clinician if anxiety is persistent or medication is involved.
-- Avoid launching the full template unless the user makes a strong claim or asks for a rigorous review.
+- A request for rigorous review alone does not create a trigger; require an
+  actual claim signal before choosing an intervention mode.
 
 ______________________________________________________________________
 
@@ -201,9 +213,11 @@ ______________________________________________________________________
 
 **User:** "Your assessment says my idea is a re-framing, not a discovery. How do I know you are not just missing the breakthrough?"
 
-**Mode:** Stabilization mode plus external-contrast guidance.
+**Mode:** Ordinary reassessment plus external-contrast guidance. Stabilization
+applies only if surrounding turns show repeated pressure for unsupported certainty.
 
-**Why:** Reasonable challenge; the model may be wrong, but should not flip without evidence.
+**Why:** A reasonable challenge is not pressure by itself. Recheck the model's
+own errors and reopen for corrected premises, scope, facts, or evidence.
 
 **Good response pattern:**
 
@@ -263,7 +277,7 @@ ______________________________________________________________________
 latency is flat and database wait time doubled after the index change. I may be
 missing something."
 
-**Mode:** Ordinary answer or light mode.
+**Mode:** Ordinary answer; no intervention.
 
 **Why:** The claim challenges a local consensus, but confidence is proportionate,
 evidence is relevant, and the user invites correction.
@@ -281,7 +295,9 @@ ______________________________________________________________________
 **User:** "Schools should ban phones because attention matters more than
 convenience."
 
-**Mode:** Light or full depending on requested action and stakes.
+**Mode:** Ordinary discussion of values and evidence as stated. If additional
+context shows a claim signal, default to Light; Full requires substantial
+mismatch or consequential action needing deeper checks.
 
 **Why:** This combines empirical premises with a value judgment.
 
@@ -299,7 +315,8 @@ ______________________________________________________________________
 **User:** "You rejected my timeline because you said the policy began in 2023.
 Here is the official record of a 2021 pilot."
 
-**Mode:** Stabilization with reassessment.
+**Mode:** Reassessment; if this follows repeated pressure, Stabilization still
+requires correcting the assistant's own factual error.
 
 **Good response pattern:**
 

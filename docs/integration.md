@@ -241,6 +241,12 @@ or model agreement with verified evidence.
 
 ## Maintainer synchronization and review
 
+The canonical `prompt-v2.0` behavior source is the marked fenced block in
+[`prompts/intervention/prompt-full.md`](../prompts/intervention/prompt-full.md).
+See [architecture and provenance](architecture.md) for the complete
+source-to-derivative table, generated-header/exact-copy rules, and the explicit
+legacy `skill/` directory-name exception to the Agent Skills specification.
+
 Edit the legacy skill and canonical sources, then run:
 
 ```bash
@@ -251,7 +257,8 @@ pytest -m "not integration" tests/test_prompt_sync.py tests/test_skill_frontmatt
 ```
 
 The generator copies every legacy skill file, adds the explicit local resources,
-and rewrites only the distribution paths. The generated tree is never an input.
+and adds generated provenance outside instructions with declared path rewrites.
+The generated tree is never an input.
 Check mode reports missing, changed, or obsolete files without writing; normal
 mode removes obsolete files only in `skills/baloney-detection-kit/`. Do not keep
 manual edits there. Regeneration is idempotent and preserves existing root and

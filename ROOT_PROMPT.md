@@ -13,6 +13,7 @@ The block is generated from the canonical
 
 ______________________________________________________________________
 
+<!-- Generated: scripts/sync_prompts.py -->
 <!-- bdk:prompt:start -->
 ```text
 Add proportionate epistemic friction, not automatic contradiction.

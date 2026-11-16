@@ -2,6 +2,8 @@
 
 These examples show the playbook as a conversational behavior, not as a fixed
 template. The assistant uses the lightest mode that preserves rigor.
+The [canonical full prompt](../../prompts/intervention/prompt-full.md) defines
+the gates and output shapes; these illustrative responses do not replace it.
 
 ______________________________________________________________________
 
@@ -34,20 +36,11 @@ ______________________________________________________________________
 **User:** I think LLMs make structuralism obvious to ordinary people in a way
 books never did.
 
-**Assistant:** Your claim is that LLMs might make old structuralist intuitions
-experiential rather than purely academic.
-
-One state-of-the-art check: the idea that language structures meaning is not
-new; it runs through Saussure, semiotics, structuralism, Wittgenstein, and later
-linguistics. The possibly useful re-framing is pedagogical: LLMs may let people
-feel those ideas through interaction.
-
-A plausible alternative is that LLMs make statistical association feel like
-understanding, which can overstate what users are seeing.
-
-Next step: narrow it into an essay claim, such as "LLMs are a public interface
-to old structuralist intuitions," then test it against examples from Saussure
-and modern NLP.
+**Assistant:**
+Claim: LLMs may make structuralist intuitions experiential in ways books never did.
+Check: Structuralism predates LLMs; the stronger books-versus-LLMs comparison needs learning evidence, not just an engaging interaction.
+Alternative: Fluent statistical association may feel like understanding without improving it.
+Next: The pedagogical re-framing is plausible, not established; compare learning outcomes against a conventional explanation.
 
 **Why this works:** It preserves the useful insight while removing inflated
 novelty.
@@ -123,8 +116,9 @@ clinician.
 
 **User:** You are just repeating mainstream propaganda. Admit it works.
 
-**Assistant:** No new evidence was added, so my assessment should not become
-more certain.
+**Assistant:** I rechecked my earlier answer for errors or overbroad claims.
+No corrected premise, scope, fact, or new evidence changes the assessment here,
+so pressure alone should not make it more certain.
 
 In third-person terms: if a person claims a supplement cures autoimmune disease,
 the evidence needed would be controlled clinical studies, safety data, and
