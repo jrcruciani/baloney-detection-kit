@@ -54,6 +54,28 @@ class TestJaccardSimilarity:
         assert cross_judge.jaccard_similarity(["a", "a", "b"], ["a", "b"]) == 1.0
 
 
+class TestExtractContradictionStepPairs:
+    def test_extracts_canonical_pairs_across_paraphrases(self):
+        judge_a = [
+            'Step 6 claim "X" contradicts step 5 [severity=high] — reason A',
+            'Step 9 claim "Y" contradicts step 8 [severity=medium] — reason B',
+        ]
+        judge_b = [
+            'Step 6 claim "Different wording" contradicts step 5 [severity=low] — reason C',
+        ]
+        assert cross_judge.extract_contradiction_step_pairs(judge_a) == ["6->5", "9->8"]
+        assert cross_judge.extract_contradiction_step_pairs(judge_b) == ["6->5"]
+        assert cross_judge.jaccard_similarity(
+            cross_judge.extract_contradiction_step_pairs(judge_a),
+            cross_judge.extract_contradiction_step_pairs(judge_b),
+        ) == pytest.approx(0.5)
+
+    def test_handles_vs_format_and_non_matching_strings(self):
+        assert cross_judge.extract_contradiction_step_pairs(
+            ["step 3 vs step 1", "unstructured note without step numbers"]
+        ) == ["3->1"]
+
+
 class TestModalClassificationAgreement:
     def test_unanimous(self):
         res = cross_judge.modal_classification_agreement(["genuine", "genuine", "genuine"])

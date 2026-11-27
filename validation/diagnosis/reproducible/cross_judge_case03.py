@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -266,6 +267,27 @@ def score_spread(scores: list[float]) -> dict[str, float]:
     }
 
 
+_CONTRADICTION_STEP_PAIR_RE = re.compile(
+    r"\bstep\s+(\d+)\b.*?(?:contradicts|vs\.?)\s+step\s+(\d+)\b",
+    re.IGNORECASE,
+)
+
+
+def extract_contradiction_step_pairs(contradictions: list[str]) -> list[str]:
+    """Extract canonical ``"<step>-><prior_step>"`` pairs from formatted contradiction text.
+
+    Exact-string Jaccard over judge-authored contradiction prose collapses to ``0.0``
+    whenever two judges paraphrase the same reversal differently. Comparing step pairs
+    preserves structural overlap without claiming semantic identity.
+    """
+    pairs: list[str] = []
+    for entry in contradictions:
+        match = _CONTRADICTION_STEP_PAIR_RE.search(entry)
+        if match:
+            pairs.append(f"{int(match.group(1))}->{int(match.group(2))}")
+    return pairs
+
+
 def pairwise_jaccard(sets: dict[str, list[str]]) -> dict[str, float]:
     """All ordered (i<j) pairs from ``sets`` mapped to Jaccard similarity."""
     keys = sorted(sets.keys())
@@ -318,9 +340,13 @@ def build_cross_judge_report(outcomes: list[JudgeOutcome]) -> dict[str, Any]:
             [o.assessment for o in ran if o.assessment]
         )
         contradictions_by_judge = {o.key: o.contradictions for o in ran}
+        step_pairs_by_judge = {
+            k: extract_contradiction_step_pairs(v) for k, v in contradictions_by_judge.items()
+        }
         agreement["contradictions"] = {
             "per_judge_counts": {k: len(v) for k, v in contradictions_by_judge.items()},
             "pairwise_jaccard": pairwise_jaccard(contradictions_by_judge),
+            "step_pair_pairwise_jaccard": pairwise_jaccard(step_pairs_by_judge),
         }
         # Backward-references don't need set semantics; report magnitude spread
         ref_counts = [o.backward_references for o in ran if o.backward_references is not None]
