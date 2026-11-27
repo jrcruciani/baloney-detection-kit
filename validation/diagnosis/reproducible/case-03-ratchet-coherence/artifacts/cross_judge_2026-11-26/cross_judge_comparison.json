@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-11-26T21:01:00+00:00",
+  "n_judges_requested": 3,
+  "n_judges_ran": 3,
+  "per_judge": {
+    "claude_sonnet_5_5": {
+      "model": "claude-sonnet-5.5",
+      "family": "Anthropic",
+      "score": 0.8106557377049181,
+      "assessment": "high-continuity",
+      "backward_references": 104,
+      "fresh_narratives": 20,
+      "claims_count": 122,
+      "contradictions_count": 20
+    },
+    "gpt_6_sol": {
+      "model": "gpt-6-sol",
+      "family": "OpenAI",
+      "score": 0.69,
+      "assessment": "partial",
+      "backward_references": 319,
+      "fresh_narratives": 42,
+      "claims_count": 361,
+      "contradictions_count": 10
+    },
+    "gemini_4_neon": {
+      "model": "gemini-4-neon",
+      "family": "Google",
+      "score": 0.69,
+      "assessment": "partial",
+      "backward_references": 134,
+      "fresh_narratives": 33,
+      "claims_count": 167,
+      "contradictions_count": 11
+    }
+  },
+  "skipped": [],
+  "agreement": {
+    "score": {
+      "min": 0.69,
+      "max": 0.8106557377049181,
+      "spread": 0.12065573770491811,
+      "mean": 0.7302185792349727
+    },
+    "classification": {
+      "modal_label": "partial",
+      "agreement": 0.6666666666666666,
+      "counts": {
+        "high-continuity": 1,
+        "partial": 2
+      },
+      "n": 3
+    },
+    "contradictions": {
+      "per_judge_counts": {
+        "claude_sonnet_5_5": 20,
+        "gpt_6_sol": 10,
+        "gemini_4_neon": 11
+      },
+      "pairwise_jaccard": {
+        "claude_sonnet_5_5_vs_gemini_4_neon": 0.0,
+        "claude_sonnet_5_5_vs_gpt_6_sol": 0.0,
+        "gemini_4_neon_vs_gpt_6_sol": 0.0
+      },
+      "step_pair_pairwise_jaccard": {
+        "claude_sonnet_5_5_vs_gemini_4_neon": 0.4666666666666667,
+        "claude_sonnet_5_5_vs_gpt_6_sol": 0.1111111111111111,
+        "gemini_4_neon_vs_gpt_6_sol": 0.2
+      }
+    },
+    "backward_references": {
+      "min": 104,
+      "max": 319,
+      "spread": 215
+    }
+  },
+  "source_session_path": "/root/.hermes/profiles/prometeo/work/bdk-empirical/repo/validation/diagnosis/reproducible/case-03-ratchet-coherence/artifacts/session.json",
+  "source_session_sha256": "dbea8db2d24b6b5543cb54ec7d428f86a20c7df7d8879cc75f93b15aa2f2e2a1",
+  "target_model_in_transcript": "claude-sonnet-4-5",
+  "endpoint_host": "api.enterprise.githubcopilot.com",
+  "per_judge_axes": {
+    "claude_sonnet_5_5": {
+      "claim_count": 122,
+      "reference_density": 0.8524590163934426,
+      "contradiction_rate": 0.16393442622950818,
+      "fresh_claim_rate": 0.16393442622950818,
+      "hedge_filtered_rate": 0.0,
+      "high_severity_contradiction_count": 0
+    },
+    "gpt_6_sol": {
+      "claim_count": 361,
+      "reference_density": 0.8836565096952909,
+      "contradiction_rate": 0.027700831024930747,
+      "fresh_claim_rate": 0.11634349030470914,
+      "hedge_filtered_rate": 0.0,
+      "high_severity_contradiction_count": 3
+    },
+    "gemini_4_neon": {
+      "claim_count": 167,
+      "reference_density": 0.8023952095808383,
+      "contradiction_rate": 0.0658682634730539,
+      "fresh_claim_rate": 0.19760479041916168,
+      "hedge_filtered_rate": 0.0,
+      "high_severity_contradiction_count": 2
+    }
+  }
+}

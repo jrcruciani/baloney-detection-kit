@@ -1,0 +1,1110 @@
+{
+  "schema_version": 1,
+  "data_kind": "empirical",
+  "labels": [
+    "true",
+    "false"
+  ],
+  "raters": [
+    {
+      "id": "judge-gemini-4-neon",
+      "role": "judge",
+      "model": "gemini-4-neon",
+      "family": "Google",
+      "ratings": [
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r5",
+          "label": "true"
+        }
+      ]
+    },
+    {
+      "id": "judge-gpt-6-sol",
+      "role": "judge",
+      "model": "gpt-6-sol",
+      "family": "OpenAI",
+      "ratings": [
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__claude_sonnet_5_5__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__claude_sonnet_5_5__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__claude_sonnet_5_5__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__claude_sonnet_5_5__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r5",
+          "label": "false"
+        }
+      ]
+    },
+    {
+      "id": "judge-claude-sonnet-5.5",
+      "role": "judge",
+      "model": "claude-sonnet-5.5",
+      "family": "Anthropic",
+      "ratings": [
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__control__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__generic_critical__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "correction_under_pressure__treatment__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__control__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__control__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__generic_critical__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gemini_4_neon__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "normative_policy__treatment__gpt_6_sol__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__control__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__generic_critical__gpt_6_sol__r5",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r1",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r2",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r3",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r4",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gemini_4_neon__r5",
+          "label": "false"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r1",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r2",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r3",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r4",
+          "label": "true"
+        },
+        {
+          "item_id": "spanish_humble_health__treatment__gpt_6_sol__r5",
+          "label": "true"
+        }
+      ]
+    }
+  ]
+}
