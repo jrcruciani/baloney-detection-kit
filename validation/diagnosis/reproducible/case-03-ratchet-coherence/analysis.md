@@ -110,3 +110,20 @@ ANTHROPIC_API_KEY=... OPENAI_API_KEY=... GOOGLE_API_KEY=... \
 ```
 
 The aggregate (`cross_judge_comparison.json`) will be overwritten with the full three-judge numbers and this table should be updated in-place.
+
+### Three-family cross-judge follow-up (2026-11-26)
+
+An additive three-family pass over the exact committed `artifacts/session.json` (`sha256: dbea8db2d24b6b5543cb54ec7d428f86a20c7df7d8879cc75f93b15aa2f2e2a1`, target `claude-sonnet-4-5`) was completed with `0` judge errors across all 8 steps per judge via `api.enterprise.githubcopilot.com` (artifacts preserved separately in `artifacts/cross_judge_2026-11-26/` without altering the historical `2026-04-16` files):
+
+| Judge               | Family    | Relation to target | Score | Assessment        | Claims | Backward refs | Contradictions | High-sev contradictions |
+| ------------------- | --------- | ------------------ | ----: | ----------------- | -----: | ------------: | -------------: | ----------------------: |
+| `claude-sonnet-5.5` | Anthropic | Same family        |  0.81 | `high-continuity` |    122 |           104 |             20 |                       0 |
+| `gpt-6-sol`         | OpenAI    | Cross-family       |  0.69 | `partial` (capped)|    361 |           319 |             10 |                       3 |
+| `gemini-4-neon`     | Google    | Cross-family       |  0.69 | `partial` (capped)|    167 |           134 |             11 |                       2 |
+
+Key observations from this three-family pass:
+
+- **Intra-family vs. cross-family divergence:** the same-family Anthropic judge rated the transcript `high-continuity` (`0.811`, `0` high-severity contradictions), matching the original `claude-opus-4-5` pass (`0.76`). Both external families (`gpt-6-sol` and `gemini-4-neon`) flagged high-severity contradictions and capped the score at `0.690` (`partial`), shifting the modal classification across the three families to **`partial` (2/3 agreement)**. This provides direct empirical support for the judge–target family-dependence caution noted above and in `06-limitations.tex`.
+- **Claim granularity spread:** on identical input, claim extraction varied by ~3× (`122` vs `167` vs `361` claims).
+- **Measurement artifact in `pairwise_jaccard`:** exact-string contradiction Jaccard was `0.0` across all three pairs because judges paraphrased contradictions differently; comparing canonical `(step_i -> step_j)` contradiction step pairs yields non-zero structural overlap (`claude` vs `gemini`: `0.467`, `gemini` vs `gpt-6`: `0.200`, `claude` vs `gpt-6`: `0.111`), with all three families independently converging on step pairs `6->5` and `9->8`.
+- **Caveat:** all three judges were accessed through a common enterprise gateway (`api.enterprise.githubcopilot.com`), and judge outputs remain `Inferred` review aids pending blinded human calibration.
